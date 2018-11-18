@@ -1,7 +1,7 @@
 <template>
   <div class='men'>
   <ul class='nav-list'>
-    <li class='test'>
+    <li>
       <i class="flaticon-bell" ></i>Dasboard
       <ul class='interna'>
         <li>sss</li>
@@ -39,25 +39,31 @@ export default {
   margin-top: 1.5em;
   line-height: 2;
 }
-
 .nav-list > li {
    z-index: 100;
 }
 .interna{
     max-height: 0;
-    transition: max-height 1s ease-out;
+    transition: max-height .25s ease-out;
     overflow: hidden;
     background: #293744;
+}
+.interna >li {
+      margin-left: -40px;
+      border-left: 2px solid #19aa8d;
+      text-align: center
 }
 
 li:hover> .interna{
     max-height: 500px;
+    border-left-color:5px coral;
     transition: max-height 1s ease-in;
 }
 i{
       color:#90959a;
 }
 li{
+  list-style:none;
   margin-left:  -19px;
 }
 li:hover{
