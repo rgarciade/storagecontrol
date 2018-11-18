@@ -1,10 +1,15 @@
 <template>
-  <h2>Hello from {{text}}</h2>
+  <div>
+    Hello from {{text}}
+    <Menu></Menu>
+    <router-view></router-view>
+  </div>
+  
 </template>
 
 <script>
 export default {
-  name: 'test',
+  name: '#app',
   data () {
     return {
        text: ''
