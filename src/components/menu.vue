@@ -1,29 +1,27 @@
 <template>
   <div class='men'>
-  <ul class='nav-list'>
-    <li>
-      <i class="flaticon-bell" ></i>Dasboard
-      <ul class='interna'>
-        <li>sss</li>
-        <li>dff</li>
-      </ul>
-    </li>
-    <li><i class="flaticon-file-1" ></i>Layout</li>
-    <li><i class="flaticon-settings-2" ></i>Graphs</li>
-    <li><i class="flaticon-users" ></i>enlace</li>
-    <li><i class="flaticon-folder" ></i>enlace</li>
-  </ul>
+    <ul class='nav-list'>
 
-
-    <!--   <router-link to="/Contacto">Contacto</router-link>
-      <router-link to="/">Prueba</router-link> -->
+      <li v-for="route in menuRoutes" :key="route.id" >
+        <i :class="route.icon" ></i>{{route.name}}
+        <ul v-if="route.subMenu" class='interna'>
+              <li v-for="subMenuRoute in route.subMenu" :key="subMenuRoute.id" >
+                <i :class="subMenuRoute.icon" ></i>{{subMenuRoute.name}}
+              </li>
+        </ul>
+      </li>
+      
+    </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name:'Menu'
+  name:'Menu',
+  props: ['menuRoutes']
 }
+
+
 </script>
 <style>
 .men{
@@ -51,7 +49,10 @@ export default {
 .interna >li {
       margin-left: -40px;
       border-left: 2px solid #19aa8d;
-      text-align: center
+     
+}
+.interna li> i {
+      margin-left: 1em;
 }
 
 li:hover> .interna{

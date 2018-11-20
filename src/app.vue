@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Menu class='menu'></Menu>
-    <router-view class='routerView'></router-view>
+    <Menu class='menu' :menuRoutes="menuRoutes"></Menu>
+    <router-view class='routerView' :Appdata="Appdata"></router-view>
   </div>
   
 </template>
@@ -9,20 +9,13 @@
 <script>
 export default {
   name: 'app',
-  data () {
-    return {
-       text: ''
-    }
-  }
+  props: ['menuRoutes','Appdata']
 }
 </script>
 <style>
 .routerView{
     position: inherit;
     margin: -8px -8px 0 10em;
-
-}
-.menu{
 
 }
 body{
