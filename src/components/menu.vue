@@ -27,7 +27,6 @@ export default {
     position: fixed;
     width: 10em;
     max-width: 10em;
-    margin-left: -8px;
     min-height: 100%;
     background-color: #2f4050;
 }
@@ -46,12 +45,12 @@ export default {
     background: #293744;
 }
 .interna >li {
-      margin-left: -40px;
-      border-left: 2px solid #19aa8d;
+  margin-left: 7px;
+  border-left: 2px solid #19aa8d;
      
 }
 .interna li> i {
-      margin-left: 1em;
+  margin-left: 1em;
 }
 
 li:hover> .interna{
@@ -64,7 +63,7 @@ i{
 }
 li{
   list-style:none;
-  margin-left:  -19px;
+  margin-left: 1em;
 }
 li:hover{
   background-color: #2c353d;

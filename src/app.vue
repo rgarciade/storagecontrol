@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <Menu class='menu' :menuRoutes="menuRoutes"></Menu>
+  <div class="">
+    <Menu class="Mymenu" :menuRoutes="menuRoutes"></Menu>
     <router-view class='routerView' :data="data"></router-view>
   </div>
-  
 </template>
 
 <script>
@@ -16,8 +15,8 @@ export default {
 <style>
 .routerView{
     position: inherit;
-    margin: -8px -8px 0 10em;
-
+    margin-left: 11em;
+    margin-right: 1em;
 }
 body{
     
