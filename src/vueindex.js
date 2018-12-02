@@ -4,11 +4,17 @@ import App from './app';
 import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
+
 const { menuRoutes, router } = require('./router.js')
 
 
-const Appdata = { 'text': 'aa' }
 
+let Appdata = { 'text': 'aa', id: 1 }
+let id = 1;
+setTimeout(function() {
+    Appdata.id = 12;
+    Appdata.text = 'fff'
+}, 2000);
 Vue.use(VueRouter)
 
 //charge components
@@ -20,7 +26,7 @@ new Vue({
     router,
     render: h => h(App, {
         props: {
-            Appdata,
+            data: Appdata,
             menuRoutes
         }
     })

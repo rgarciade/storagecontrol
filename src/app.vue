@@ -1,7 +1,7 @@
 <template>
   <div>
     <Menu class='menu' :menuRoutes="menuRoutes"></Menu>
-    <router-view class='routerView' :Appdata="Appdata"></router-view>
+    <router-view class='routerView' :data="data"></router-view>
   </div>
   
 </template>
@@ -9,7 +9,8 @@
 <script>
 export default {
   name: 'app',
-  props: ['menuRoutes','Appdata']
+  props: ['menuRoutes','data'],
+
 }
 </script>
 <style>

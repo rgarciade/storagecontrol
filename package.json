@@ -1,66 +1,71 @@
 {
-  "name": "storagecontrol",
-  "productName": "storagecontrol",
-  "version": "1.0.0",
-  "description": "My Electron application description",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
-  },
-  "keywords": [],
-  "author": "raul",
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {
-        "packageManager": "npm"
-      },
-      "electronWinstallerConfig": {
-        "name": "storagecontrol"
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "windowsStoreConfig": {
-        "packageName": "",
-        "name": "storagecontrol"
-      }
+    "name": "storagecontrol",
+    "productName": "storagecontrol",
+    "version": "1.0.0",
+    "description": "My Electron application description",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "echo \"No linting configured\"",
+        "css-build": "node-sass --omit-source-map-url src/public/css/app.scss src/public/css/app.css",
+        "css-watch": "npm run css-build -- --watch",
+        "start-css": "npm run css-watch"
+    },
+    "keywords": [],
+    "author": "raul",
+    "license": "MIT",
+    "config": {
+        "forge": {
+            "make_targets": {
+                "win32": [
+                    "squirrel"
+                ],
+                "darwin": [
+                    "zip"
+                ],
+                "linux": [
+                    "deb",
+                    "rpm"
+                ]
+            },
+            "electronPackagerConfig": {
+                "packageManager": "npm"
+            },
+            "electronWinstallerConfig": {
+                "name": "storagecontrol"
+            },
+            "electronInstallerDebian": {},
+            "electronInstallerRedhat": {},
+            "github_repository": {
+                "owner": "",
+                "name": ""
+            },
+            "windowsStoreConfig": {
+                "packageName": "",
+                "name": "storagecontrol"
+            }
+        }
+    },
+    "dependencies": {
+        "bulma": "^0.7.2",
+        "electron-compile": "^6.4.3",
+        "electron-devtools-installer": "^2.2.4",
+        "electron-squirrel-startup": "^1.0.0",
+        "knex": "^0.15.2",
+        "mysql": "^2.16.0",
+        "node-sass": "^4.10.0",
+        "vue": "^2.5.17",
+        "vue-router": "^3.0.1",
+        "vueify": "^9.4.1"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-react": "^6.24.1",
+        "electron-forge": "^5.2.2",
+        "electron-prebuilt-compile": "3.0.6"
     }
-  },
-  "dependencies": {
-    "electron-compile": "^6.4.3",
-    "electron-devtools-installer": "^2.2.4",
-    "electron-squirrel-startup": "^1.0.0",
-    "knex": "^0.15.2",
-    "mysql": "^2.16.0",
-    "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
-    "vueify": "^9.4.1"
-  },
-  "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "electron-forge": "^5.2.2",
-    "electron-prebuilt-compile": "3.0.6"
-  }
 }

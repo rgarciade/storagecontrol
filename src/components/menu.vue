@@ -9,8 +9,7 @@
                 <i :class="subMenuRoute.icon" ></i>{{subMenuRoute.name}}
               </li>
         </ul>
-      </li>
-      
+      </li> 
     </ul>
   </div>
 </template>
