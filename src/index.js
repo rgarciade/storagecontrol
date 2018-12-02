@@ -18,6 +18,8 @@ const createWindow = async() => {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        minHeight: 500,
+        minWidth: 800,
         titleBarStyle: 'hidden'
     });
     mainWindow.setMenu(null);
