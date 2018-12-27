@@ -19,7 +19,6 @@ let id = 1;
     Appdata.id = 12;
     Appdata.text = 'fff'
 }, 2000); */
-console.log(colors)
 Vue.use(VueRouter)
 Vue.use(Vuetify, {
         iconfont: 'md',
