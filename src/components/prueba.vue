@@ -1,18 +1,14 @@
 <template>
     <div>
-        {{data.id}}<br>
-        <button v-on:click="data.id += 1">Add {{data.id}}</button>
+        <v-btn color="success">Success</v-btn>
+        <v-btn color="primary">ssss</v-btn>
+        <v-btn color="error">Error</v-btn>
+        <v-btn color="warning">Warning</v-btn>
+        <v-btn color="info">Info</v-btn>
     </div>
 </template>
 <script>
 export default {
-  name:'prueba',
-  props: ['data'],
-  data(){
-    return {
-        data:this.data
-    }
-  }
-  
+  name:'prueba',  
 }
 </script>

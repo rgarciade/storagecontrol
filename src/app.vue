@@ -1,8 +1,8 @@
 <template>
-  <div class="">
+  <v-app>
     <Menu class="Mymenu" :menuRoutes="menuRoutes"></Menu>
     <router-view class='routerView' :data="data"></router-view>
-  </div>
+  </v-app>
 </template>
 
 <script>
