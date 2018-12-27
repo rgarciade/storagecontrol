@@ -7,6 +7,7 @@ import App from './app';
 import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
+import Progress from './components/progress';
 
 
 const { menuRoutes, router } = require('./router.js')
@@ -23,15 +24,20 @@ Vue.use(VueRouter)
 Vue.use(Vuetify, {
         iconfont: 'md',
         theme: {
-            primary: colors.red.darken1, // #E53935
-            secondary: colors.red.lighten4, // #FFCDD2
-            accent: colors.indigo.base // #3F51B5
+            primary: "#37474F",
+            secondary: "#424242",
+            accent: "#F57C00",
+            error: "#FF5252",
+            warning: "#FDD835",
+            info: "#82B1FF",
+            success: "#81C784"
         }
     })
     //charge components
 Vue.component('Menu', Menu)
 Vue.component('Prueba', Prueba)
 Vue.component('Contacto', Contacto)
+Vue.component('Progress', Progress)
 
 new Vue({
     el: '#app',

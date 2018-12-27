@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <Menu class="Mymenu" :menuRoutes="menuRoutes"></Menu>
+    <Progress :active="false"></Progress>
     <router-view class='routerView' :data="data"></router-view>
   </v-app>
 </template>
@@ -9,17 +10,15 @@
 export default {
   name: 'app',
   props: ['menuRoutes','data'],
-
 }
 </script>
 <style>
 .routerView{
     position: inherit;
-    margin-left: 11em;
+    margin-left: 6.1em;
     margin-right: 1em;
 }
-body{
-    
+body{   
     background-color: white;
     font-size: 13px;
     color: #676a6c;

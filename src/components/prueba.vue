@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="">
         <v-btn color="success">Success</v-btn>
         <v-btn color="primary">ssss</v-btn>
         <v-btn color="error">Error</v-btn>

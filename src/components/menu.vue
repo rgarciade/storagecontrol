@@ -11,7 +11,7 @@
         <v-list class="pa-1">
           <v-list-tile v-if="mini" @click.stop="mini = !mini">
             <v-list-tile-action>
-              <v-icon>chevron_right</v-icon>
+              <v-icon class='menu_arrow_right'>chevron_right</v-icon>
             </v-list-tile-action>
           </v-list-tile>
   
@@ -61,5 +61,7 @@ export default {
 }
 </script>
 <style>
-
+.menu_arrow_right{
+  margin-left: -6px;
+}
 </style>
