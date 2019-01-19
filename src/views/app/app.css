@@ -1,0 +1,12 @@
+.routerView {
+    position: inherit;
+    margin-left: 6.1em;
+    margin-right: 1em;
+}
+
+body {
+    background-color: white;
+    font-size: 13px;
+    color: #676a6c;
+    overflow-x: hidden;
+}

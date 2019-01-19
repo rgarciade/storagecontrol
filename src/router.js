@@ -3,36 +3,21 @@ import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 
 const routes = [
-    { path: '/', component: Prueba },
-    { path: '/Contacto', component: Contacto },
-    { path: '*', component: Prueba }
+    { path: '/', name: 'home', component: Prueba },
+    { path: '/Contacto', name: 'Contacto', component: Contacto },
+    { path: '*', redirect: '/' }
 ];
 
-const menuRoutes = [{
-    name: 'dasboars',
-    icon: 'flaticon-bell',
-    subMenu: [
-        { name: 'sss', icon: 'flaticon-file-1' },
-        { name: 'dff', icon: 'flaticon-file-1' }
-    ]
-}, {
-    name: 'Layout',
-    icon: 'flaticon-file-1',
-    subMenu: [
-        { name: 'aaa', icon: 'flaticon-settings-2' },
-        { name: 'dfaaaf', icon: 'flaticon-settings-2' }
-    ]
-}, {
-    name: 'Graphs',
-    icon: 'flaticon-settings-2',
+const menuRoutes = [
+    { title: 'home', icon: 'dashboard', route: '/' },
+    { title: 'Contacto', icon: 'question_answer', route: '/Contacto' }
+]
 
-}]
-
-
+const router = new VueRouter({
+    routes,
+    mode: 'history'
+})
 module.exports = {
     menuRoutes,
-    router: new VueRouter({
-        routes,
-        mode: 'history'
-    })
+    router
 }
