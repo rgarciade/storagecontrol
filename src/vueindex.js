@@ -3,23 +3,16 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import colors from 'vuetify/es5/util/colors'
 
-import App from './app';
+import App from './views/app';
 import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 import Progress from './components/progress';
 
+const { router } = require('./router.js')
+import store from "./store"
 
-const { menuRoutes, router } = require('./router.js')
 
-
-
-let Appdata = { 'text': 'aa', id: 1 }
-let id = 1;
-/* setTimeout(function() {
-    Appdata.id = 12;
-    Appdata.text = 'fff'
-}, 2000); */
 Vue.use(VueRouter)
 Vue.use(Vuetify, {
         iconfont: 'md',
@@ -38,14 +31,10 @@ Vue.component('Menu', Menu)
 Vue.component('Prueba', Prueba)
 Vue.component('Contacto', Contacto)
 Vue.component('Progress', Progress)
-
+console.log('router', router)
 new Vue({
     el: '#app',
+    store,
     router,
-    render: h => h(App, {
-        props: {
-            data: Appdata,
-            menuRoutes
-        }
-    })
+    render: h => h(App)
 })

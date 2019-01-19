@@ -34,7 +34,7 @@
           <v-list-tile
             v-for="item in menuRoutes"
             :key="item.title"
-            @click="" >
+            @click="()=>{}" >
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
@@ -46,22 +46,7 @@
         </v-list>
       </v-navigation-drawer>
 </template>
-
-<script>
-export default {
-  name:'Menu',
-  props: ['menuRoutes'],
-  data () {
-    return {
-      drawer: true,
-      mini: true,
-      right: null
-    }
-  }
-}
-</script>
 <style>
-.menu_arrow_right{
-  margin-left: -6px;
-}
 </style>
+<script src="./menu.js" />
+<style src="./menu.css" />

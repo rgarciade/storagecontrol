@@ -2,6 +2,9 @@ import { app, BrowserWindow } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 
+import store from "./store"
+import { StringDecoder } from 'string_decoder';
+import { Store } from 'vuex';
 const knex = require('./DB/connection')
     //knex.select().table('books').then(a => console.log(a)).catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 
@@ -44,7 +47,14 @@ const createWindow = async() => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+    // Example of usage of Vuex Store from the main process
+    // Results of action will be automatically passed to all renderer processes
+
+    store.commit('count', 2)
+
+    createWindow()
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
