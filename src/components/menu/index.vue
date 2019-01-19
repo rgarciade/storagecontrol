@@ -39,8 +39,8 @@
   
             <v-list-tile-content>
                 <v-list-tile-title>
-                  <router-link :to="item.route" >
-                    {{ item.title }}
+                  <router-link :to="item.route"  >
+                    <span @click="mini = !mini">{{ item.title }}</span>
                   </router-link>
                   
                   </v-list-tile-title>
