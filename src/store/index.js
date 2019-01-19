@@ -1,7 +1,7 @@
 import Vue from "vue"
 import Vuex from "vuex"
 const { menuRoutes } = require('../router.js')
-import { createPersistedState, createSharedMutations } from "vuex-electron"
+import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -46,6 +46,6 @@ export default new Vuex.Store({
             state.progresActive = false
         }
     },
-    plugins: [createPersistedState(), createSharedMutations()],
+    plugins: [createSharedMutations()],
     strict: process.env.NODE_ENV !== "production"
 })

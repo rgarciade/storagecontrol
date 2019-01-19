@@ -31,7 +31,6 @@ Vue.component('Menu', Menu)
 Vue.component('Prueba', Prueba)
 Vue.component('Contacto', Contacto)
 Vue.component('Progress', Progress)
-console.log('router', router)
 new Vue({
     el: '#app',
     store,

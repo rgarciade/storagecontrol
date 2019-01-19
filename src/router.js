@@ -3,21 +3,21 @@ import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 
 const routes = [
-    { path: '/', component: Prueba },
-    { path: '/Contacto', component: Contacto },
-    { path: '*', component: Prueba }
+    { path: '/', name: 'home', component: Prueba },
+    { path: '/Contacto', name: 'Contacto', component: Contacto },
+    { path: '*', redirect: '/' }
 ];
 
 const menuRoutes = [
-    { title: 'Home', icon: 'dashboard' },
-    { title: 'About', icon: 'question_answer' }, { title: 'Aboutt', icon: 'question_answer' }
+    { title: 'home', icon: 'dashboard', route: '/' },
+    { title: 'Contacto', icon: 'question_answer', route: '/Contacto' }
 ]
 
-
+const router = new VueRouter({
+    routes,
+    mode: 'history'
+})
 module.exports = {
     menuRoutes,
-    router: new VueRouter({
-        routes,
-        mode: 'history'
-    })
+    router
 }

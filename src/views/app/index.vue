@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <div class="count">
-      aa:{{count}}
+      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:{{count}}
     </div>
     <Menu class="Mymenu" ></Menu>
     <Progress :active="false"></Progress>
-    <router-view class='routerView'></router-view> 
+    <router-view class='routerView' default="{name: 'home'}"></router-view> 
   </v-app>
 </template>
 
