@@ -1,4 +1,4 @@
-const { DB } = require('../../config')
+const { DB } = require('../config')
 let knex = require('knex')({
     client: 'mysql',
     connection: {

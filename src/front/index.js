@@ -2,10 +2,10 @@ import { app, BrowserWindow } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 
-import store from "./store"
+import store from "../store"
 import { StringDecoder } from 'string_decoder';
 import { Store } from 'vuex';
-const knex = require('./DB/connection')
+const knex = require('../back/DB/connection')
     //knex.select().table('books').then(a => console.log(a)).catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 
 // Keep a global reference of the window object, if you don't, the window will

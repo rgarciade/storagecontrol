@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
-const { menuRoutes } = require('../router.js')
+const { menuRoutes } = require('../front/router.js')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
 
@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         count: 0,
         menuRoutes,
-        progresActive: false
+        progresActive: false,
+        companys: {}
     },
 
     actions: {
@@ -26,6 +27,21 @@ export default new Vuex.Store({
         },
         initCount(store, initial) {
             store.commit('count', initial)
+        },
+        findCompanys(store, text) {
+
+            let examplefind = [{
+                    "name": "empresa1",
+                    "telefono": "666666666",
+                    "emailContacto": "aa@.com",
+                },
+                {
+                    "name": "empresa2",
+                    "telefono": "7777777",
+                    "emailContacto": "bb@.com",
+                }
+            ]
+            store.commit('companys', examplefind)
         }
     },
 
@@ -44,6 +60,9 @@ export default new Vuex.Store({
         },
         charged(state) {
             state.progresActive = false
+        },
+        companys(state, finded) {
+            state.companys = finded
         }
     },
     plugins: [createSharedMutations()],

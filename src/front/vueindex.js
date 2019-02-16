@@ -8,9 +8,10 @@ import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 import Progress from './components/progress';
+import Companysfinder from './views/companysfinder';
 
 const { router } = require('./router.js')
-import store from "./store"
+import store from "../store"
 
 
 Vue.use(VueRouter)
@@ -31,6 +32,7 @@ Vue.component('Menu', Menu)
 Vue.component('Prueba', Prueba)
 Vue.component('Contacto', Contacto)
 Vue.component('Progress', Progress)
+Vue.component('Companysfinder', Companysfinder)
 new Vue({
     el: '#app',
     store,
