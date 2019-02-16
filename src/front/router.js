@@ -7,7 +7,7 @@ const routes = [
     { path: '/', name: 'home', component: Prueba },
     { path: '/Contacto', name: 'Contacto', component: Contacto },
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
-    { path: '*', redirect: '/' }
+    { path: '*', name: '*', component: Prueba }
 ];
 
 const menuRoutes = [
