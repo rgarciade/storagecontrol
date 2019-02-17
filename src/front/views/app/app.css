@@ -1,7 +1,8 @@
 .routerView {
     position: inherit;
     margin-left: 6.1em;
-    margin-right: 1em;
+    margin-right: 0em;
+    margin-top: -1em;
 }
 
 body {

@@ -4,10 +4,11 @@ import Contacto from './components/contacto';
 import Companysfinder from './views/companysfinder';
 
 const routes = [
-    { path: '/', name: 'home', component: Prueba },
-    { path: '/Contacto', name: 'Contacto', component: Contacto },
-    { path: '/Empresas', name: 'Empresas', component: Companysfinder },
-    { path: '*', name: '*', component: Prueba }
+    /*     { path: '/', name: 'home', component: Prueba },
+        { path: '/Contacto', name: 'Contacto', component: Contacto },
+        { path: '/Empresas', name: 'Empresas', component: Companysfinder },
+        { path: '*', name: '*', component: Prueba } */
+    { path: '*', name: '*', component: Companysfinder }
 ];
 
 const menuRoutes = [
