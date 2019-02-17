@@ -4,6 +4,7 @@ let knex = require('knex')({
     connection: {
         host: DB.host,
         user: DB.user,
+        port: DB.port,
         password: DB.password,
         database: DB.database
     },

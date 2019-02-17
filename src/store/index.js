@@ -1,19 +1,15 @@
 import Vue from "vue"
 import Vuex from "vuex"
 const { menuRoutes } = require('../front/router.js')
+const { DB_Companys } = require('../back/DB/companys')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
-
 export default new Vuex.Store({
     state: {
         count: 3,
         menuRoutes,
         progresActive: false,
-        companys: [{
-            "name": "empresa1",
-            "telephon": "666666666",
-            "emailContacto": "aa@.com"
-        }]
+        companys: []
     },
 
     actions: {
@@ -32,13 +28,8 @@ export default new Vuex.Store({
         initCount(store, initial) {
             store.commit('count', initial)
         },
-        findCompanys(store, text) {
-
-            store.commit('companys', [{
-                "name": "empresa1222",
-                "telephon": "666666666",
-                "emailContacto": "aa@.com"
-            }])
+        async findCompanys(store, text) {
+            store.commit('companys', await DB_Companys.findCompanys(text))
         }
     },
 
@@ -59,9 +50,11 @@ export default new Vuex.Store({
             state.progresActive = false
         },
         companys(state, finded) {
+            let temporalState = []
             finded.forEach(function(element) {
-                state.companys.push(element)
+                temporalState.push(element)
             });
+            state.companys = temporalState
 
         }
     },

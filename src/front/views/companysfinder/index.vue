@@ -7,10 +7,11 @@
       </v-card-title>
     </v-card>
     <v-text-field
-      v-on:keyup ="findCompanys"
+      v-on:keyup ="findCompanys(textFinder)"
       label="Solo"
       placeholder="Placeholder"
       solo
+      v-model="textFinder"
     ></v-text-field>
 </div>
 
