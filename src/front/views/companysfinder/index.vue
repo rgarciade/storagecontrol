@@ -7,29 +7,34 @@
       </v-card-title>
     </v-card>
     <v-text-field
+      v-on:keyup ="findCompanys"
       label="Solo"
       placeholder="Placeholder"
       solo
     ></v-text-field>
 </div>
-<div >
-  <v-layout row justify-space-around>
+
+  <v-layout             
+    v-for="company in companys"
+    :key="company.key" row justify-space-around
+    style="margin-top: 1em"
+    >
     <v-flex xs9>
       <v-hover>
         <v-card color="blue-grey darken-2" 
-              hover
+              slot-scope="{ hover }"
+              :class="`elevation-${hover ? 24 : 2}`"
               class="white--text ">
             <v-card-title primary-title>
               <div>
-                <div class="headline">Unlimited music now</div>
-                <span>Listen to your favorite artists and albums whenever and wherever, online and offline.</span>
+                <div class="headline">{{company.name}}</div>
+                <span>telefono: {{company.telephon}}</span>
               </div>
             </v-card-title>
           </v-card>
       </v-hover>
     </v-flex>
   </v-layout>
-</div>
 </div>
 </template>
 

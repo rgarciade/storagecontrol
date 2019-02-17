@@ -6,10 +6,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        count: 0,
+        count: 3,
         menuRoutes,
         progresActive: false,
-        companys: {}
+        companys: [{
+            "name": "empresa1",
+            "telephon": "666666666",
+            "emailContacto": "aa@.com"
+        }]
     },
 
     actions: {
@@ -30,18 +34,11 @@ export default new Vuex.Store({
         },
         findCompanys(store, text) {
 
-            let examplefind = [{
-                    "name": "empresa1",
-                    "telefono": "666666666",
-                    "emailContacto": "aa@.com",
-                },
-                {
-                    "name": "empresa2",
-                    "telefono": "7777777",
-                    "emailContacto": "bb@.com",
-                }
-            ]
-            store.commit('companys', examplefind)
+            store.commit('companys', [{
+                "name": "empresa1222",
+                "telephon": "666666666",
+                "emailContacto": "aa@.com"
+            }])
         }
     },
 
@@ -62,7 +59,10 @@ export default new Vuex.Store({
             state.progresActive = false
         },
         companys(state, finded) {
-            state.companys = finded
+            finded.forEach(function(element) {
+                state.companys.push(element)
+            });
+
         }
     },
     plugins: [createSharedMutations()],
