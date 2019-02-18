@@ -17,7 +17,7 @@
 
   <v-layout             
     v-for="company in companys"
-    :key="company.key" row justify-space-around
+    :key="company.name" row justify-space-around
     style="margin-top: 1em"
     >
     <v-flex xs9>
