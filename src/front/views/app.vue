@@ -27,4 +27,10 @@ body {
     color: #676a6c;
     overflow-x: hidden;
 }
+.container_position{
+      margin-top: 1%;
+}
+a{
+  text-decoration: none;
+}
 </style>
