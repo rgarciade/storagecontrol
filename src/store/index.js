@@ -32,8 +32,8 @@ export default new Vuex.Store({
             store.commit('charging')
             store.commit('companys', await DB_Companys.findCompanys(text))
         },
-        companyConfigurationView(store) {
-
+        companyConfigurationView(store, companyName) {
+            console.log(companyName)
         }
     },
 

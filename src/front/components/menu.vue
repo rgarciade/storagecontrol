@@ -7,8 +7,9 @@
         stateless
         absolute
         dark
+        class='background_img'
       >
-        <v-list class="pa-1">
+        <v-list class="pa-1 list_background">
           <v-list-tile v-if="mini" @click.stop="mini = !mini">
             <v-list-tile-action>
               <v-icon class='menu_arrow_right'>chevron_right</v-icon>
@@ -27,26 +28,25 @@
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
-  
-        <v-list class="pt-0" dense>
-          <v-divider light></v-divider>
-          <v-list-tile
-            v-for="item in menuRoutes"
-            :key="item.title" >
-            <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-tile-action>
-  
-            <v-list-tile-content>
-                <v-list-tile-title>
-                  <router-link :to="item.route"  >
-                    <span @click="mini = !mini">{{ item.title }}</span>
-                  </router-link>
-                  
-                  </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
+          <v-list class="pt-0 list_background min_height_menu" dense>
+            <v-divider light></v-divider>
+            <v-list-tile
+              v-for="item in menuRoutes"
+              :key="item.title" >
+              <v-list-tile-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-tile-action>
+    
+              <v-list-tile-content>
+                  <v-list-tile-title>
+                    <router-link :to="item.route"  >
+                      <span @click="mini = !mini">{{ item.title }}</span>
+                    </router-link>
+                    
+                    </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
       </v-navigation-drawer>
 </template>
 
@@ -75,7 +75,19 @@ a {
     color: #507fbd;
     cursor: pointer;
 }
-
+.list_background{
+  background: rgba(27,27,27,.74);
+}
+.min_height_menu{
+  min-height: 100% 
+}
+.background_img{
+    background-image: url(./public/imgs/menu.jpg);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+}
 .router-link-exact-active {
     color: #95c527
 }
