@@ -30,6 +30,10 @@
               <div>
                 <div class="headline">{{company.name}}</div>
                 <span>telefono: {{company.telephon}}</span>
+                <v-card-actions>
+                  <v-btn flat color="orange" :href="`mailto:${company.email}`" icon><v-icon>email</v-icon></v-btn>
+                  <v-btn flat color="orange" ><router-link :to="{ name: 'conpanyconfiguration', params: { comnpanyName: company.name}}">configurar</router-link></v-btn>
+                </v-card-actions>
               </div>
             </v-card-title>
           </v-card>

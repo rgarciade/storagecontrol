@@ -1,14 +1,14 @@
 import VueRouter from 'vue-router';
-import Prueba from './components/prueba';
-import Contacto from './components/contacto';
 import Companysfinder from './views/companysfinder';
+import conpanyconfiguration from './views/conpanyconfiguration';
 
 const routes = [
     /*     { path: '/', name: 'home', component: Prueba },
         { path: '/Contacto', name: 'Contacto', component: Contacto },
         { path: '/Empresas', name: 'Empresas', component: Companysfinder },
         { path: '*', name: '*', component: Prueba } */
-    { path: '*', name: '*', component: Companysfinder }
+    { path: '*', name: '*', component: Companysfinder },
+    { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration }
 ];
 
 const menuRoutes = [

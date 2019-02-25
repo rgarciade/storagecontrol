@@ -29,7 +29,11 @@ export default new Vuex.Store({
             store.commit('count', initial)
         },
         async findCompanys(store, text) {
+            store.commit('charging')
             store.commit('companys', await DB_Companys.findCompanys(text))
+        },
+        companyConfigurationView(store) {
+
         }
     },
 
@@ -55,6 +59,7 @@ export default new Vuex.Store({
                 temporalState.push(element)
             });
             state.companys = temporalState
+            state.progresActive = false
 
         }
     },
