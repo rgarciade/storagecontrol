@@ -39,5 +39,12 @@
 </div>
 </template>
 
-<script src="./companysfinder.js" />
-<style src="./companysfinder.css" />
+<script>
+  import { mapState, mapActions } from "vuex"
+
+  export default {
+      name: 'companysfinder',
+      computed: mapState(["companys"]),
+      methods: mapActions(["findCompanys"]),
+  }
+</script>

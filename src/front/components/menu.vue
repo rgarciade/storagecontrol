@@ -50,7 +50,33 @@
       </v-navigation-drawer>
 </template>
 
-<script src="./menu.js" />
-<style src="./menu.css" scoped>
+<script>
+  import { mapState } from "vuex"
 
+  export default {
+      name: 'Menu',
+      computed: mapState(["menuRoutes"]),
+      data() {
+          return {
+              drawer: true,
+              mini: true,
+              right: null
+          }
+      }
+  }
+</script>
+
+<style scoped>
+.menu_arrow_right {
+    margin-left: -6px;
+}
+
+a {
+    color: #507fbd;
+    cursor: pointer;
+}
+
+.router-link-exact-active {
+    color: #95c527
+}
 </style>
