@@ -8,6 +8,8 @@ export default new Vuex.Store({
     state: {
         count: 3,
         menuRoutes,
+        companyData: {},
+        companyDataContacts: [],
         progresActive: false,
         companys: []
     },
@@ -32,8 +34,13 @@ export default new Vuex.Store({
             store.commit('charging')
             store.commit('companys', await DB_Companys.findCompanys(text))
         },
-        companyConfigurationView(store, companyName) {
-            console.log(companyName)
+        async companyConfigurationView(store, companyName) {
+            let companyData = await DB_Companys.findCompanyWithData(companyName)
+            let companyDataContacts = await DB_Companys.findCompanyDataContacts(companyData[0].id)
+
+
+            store.commit('companyData', companyData)
+            store.commit('companyDataContacts', companyDataContacts)
         }
     },
 
@@ -61,6 +68,14 @@ export default new Vuex.Store({
             state.companys = temporalState
             state.progresActive = false
 
+        },
+        companyData(state, data) {
+            console.log('1', data)
+            state.companyData = data
+        },
+        companyDataContacts(state, data) {
+            console.log('2', data)
+            state.companyDataContacts = data
         }
     },
     plugins: [createSharedMutations()],

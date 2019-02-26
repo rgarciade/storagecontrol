@@ -1,15 +1,12 @@
 <template>
   <div>
     <v-form v-model="valid">
-      <v-container class='container_position' grid-list-md text-xs-center>
+      <v-container class='container_position' grid-list-md >
         <h1>Datos de la empresa</h1>
         <v-layout>
-          <v-flex
-            xs12
-            md12
-          >
+          <v-flex xs12 md12 >
             <v-text-field
-              v-model="companyName"
+              v-model="companyData[0].name"
               :rules="nameRules"
               label="Nombre de la compañia"
               required
@@ -17,34 +14,25 @@
           </v-flex>
         </v-layout>
         <v-layout>
-           <v-flex
-            xs12
-            md4
-          >
+           <v-flex xs12 md4 >
             <v-text-field
-              v-model="nombreContacto"
+              v-model="companyData[0].contact"
               :rules="nameRules"
               label="nombre de contacto"
               required
             ></v-text-field>
           </v-flex>
-           <v-flex
-            xs12
-            md4
-          >
+           <v-flex xs12 md4 >
             <v-text-field
-              v-model="telephone"
+              v-model="companyData[0].telephone"
               :rules="telephoneRules"
               label="telefono de contactor"
               required
             ></v-text-field>
           </v-flex>
-           <v-flex
-            xs12
-            md4
-          >
+           <v-flex xs12 md4 >
             <v-text-field
-              v-model="email"
+              v-model="companyData[0].email"
               :rules="emailRules"
               label="email de contacto"
               required
@@ -56,35 +44,47 @@
         </v-layout>
         <h1>otros contactos</h1>
         <v-layout>
-          
-           <v-flex
-            xs12
-            md6
-          >
+          <v-flex xs12 md3 >
             <v-text-field
               v-model="newContact"
               :rules="nameRules"
               label="nuevo contacto"
               required
-            ></v-text-field>
+            >
+            </v-text-field>
           </v-flex>
-           <v-flex
-            xs12
-            md6
-          >
+          <v-flex xs12 md3 >
             <v-text-field
               v-model="newContactEmail"
               :rules="emailRules"
-              label="nuevo contacto"
+              label="email de contacto"
               required
             ></v-text-field>
           </v-flex>
+          <v-flex xs12 md3 >
+            <v-text-field
+              v-model="newContacttelephone"
+              :rules="telephoneRules"
+              label="telefono de contacto"
+              required
+            ></v-text-field>
+          </v-flex>
+          <v-flex
+            xs12
+            md1
+          >
+            <v-btn flat icon >
+              <v-icon>playlist_add</v-icon>
+            </v-btn>
+          </v-flex>
         </v-layout>
         <v-layout justify-center row wrap>
-          <v-flex xs4>
+          <v-flex xs4 
+              v-for="companyDataContact in companyDataContacts"
+              :key="companyDataContact.idcontacts">
             <v-card>
               <v-card-title class="cyan darken-1">
-                <span class="headline white--text">Sarah Mcbeal</span>
+                <span class="headline white--text">{{companyDataContact.name}}</span>
 
                 <v-spacer></v-spacer>
                 <v-btn dark icon>
@@ -93,30 +93,28 @@
               </v-card-title>
 
               <v-list>
-                <v-list-tile >
+                <v-list-tile v-if="companyDataContact.telephone">
                   <v-list-tile-action>
                     <v-icon>phone</v-icon>
                   </v-list-tile-action>
 
-                  <v-list-tile-content>
-                    <v-list-tile-title>(650) 555-1234</v-list-tile-title>
+                  <v-list-tile-content >
+                    <v-list-tile-title >{{companyDataContact.telephone}}</v-list-tile-title>
                   </v-list-tile-content>
                 </v-list-tile>
-                <v-divider inset></v-divider>
+                <v-divider inset v-if="companyDataContact.telephone"></v-divider>
 
                 <v-list-tile >
                   <v-list-tile-action>
                     <v-icon>mail</v-icon>
                   </v-list-tile-action>
-
                   <v-list-tile-content>
-                    <v-list-tile-title>mcbeal@example.com</v-list-tile-title>
+                    <v-list-tile-title>{{companyDataContact.email}}</v-list-tile-title>
                   </v-list-tile-content>
                 </v-list-tile>
               </v-list>
             </v-card>
           </v-flex>
-
         </v-layout>
       </v-container>
     </v-form>
@@ -148,13 +146,14 @@
               nombreContacto: '',
               newContact:'',
               newContactEmail:'',
+              newContacttelephone:'',
               nameRules: [
                 v => !!v || 'nombre requerido',
                 v => v.length >= 2 || 'debe tener minimo 3 letras'
               ],
           }
       },
-      computed: mapState(["company"]),
+      computed: mapState(["companyData","companyDataContacts"]),
       methods: mapActions(["companyConfigurationView"])
   }
 </script>
