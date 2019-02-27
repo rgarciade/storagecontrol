@@ -25,5 +25,13 @@ const DB_Companys = class {
             .then((value) => value)
             .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
+    static async insertCompanyWithCompanyId(idcompany, email, name, telephone) {
+
+        return knex('contacts').insert({ idcompany, email, name, telephone })
+            .then((value) => value)
+            .catch(error => {
+                console.log(error)
+            })
+    }
 }
 module.exports = { DB_Companys }

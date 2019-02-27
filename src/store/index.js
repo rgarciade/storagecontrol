@@ -37,10 +37,16 @@ export default new Vuex.Store({
         async companyConfigurationView(store, companyName) {
             let companyData = await DB_Companys.findCompanyWithData(companyName)
             let companyDataContacts = await DB_Companys.findCompanyDataContacts(companyData[0].id)
-
-
             store.commit('companyData', companyData)
             store.commit('companyDataContacts', companyDataContacts)
+        },
+        async addNewContact(store, data) {
+            store.commit("charging")
+            let response = await DB_Companys.insertCompanyWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
+            let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.id)
+            store.commit('companyDataContacts', companyDataContacts)
+            store.commit('charged')
+
         }
     },
 

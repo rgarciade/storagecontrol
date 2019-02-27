@@ -73,7 +73,7 @@
             xs12
             md1
           >
-            <v-btn flat icon >
+            <v-btn flat icon  @click="insertNewContact">
               <v-icon>playlist_add</v-icon>
             </v-btn>
           </v-flex>
@@ -154,6 +154,19 @@
           }
       },
       computed: mapState(["companyData","companyDataContacts"]),
-      methods: mapActions(["companyConfigurationView"])
+      methods: 
+      Object.assign({},
+                      mapActions(["companyConfigurationView","addNewContact","charging"]),{
+                      insertNewContact() {
+                        let contact = {
+                          id:this.companyData[0].id,
+                          newContact:this.newContact,
+                          newContactEmail:this.newContactEmail,
+                          newContacttelephone:this.newContacttelephone
+                        }
+                        this.addNewContact(contact)
+                      } 
+
+                    })
   }
 </script>
