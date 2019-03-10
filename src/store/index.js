@@ -50,6 +50,8 @@ export default new Vuex.Store({
             console.log('text'), text
             if (text != '') {
                 store.commit('companys', await DB_Companys.findCompanys(text))
+            } else {
+                store.commit('companys', [])
             }
             store.commit('charged')
         },

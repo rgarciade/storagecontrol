@@ -12,7 +12,7 @@
     <v-text-field
       v-on:keyup ="findCompanys(textFinder)"
       label="Solo"
-      placeholder="Placeholder"
+      placeholder="Buscar"
       solo
       v-model="textFinder"
     ></v-text-field>
@@ -54,6 +54,10 @@
 
   export default {
       name: 'companysfinder',
+      created(){
+        console.log('asasaasas')
+        this.findCompanys('')
+      },
       computed: mapState(["companys"]),
       methods: mapActions(["findCompanys"])
   }
