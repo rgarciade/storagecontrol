@@ -8,6 +8,7 @@ import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 import Progress from './components/progress';
+import Alerts from './components/alerts';
 import Companysfinder from './views/companysfinder';
 
 const { router } = require('./router.js')
@@ -33,6 +34,7 @@ Vue.component('Prueba', Prueba)
 Vue.component('Contacto', Contacto)
 Vue.component('Progress', Progress)
 Vue.component('Companysfinder', Companysfinder)
+Vue.component('Alerts', Alerts)
 new Vue({
     el: '#app',
     store,

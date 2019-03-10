@@ -8,7 +8,15 @@ export default new Vuex.Store({
     state: {
         count: 3,
         menuRoutes,
-        companyData: {},
+        companyData: {
+            id: '',
+            name: '',
+            contact: '',
+            location: '',
+            telephone: '',
+            email: ''
+        },
+        alert: "",
         companyDataContacts: [],
         progresActive: false,
         companys: []
@@ -30,6 +38,9 @@ export default new Vuex.Store({
         initCount(store, initial) {
             store.commit('count', initial)
         },
+        resetAlert(store) {
+            store.commit('alert', '')
+        },
         async findCompanys(store, text) {
             store.commit('charging')
             store.commit('companys', await DB_Companys.findCompanys(text))
@@ -42,11 +53,20 @@ export default new Vuex.Store({
         },
         async addNewContact(store, data) {
             store.commit("charging")
-            let response = await DB_Companys.insertCompanyWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
+            let response = await DB_Companys.insertContactWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
             let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.id)
             store.commit('companyDataContacts', companyDataContacts)
             store.commit('charged')
 
+        },
+        async updateCompanyData(store, data) {
+            store.commit("charging")
+            store.commit('alert', '')
+            let id = data.companyId
+            delete data.companyId
+            let response = await DB_Companys.updateCompany(id, data)
+            store.commit('charged')
+            store.commit('alert', 'datos actualizados')
         }
     },
 
@@ -75,12 +95,13 @@ export default new Vuex.Store({
             state.progresActive = false
 
         },
+        alert(state, msg) {
+            state.alert = msg
+        },
         companyData(state, data) {
-            console.log('1', data)
-            state.companyData = data
+            state.companyData = data[0]
         },
         companyDataContacts(state, data) {
-            console.log('2', data)
             state.companyDataContacts = data
         }
     },

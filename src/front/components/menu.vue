@@ -7,7 +7,7 @@
         stateless
         absolute
         dark
-        class='background_img'
+        class='background_img fixedmenu'
       >
         <v-list class="pa-1 list_background">
           <v-list-tile v-if="mini" @click.stop="mini = !mini">
@@ -90,5 +90,8 @@ a {
 }
 .router-link-exact-active {
     color: #95c527
+}
+.fixedmenu{
+  position: fixed;
 }
 </style>

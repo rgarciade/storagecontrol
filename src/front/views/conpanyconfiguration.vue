@@ -6,7 +6,8 @@
         <v-layout>
           <v-flex xs12 md12 >
             <v-text-field
-              v-model="companyData[0].name"
+              :value="companyData.name"
+              id="c_name"
               :rules="nameRules"
               label="Nombre de la compañia"
               required
@@ -16,7 +17,9 @@
         <v-layout>
            <v-flex xs12 md4 >
             <v-text-field
-              v-model="companyData[0].contact"
+              :value="companyData.contact"
+              id="c_contact"
+              
               :rules="nameRules"
               label="nombre de contacto"
               required
@@ -24,7 +27,9 @@
           </v-flex>
            <v-flex xs12 md4 >
             <v-text-field
-              v-model="companyData[0].telephone"
+              :value="companyData.telephone"
+              id="c_telephone"
+              
               :rules="telephoneRules"
               label="telefono de contactor"
               required
@@ -32,7 +37,9 @@
           </v-flex>
            <v-flex xs12 md4 >
             <v-text-field
-              v-model="companyData[0].email"
+              :value="companyData.email"
+              id="c_email"
+              
               :rules="emailRules"
               label="email de contacto"
               required
@@ -40,7 +47,7 @@
           </v-flex>
         </v-layout>
         <v-layout>
-          <v-btn block color="secondary" dark>Actualizar datos</v-btn>
+          <v-btn block color="secondary"  @click="updateCompany" dark>Actualizar datos</v-btn>
         </v-layout>
         <h1>otros contactos</h1>
         <v-layout>
@@ -127,13 +134,12 @@
   export default {
       name: 'conpanyconfiguration',
       mounted(){
-          //this.companyName = this.$route.params.companyName
+         // this.companyName = this.$route.params.companyName
           this.companyConfigurationView(this.companyName)
       },
       data(){
           return {
               companyName:"casa",
-              telephone:'',
               telephoneRules: [
                 v => !!v || 'Teléfono requerido',
                 v => !isNaN(v) || 'solo se admiten caracteres numricos'
@@ -154,17 +160,34 @@
           }
       },
       computed: mapState(["companyData","companyDataContacts"]),
-      methods: 
-      Object.assign({},
-                      mapActions(["companyConfigurationView","addNewContact","charging"]),{
+      methods: Object.assign({},
+                      mapActions(["companyConfigurationView","addNewContact","updateCompanyData"]),{
                       insertNewContact() {
                         let contact = {
-                          id:this.companyData[0].id,
+                          id:this.companyData.id,
                           newContact:this.newContact,
                           newContactEmail:this.newContactEmail,
                           newContacttelephone:this.newContacttelephone
                         }
                         this.addNewContact(contact)
+                      },
+                      updateCompany(){
+                        let company = {
+                          companyId:this.companyData.id,
+                          name: document.getElementById('c_name').value,
+                          contact: document.getElementById('c_contact').value,
+                          telephone: document.getElementById('c_telephone').value,
+                          email: document.getElementById('c_email').value,
+                        }
+                        if(
+                          company.name != this.companyData.name ||
+                          company.contact != this.companyData.contact ||
+                          company.telephone != this.companyData.telephone ||
+                          company.email != this.companyData.email){
+                            this.updateCompanyData(company)
+                          }
+                        console.log(company)
+                        //this.companyData.id
                       } 
 
                     })

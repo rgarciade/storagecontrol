@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <Menu class="Mymenu" ></Menu>
+    <Alerts></Alerts>
     <Progress :active="false"></Progress>
     <router-view class='routerView' default="{name: 'home'}"></router-view> 
   </v-app>
