@@ -4,6 +4,10 @@ const { menuRoutes } = require('../front/router.js')
 const { DB_Companys } = require('../back/DB/companys')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
+const createAlert = (store, text) => {
+    store.commit('alert', '')
+    store.commit('alert', text)
+}
 export default new Vuex.Store({
     state: {
         count: 3,
@@ -61,12 +65,13 @@ export default new Vuex.Store({
         },
         async updateCompanyData(store, data) {
             store.commit("charging")
-            store.commit('alert', '')
+                //store.commit('alert', '')
             let id = data.companyId
             delete data.companyId
             let response = await DB_Companys.updateCompany(id, data)
             store.commit('charged')
-            store.commit('alert', 'datos actualizados')
+            createAlert(store, 'datos actualizados')
+                // store.commit('alert', 'datos actualizados')
         }
     },
 
