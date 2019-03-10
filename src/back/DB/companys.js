@@ -32,6 +32,16 @@ const DB_Companys = class {
                 console.log(error)
             })
     }
+    static async deleteContacts(idcontacts) {
+
+        return knex
+            .table('contacts')
+            .where('idcontacts', idcontacts)
+            .del()
+            .catch(error => {
+                console.log(error)
+            })
+    }
     static async findCompanyDataContacts(companyId) {
         return knex.select()
             .table('contacts')

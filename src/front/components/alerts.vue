@@ -13,7 +13,7 @@
           flat
           @click="msg = false"
         >
-          Close
+          Cerrar
         </v-btn>
       </v-snackbar>
     </div>

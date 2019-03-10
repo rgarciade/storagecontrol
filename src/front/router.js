@@ -7,9 +7,9 @@ const routes = [
         { path: '/Contacto', name: 'Contacto', component: Contacto },
         { path: '/Empresas', name: 'Empresas', component: Companysfinder },
         { path: '*', name: '*', component: Prueba } */
-    // { path: '*', name: '*', component: Companysfinder },
-    //{ path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration }
-    { path: '*', name: 'conpanyconfiguration', component: conpanyconfiguration }
+    { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
+    { path: '*', name: '*', component: Companysfinder }
+    //{ path: '*', name: 'conpanyconfiguration', component: conpanyconfiguration }
 ];
 
 const menuRoutes = [

@@ -47,7 +47,11 @@ export default new Vuex.Store({
         },
         async findCompanys(store, text) {
             store.commit('charging')
-            store.commit('companys', await DB_Companys.findCompanys(text))
+            console.log('text'), text
+            if (text != '') {
+                store.commit('companys', await DB_Companys.findCompanys(text))
+            }
+            store.commit('charged')
         },
         async companyConfigurationView(store, companyName) {
             let companyData = await DB_Companys.findCompanyWithData(companyName)
@@ -57,21 +61,28 @@ export default new Vuex.Store({
         },
         async addNewContact(store, data) {
             store.commit("charging")
-            let response = await DB_Companys.insertContactWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
+            await DB_Companys.insertContactWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
             let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.id)
             store.commit('companyDataContacts', companyDataContacts)
             store.commit('charged')
-
+            createAlert(store, 'contacto añadido')
+        },
+        async deleteContactFromId(store, data) {
+            store.commit("charging")
+            console.log('companyId', data)
+            await DB_Companys.deleteContacts(data.deleteFocustId)
+            let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.companyId)
+            store.commit('companyDataContacts', companyDataContacts)
+            store.commit('charged')
+            createAlert(store, 'contacto eliminado')
         },
         async updateCompanyData(store, data) {
             store.commit("charging")
-                //store.commit('alert', '')
             let id = data.companyId
             delete data.companyId
-            let response = await DB_Companys.updateCompany(id, data)
+            await DB_Companys.updateCompany(id, data)
             store.commit('charged')
             createAlert(store, 'datos actualizados')
-                // store.commit('alert', 'datos actualizados')
         }
     },
 
@@ -97,7 +108,6 @@ export default new Vuex.Store({
                 temporalState.push(element)
             });
             state.companys = temporalState
-            state.progresActive = false
 
         },
         alert(state, msg) {

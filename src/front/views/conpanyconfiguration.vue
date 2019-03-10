@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="arrowback" @click="goLastRoute">
+      <v-icon>arrow_back_ios</v-icon>
+    </div>
     <v-form v-model="valid">
       <v-container class='container_position' grid-list-md >
         <h1>Datos de la empresa</h1>
@@ -65,6 +68,7 @@
               v-model="newContactEmail"
               :rules="emailRules"
               label="email de contacto"
+              :error="contactEmailError"
               required
             ></v-text-field>
           </v-flex>
@@ -81,7 +85,7 @@
             md1
           >
             <v-btn flat icon  @click="insertNewContact">
-              <v-icon>playlist_add</v-icon>
+              <v-icon>person_add</v-icon>
             </v-btn>
           </v-flex>
         </v-layout>
@@ -94,9 +98,10 @@
                 <span class="headline white--text">{{companyDataContact.name}}</span>
 
                 <v-spacer></v-spacer>
-                <v-btn dark icon>
-                  <v-icon>edit</v-icon>
-                </v-btn>
+                <v-btn dark icon @click="deleteContact(companyDataContact.idcontacts)">
+                  <v-icon color="red lighten-2">
+                    delete_forever</v-icon>
+                  </v-btn>
               </v-card-title>
 
               <v-list>
@@ -134,7 +139,8 @@
   export default {
       name: 'conpanyconfiguration',
       mounted(){
-         // this.companyName = this.$route.params.companyName
+        
+          this.companyName = this.$route.params.companyName
           this.companyConfigurationView(this.companyName)
       },
       data(){
@@ -145,6 +151,7 @@
                 v => !isNaN(v) || 'solo se admiten caracteres numricos'
               ],
               email: '',
+              contactEmailError: false,
               emailRules: [
                 v => !!v || 'E-mail requerido',
                 v => /.+@.+/.test(v) || 'debe usar un E-mail valido'
@@ -161,7 +168,7 @@
       },
       computed: mapState(["companyData","companyDataContacts"]),
       methods: Object.assign({},
-                      mapActions(["companyConfigurationView","addNewContact","updateCompanyData"]),{
+                      mapActions(["companyConfigurationView","addNewContact","updateCompanyData","deleteContactFromId"]),{
                       insertNewContact() {
                         let contact = {
                           id:this.companyData.id,
@@ -169,7 +176,12 @@
                           newContactEmail:this.newContactEmail,
                           newContacttelephone:this.newContacttelephone
                         }
-                        this.addNewContact(contact)
+                        if(contact.newContactEmail && /.+@.+/.test(contact.newContactEmail)){
+                          this.contactEmailError = false
+                          this.addNewContact(contact)
+                        }else{
+                          this.contactEmailError = true
+                        }
                       },
                       updateCompany(){
                         let company = {
@@ -188,7 +200,17 @@
                           }
                         console.log(company)
                         //this.companyData.id
-                      } 
+                      },
+                      deleteContact(deleteFocustId){
+                          const data = {
+                            companyId:this.companyData.id,
+                            deleteFocustId:deleteFocustId
+                          }
+                          this.deleteContactFromId(data)
+                      },
+                      goLastRoute(){
+                        this.$router.go(-1)
+                      }
 
                     })
   }

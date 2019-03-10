@@ -29,9 +29,23 @@ body {
     overflow-x: hidden;
 }
 .container_position{
-      margin-top: 1%;
+  margin-top: 2em;
 }
 a{
   text-decoration: none;
 }
+.arrowback{
+    position: absolute;
+    margin-top: 1em;
+    margin-left: 1em;
+    cursor: pointer;
+}
+.button_add_company{
+  position: absolute;
+    margin-left: 90%;
+}
+.button_add_company:hover{
+  position: absolute !important;
+}
+
 </style>
