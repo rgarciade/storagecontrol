@@ -47,7 +47,6 @@ export default new Vuex.Store({
         },
         async findCompanys(store, text) {
             store.commit('charging')
-            console.log('text'), text
             if (text != '') {
                 store.commit('companys', await DB_Companys.findCompanys(text))
             } else {
@@ -71,7 +70,6 @@ export default new Vuex.Store({
         },
         async deleteContactFromId(store, data) {
             store.commit("charging")
-            console.log('companyId', data)
             await DB_Companys.deleteContacts(data.deleteFocustId)
             let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.companyId)
             store.commit('companyDataContacts', companyDataContacts)
