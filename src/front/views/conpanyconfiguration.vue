@@ -18,17 +18,7 @@
           </v-flex>
         </v-layout>
         <v-layout>
-           <v-flex xs12 md4 >
-            <v-text-field
-              :value="companyData.contact"
-              id="c_contact"
-              
-              :rules="nameRules"
-              label="nombre de contacto"
-              required
-            ></v-text-field>
-          </v-flex>
-           <v-flex xs12 md4 >
+          <v-flex xs12  md3>
             <v-text-field
               :value="companyData.telephone"
               id="c_telephone"
@@ -38,16 +28,90 @@
               required
             ></v-text-field>
           </v-flex>
-           <v-flex xs12 md4 >
+          <v-flex xs12  md2>
+            <v-text-field
+              :value="companyData.mobile"
+              id="c_mobile"
+              label="movil"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12  md2>
+            <v-text-field
+              :value="companyData.contact"
+              id="c_contact"
+              :rules="nameRules"
+              label="nombre de contacto"
+              required
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs12  md3>
+              <v-text-field
+                :value="companyData.banck"
+                id="c_banck"
+                label="banco"
+              ></v-text-field>
+          </v-flex>
+          <v-flex xs12  md2>
+            <v-text-field
+              :value="companyData.cta"
+              id="c_cta"
+              label="cta"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
+        <v-layout>
+          <v-flex xs12 m2>
             <v-text-field
               :value="companyData.email"
               id="c_email"
               
               :rules="emailRules"
-              label="email de contacto"
+              label="email de facturación"
               required
             ></v-text-field>
           </v-flex>
+          <v-flex xs12  md2>
+            <v-text-field
+              :value="companyData.state"
+              id="c_state"
+              label="provincia"
+            ></v-text-field>
+            </v-flex>
+            <v-flex xs12  md2>
+              <v-text-field
+                :value="companyData.city"
+                id="city"
+                label="localidad/ciudad"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12  md3>
+              <v-text-field
+                :value="companyData.postalcode"
+                id="c_postalcode"
+                label="codigo postal"
+              ></v-text-field>
+            </v-flex>
+            <v-flex xs12  md3>
+              <v-text-field
+                :value="companyData.street"
+                id="c_street"
+                label="calle"
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex xs12 >
+              <v-textarea
+                solo
+                id="c_notas"
+                label="Notas"
+                :value="companyData.notas"
+                box
+                clearable
+                auto-grow
+                counter="512"
+              ></v-textarea>
+            </v-flex>
         </v-layout>
         <v-layout>
           <v-btn block color="secondary"  @click="updateCompany" dark>Actualizar datos</v-btn>
@@ -190,6 +254,7 @@
                           contact: document.getElementById('c_contact').value,
                           telephone: document.getElementById('c_telephone').value,
                           email: document.getElementById('c_email').value,
+                          mobile: document.getElementById('c_mobile').value,
                         }
                         if(
                           company.name != this.companyData.name ||

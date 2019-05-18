@@ -4,9 +4,11 @@ import conpanyconfiguration from './views/conpanyconfiguration';
 
 const routes = [
     /*     { path: '/', name: 'home', component: Prueba },
-        { path: '/Contacto', name: 'Contacto', component: Contacto },
-        { path: '/Empresas', name: 'Empresas', component: Companysfinder },
-        { path: '*', name: '*', component: Prueba } */
+     { path: '*', name: '*', component: Prueba } 
+    
+    { path: '/Contacto', name: 'Contacto', component: Contacto },*/
+    { path: '/Empresas', name: 'Empresas', component: Companysfinder },
+
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
     { path: '*', name: '*', component: Companysfinder }
     //{ path: '*', name: 'conpanyconfiguration', component: conpanyconfiguration }
@@ -19,8 +21,7 @@ const menuRoutes = [
 ]
 
 const router = new VueRouter({
-    routes,
-    mode: 'history'
+    routes
 })
 module.exports = {
     menuRoutes,
