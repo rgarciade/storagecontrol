@@ -3,18 +3,17 @@ const knex = require('./connection')
 const DB_Companys = class {
 
     static async findCompanys(text) {
-            return knex.select()
-                .table('companys')
-                .where('name', 'like', `%${text}%`)
-                .then((value) => value)
-                .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+        return knex.select()
+            .table('companys')
+            .where('name', 'like', `%${text}%`)
+            .then((value) => value)
+            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 
-        }
-        /*
-            datas: {name, contact, location, telephone, email}
-        */
+    }
+
     static async updateCompany(id, datas) {
         debugger
+        console.log('--', datas)
         return knex
             .table('companys')
             .where('id', id)
@@ -47,7 +46,7 @@ const DB_Companys = class {
             .table('contacts')
             .where('idcompany', companyId)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.log(error))
 
     }
     static async findCompanyWithData(name) {
@@ -55,13 +54,22 @@ const DB_Companys = class {
             .table('companys')
             .where('name', name)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.log(error))
     }
     static async insertContactWithCompanyId(idcompany, email, name, telephone) {
 
         return knex
             .table('contacts').insert({ idcompany, email, name, telephone })
             .then((value) => value)
+            .catch(error => {
+                console.log(error)
+            })
+    }
+    static async insertCompany(data) {
+
+        return knex
+            .table('companys').insert(data)
+            .then((value) => console.log('insertCompany', value))
             .catch(error => {
                 console.log(error)
             })

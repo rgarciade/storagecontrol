@@ -10,6 +10,7 @@ import Contacto from './components/contacto';
 import Progress from './components/progress';
 import Alerts from './components/alerts';
 import Companysfinder from './views/companysfinder';
+import newcompany from './components/newcompany';
 
 const { router } = require('./router.js')
 import store from "../store"
@@ -35,6 +36,7 @@ Vue.component('Contacto', Contacto)
 Vue.component('Progress', Progress)
 Vue.component('Companysfinder', Companysfinder)
 Vue.component('Alerts', Alerts)
+Vue.component('Newcompany', newcompany)
 new Vue({
     el: '#app',
     store,

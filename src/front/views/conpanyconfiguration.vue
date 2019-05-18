@@ -73,14 +73,14 @@
           <v-flex xs12  md2>
             <v-text-field
               :value="companyData.state"
-              id="c_state"
+              id="c_province"
               label="provincia"
             ></v-text-field>
             </v-flex>
             <v-flex xs12  md2>
               <v-text-field
                 :value="companyData.city"
-                id="city"
+                id="c_city"
                 label="localidad/ciudad"
               ></v-text-field>
             </v-flex>
@@ -199,6 +199,7 @@
 
 <script>
   import { mapState, mapActions } from "vuex"
+  import { findChangesInObjetExist } from "../functions/commonFunctions"
 
   export default {
       name: 'conpanyconfiguration',
@@ -255,16 +256,19 @@
                           telephone: document.getElementById('c_telephone').value,
                           email: document.getElementById('c_email').value,
                           mobile: document.getElementById('c_mobile').value,
-                        }
-                        if(
-                          company.name != this.companyData.name ||
-                          company.contact != this.companyData.contact ||
-                          company.telephone != this.companyData.telephone ||
-                          company.email != this.companyData.email){
+                          banck: document.getElementById('c_banck').value,
+                          cta: document.getElementById('c_cta').value,
+                          province: document.getElementById('c_province').value,
+                          city: document.getElementById('c_city').value,
+                          postalcode: document.getElementById('c_postalcode').value,
+                          street: document.getElementById('c_street').value,
+                          notas: document.getElementById('c_notas').value
+                        } 
+                        console.log(company)
+                        if(findChangesInObjetExist(company,this.companyData)){
                             this.updateCompanyData(company)
                           }
-                        console.log(company)
-                        //this.companyData.id
+                       
                       },
                       deleteContact(deleteFocustId){
                           const data = {

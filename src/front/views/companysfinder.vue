@@ -1,10 +1,14 @@
 <template>
+
   <div>
+    <Newcompany
+    v-bind:active="activeNewCompany"
+    @disable="activeNewCompany = $event "></Newcompany>
     <div>
     <v-card>
       <v-card-title class="headline primary lighten-3">
           Empresas
-            <v-btn flat icon  class="button_add_company" @click="">
+            <v-btn flat icon  class="button_add_company" @click="activeNewCompany = true">
               <v-icon>add_comment</v-icon>
             </v-btn>
       </v-card-title>
@@ -55,10 +59,17 @@
   export default {
       name: 'companysfinder',
       created(){
-        console.log('asasaasas')
         this.findCompanys('')
       },
+      data(){
+        return  {
+          activeNewCompany:false
+        }
+      },
       computed: mapState(["companys"]),
-      methods: mapActions(["findCompanys"])
+      methods: Object.assign({},
+                  mapActions(["findCompanys"]),{
+                    
+                  })
   }
 </script>

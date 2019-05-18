@@ -83,6 +83,12 @@ export default new Vuex.Store({
             await DB_Companys.updateCompany(id, data)
             store.commit('charged')
             createAlert(store, 'datos actualizados')
+        },
+        async createCompany(store, data) {
+            store.commit("charging")
+            await DB_Companys.insertCompany(data)
+            store.commit('charged')
+            createAlert(store, 'Comnpañia creada actualizados')
         }
     },
 
