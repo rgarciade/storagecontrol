@@ -34,7 +34,9 @@
               v-for="item in menuRoutes"
               :key="item.title" >
               <v-list-tile-action>
-                <v-icon>{{ item.icon }}</v-icon>
+                <router-link :to="item.route"  >
+                  <v-icon>{{ item.icon }}</v-icon>
+                </router-link>
               </v-list-tile-action>
     
               <v-list-tile-content>
@@ -42,8 +44,7 @@
                     <router-link :to="item.route"  >
                       <span @click="mini = !mini">{{ item.title }}</span>
                     </router-link>
-                    
-                    </v-list-tile-title>
+                  </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list>
