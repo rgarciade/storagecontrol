@@ -34,6 +34,7 @@
                     <div>
                       <div class="headline">{{company.name}}</div>
                       <span>telefono: {{company.telephone}}</span>
+                      <span>cif: {{company.cif}}</span>
                       <v-card-actions>
                         <v-btn flat color="orange" :href="`mailto:${company.email}`" icon><v-icon>email</v-icon></v-btn>
                         <router-link :to="{ name: 'conpanyconfiguration', params: { companyId: company.id}}"><v-btn flat color="orange" >ver</v-btn></router-link>
@@ -67,8 +68,6 @@
       },
       computed: mapState(["companys"]),
       methods: Object.assign({},
-                  mapActions(["findCompanys"]),{
-                    
-                  })
+                  mapActions(["findCompanys"]),{})
   }
 </script>

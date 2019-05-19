@@ -14,6 +14,7 @@ export default new Vuex.Store({
         menuRoutes,
         companyData: {
             id: '',
+            cif: '',
             name: '',
             contact: '',
             location: '',

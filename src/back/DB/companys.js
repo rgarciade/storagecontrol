@@ -6,6 +6,7 @@ const DB_Companys = class {
         return knex.select()
             .table('companys')
             .where('name', 'like', `%${text}%`)
+            .orWhere('cif', 'like', `%${text}%`)
             .then((value) => value)
             .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 

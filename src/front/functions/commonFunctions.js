@@ -1,6 +1,7 @@
 const findChangesInObjetExist = (initialObjet, newObjet) => {
+
     for (var key in newObjet) {
-        if (newObjet[key] && initialObjet[key] && (newObjet[key] != initialObjet[key])) {
+        if (newObjet.hasOwnProperty(key) && initialObjet.hasOwnProperty(key) && (newObjet[key] != initialObjet[key])) {
             return true
         }
     }

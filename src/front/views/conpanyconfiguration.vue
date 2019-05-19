@@ -7,12 +7,20 @@
       <v-container class='container_position' grid-list-md >
         <h1>Datos de la empresa</h1>
         <v-layout>
-          <v-flex xs12 md12 >
+          <v-flex xs6 md6 >
             <v-text-field
               :value="companyData.name"
               id="c_name"
               :rules="nameRules"
               label="Nombre de la compañia"
+              required
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs6 md6 >
+            <v-text-field
+              :value="companyData.cif"
+              id="c_cif"
+              label="cif de la compañia"
               required
             ></v-text-field>
           </v-flex>
@@ -246,6 +254,7 @@
                       updateCompany(){
                         let company = {
                           companyId:this.companyData.id,
+                          cif:document.getElementById('c_cif').value,
                           name: document.getElementById('c_name').value,
                           contact: document.getElementById('c_contact').value,
                           telephone: document.getElementById('c_telephone').value,
