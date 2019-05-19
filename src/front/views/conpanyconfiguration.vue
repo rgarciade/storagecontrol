@@ -199,36 +199,31 @@
 
 <script>
   import { mapState, mapActions } from "vuex"
-  import { findChangesInObjetExist } from "../functions/commonFunctions"
+  import { findChangesInObjetExist,checkInputs } from "../functions/commonFunctions"
 
   export default {
       name: 'conpanyconfiguration',
-      mounted(){
-        
-          this.companyName = this.$route.params.companyName
-          this.companyConfigurationView(this.companyName)
+      async mounted(){
+        let id = await this.$route.params.companyId
+        if( id !== undefined){
+          this.companyId = id
+          this.companyName = this.companyConfigurationView(id)
+        }else{
+          this.$router.push({name:'Empresas'})
+        }
       },
       data(){
           return {
-              companyName:"casa",
-              telephoneRules: [
-                v => !!v || 'Teléfono requerido',
-                v => !isNaN(v) || 'solo se admiten caracteres numricos'
-              ],
+              companyName:'',
+              telephoneRules: checkInputs.telephoneRules,
               email: '',
               contactEmailError: false,
-              emailRules: [
-                v => !!v || 'E-mail requerido',
-                v => /.+@.+/.test(v) || 'debe usar un E-mail valido'
-              ],
+              emailRules: checkInputs.emailRules,
               nombreContacto: '',
               newContact:'',
               newContactEmail:'',
               newContacttelephone:'',
-              nameRules: [
-                v => !!v || 'nombre requerido',
-                v => v.length >= 2 || 'debe tener minimo 3 letras'
-              ],
+              nameRules: checkInputs.nameRules,
           }
       },
       computed: mapState(["companyData","companyDataContacts"]),

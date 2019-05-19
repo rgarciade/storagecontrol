@@ -1,57 +1,98 @@
 <template>
-    <v-dialog v-model="active" persistent max-width="500px">
+    <v-dialog v-model="active" persistent max-width="70%">
           <v-card>
             <v-card-title>
               Creación de Cliente
             </v-card-title>
             <v-card-text>
-                <v-form v-model="valid">
+                <v-form 
+                ref="form"
+                lazy-validation
+                v-model="valid">
                 <v-text-field
-                    :value="companyData.name"
-                    id="c_name"
+                    v-model="companyData.name"
                     :rules="nameRules"
                     label="Nombre de la compañia"
                     required
                 ></v-text-field>
                 <v-text-field
-                    :value="companyData.contact"
-                    id="c_contact"
+                    v-model="companyData.contact"
                     :rules="nameRules"
                     label="nombre de contacto"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="companyData.telephone"
+                    label="telefono de contactor"
+                    :rules="telephoneRules"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="companyData.email"
+                    label="email de contactor"
+                    :rules="emailRules"
                     required
                 ></v-text-field>
              </v-form>
             </v-card-text>
             <v-card-actions>
                 <v-btn 
-                :disabled="!valid">Crear usuario</v-btn>
-                <v-btn @click="disableModal()">Cerrar</v-btn>
+                :disabled="!valid" @click="newCompany" color="success">Crear usuario</v-btn>
+                <v-btn @click="disableModal()" >Cerrar</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
 </template>
 <script>
-    import { mapActions } from "vuex"
+    import { mapActions,mapState } from "vuex"
+    import { checkInputs } from "../functions/commonFunctions"
     export default {
         name: 'newcompany',
         data(){
           return {
             valid: true,
             companyData:{
-                name:'',
-                contact:''
-            }
+                name:'aaa',
+                contact:'aaa',
+                telephone:'999',
+                email:'aa@a'
+            },
+            nameRules: checkInputs.nameRules,
+            emailRules: checkInputs.emailRules,
+            telephoneRules: checkInputs.telephoneRules,
           }
         },
         props: {
           active: Boolean
         },
+        computed: mapState(["newCompanyDataId"]),
         methods: Object.assign({},
           mapActions(["createCompany"]),{
           disableModal(){
             this.$emit('disable', false)
+          },
+          async newCompany(){
+            if(this.validate()){
+              let newId = await this.createCompany(this.companyData)
+             // this.$router.push({name:'conpanyconfiguration'})
+            }
+            
+            
+          },
+          validate () {
+            if (this.$refs.form.validate()) {
+              this.snackbar = true
+              return true
+            }
+            return false
           }
-        })                    
+
+        }),
+        watch: {
+          newCompanyDataId : function (id) {
+            this.$router.push({name:'conpanyconfiguration',params:{companyId:id}})
+          }
+        }                    
     }
 </script>
 <style>

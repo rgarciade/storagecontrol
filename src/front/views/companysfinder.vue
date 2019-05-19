@@ -36,7 +36,7 @@
                       <span>telefono: {{company.telephone}}</span>
                       <v-card-actions>
                         <v-btn flat color="orange" :href="`mailto:${company.email}`" icon><v-icon>email</v-icon></v-btn>
-                        <router-link :to="{ name: 'conpanyconfiguration', params: { companyName: company.name}}"><v-btn flat color="orange" >ver</v-btn></router-link>
+                        <router-link :to="{ name: 'conpanyconfiguration', params: { companyId: company.id}}"><v-btn flat color="orange" >ver</v-btn></router-link>
                       </v-card-actions>
                     </div>
                   </v-card-title>

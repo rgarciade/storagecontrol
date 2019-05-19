@@ -20,6 +20,7 @@ export default new Vuex.Store({
             telephone: '',
             email: ''
         },
+        newCompanyDataId: 0,
         alert: "",
         companyDataContacts: [],
         progresActive: false,
@@ -54,8 +55,8 @@ export default new Vuex.Store({
             }
             store.commit('charged')
         },
-        async companyConfigurationView(store, companyName) {
-            let companyData = await DB_Companys.findCompanyWithData(companyName)
+        async companyConfigurationView(store, companyId) {
+            let companyData = await DB_Companys.findCompanyWithData(companyId)
             let companyDataContacts = await DB_Companys.findCompanyDataContacts(companyData[0].id)
             store.commit('companyData', companyData)
             store.commit('companyDataContacts', companyDataContacts)
@@ -86,9 +87,10 @@ export default new Vuex.Store({
         },
         async createCompany(store, data) {
             store.commit("charging")
-            await DB_Companys.insertCompany(data)
+            let newId = await DB_Companys.insertCompany(data).then(value => value[0])
             store.commit('charged')
-            createAlert(store, 'Comnpañia creada actualizados')
+            createAlert(store, 'Comnpañia creada')
+            store.commit('addNewCompanyDataId', newId)
         }
     },
 
@@ -121,6 +123,9 @@ export default new Vuex.Store({
         },
         companyData(state, data) {
             state.companyData = data[0]
+        },
+        addNewCompanyDataId(state, id) {
+            state.newCompanyDataId = id
         },
         companyDataContacts(state, data) {
             state.companyDataContacts = data

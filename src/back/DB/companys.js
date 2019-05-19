@@ -49,10 +49,10 @@ const DB_Companys = class {
             .catch(error => console.log(error))
 
     }
-    static async findCompanyWithData(name) {
+    static async findCompanyWithData(companyId) {
         return knex.select()
             .table('companys')
-            .where('name', name)
+            .where('id', companyId)
             .then((value) => value)
             .catch(error => console.log(error))
     }
@@ -69,7 +69,7 @@ const DB_Companys = class {
 
         return knex
             .table('companys').insert(data)
-            .then((value) => console.log('insertCompany', value))
+            .then((value) => value)
             .catch(error => {
                 console.log(error)
             })
