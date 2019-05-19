@@ -260,7 +260,7 @@
                           telephone: document.getElementById('c_telephone').value,
                           email: document.getElementById('c_email').value,
                           mobile: document.getElementById('c_mobile').value,
-                          banck: document.getElementById('c_banck').value,
+                          banck: document.getElementById('c_banck').value.toUpperCase(),
                           cta: document.getElementById('c_cta').value,
                           province: document.getElementById('c_province').value,
                           city: document.getElementById('c_city').value,
