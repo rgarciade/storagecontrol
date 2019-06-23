@@ -1,3 +1,6 @@
+const basePrice = (price, vat, decimals = 2) => {
+    return (price / ((vat / 100) + 1)).toFixed(decimals)
+}
 const findChangesInObjetExist = (initialObjet, newObjet) => {
 
     for (var key in newObjet) {
@@ -21,7 +24,8 @@ const checkInputs = {
         v => v.length > 2 || 'debe tener minimo 3 letras'
     ],
     idMaxLength: [
-        v => v > 13 || 'maximo 13 caracteres',
+        v => !!v || 'no es obligatorio',
+        v => v.length < 13 || 'maximo 13 caracteres',
     ]
 }
-module.exports = { findChangesInObjetExist, checkInputs }
+module.exports = { basePrice, findChangesInObjetExist, checkInputs }

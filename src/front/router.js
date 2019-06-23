@@ -6,7 +6,6 @@ import conpanyconfiguration from './views/conpanyconfiguration';
 const routes = [
     { path: '/Articles', name: 'Articles', component: Articles },
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
-
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
     { path: '*', name: '*', component: Companysfinder }
 ];
