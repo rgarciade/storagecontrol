@@ -79,8 +79,17 @@ export default new Vuex.Store({
             let id = data.idarticles
             delete data.idarticles
             await DB_Articles.updateArticle(id, data)
+            store.commit('articles', await DB_Articles.findArticles())
             store.commit('charged')
             createAlert(store, 'articulo actualizado')
+                //deleteArticle
+        },
+        async deleteArticleFromId(store, data) {
+            store.commit("charging")
+            await DB_Articles.deleteArticle(data.idarticles)
+            store.commit('articles', await DB_Articles.findArticles())
+            store.commit('charged')
+            createAlert(store, 'articulo eliminado')
         },
         async findCompanys(store, text) {
             store.commit('charging')

@@ -144,7 +144,7 @@
     this.findArticles('')
   },
   methods: 
-    Object.assign({},mapActions(["addNewArticle","findArticles","updateArticle"]),{
+    Object.assign({},mapActions(["addNewArticle","findArticles","updateArticle","deleteArticleFromId"]),{
 
     statusNewItem(status = true){
       this.newItem = status
@@ -158,6 +158,8 @@
     deleteItem (item) {
       this.statusNewItem(false)
       const index = this.articles.indexOf(item)
+      console.log(item)
+      this.deleteArticleFromId(item)
       //confirm('Are you sure you want to delete this item?') && this.articles.splice(index, 1)
     },
     close () {
@@ -170,14 +172,14 @@
     async save () {
       if (this.newItem) {
         let article = {
-          productId:this.editedItem.productId,
+          productId:parseInt(this.editedItem.productId),
           description:this.editedItem.description,
-          units:this.editedItem.units,
-          purchase_price:this.editedItem.purchase_price,
-          public_price:this.editedItem.public_price
+          units:parseInt(this.editedItem.units),
+          purchase_price:parseInt(this.editedItem.purchase_price),
+          public_price:parseInt(this.editedItem.public_price)
         }
-       await this.addNewArticle(article)
-       this.findArticles('')
+        await this.addNewArticle(article)
+        this.findArticles('')
       } else {
         let media = (this.articles[this.editedIndex].purchase_price + this.editedItem.purchase_price) / 2
         let article = {
@@ -190,7 +192,6 @@
           media:parseInt(media),
         }
         await this.updateArticle(article)
-        this.findArticles('')
       }
       this.close()
     }

@@ -2,7 +2,7 @@ const knex = require('./connection')
 const tableName = 'articles';
 const DB_Articles = class {
 
-    static async findArticles(text) {
+    static async findArticles(text = '') {
         return knex.select()
             .table(tableName)
             .where('description', 'like', `%${text}%`)
