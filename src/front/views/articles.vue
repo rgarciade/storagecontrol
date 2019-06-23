@@ -1,84 +1,98 @@
 <template>
-     <div>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>Articulos</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="60%">
-          <template v-slot:activator="{ on }">
-            <v-btn color="primary" @click="statusNewItem(true)" dark class="mb-2" v-on="on">Nuevo Articulo</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.productId" label="Id del prroducto" :rules="idMaxLength" validate-on-blur></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.description" label="Descripción" ></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.price_without_vat" disabled label="precio de compra sin iva"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.purchase_price" label="precio de compra"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.public_price" label="precio de venta"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.units" label="unidades"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
-              <v-btn color="blue darken-1" flat @click="save">Guardar</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-
-      <v-data-table
-        :headers="headers"
-        :items="articles"
-        class="elevation-1"
-        :rows-per-page-items="rowsPerPage"
-        rows-per-page-text="Listados por pagina"
-        
-        
-      >
-        <template v-slot:items="props">
-          <td>{{ props.item.productId }}</td>
-          <td>{{ props.item.description }}</td>
-          <td>{{ props.item.price_without_vat }}</td>
-          <td>{{ props.item.purchase_price }}</td>
-          <td>{{ props.item.public_price }}</td>
-          <td>21</td>
-          <td>{{ props.item.units }}</td>
-          <td class="justify-center layout px-0">
-            <v-icon
-              small
-              class="mr-2"
-              @click="editItem(props.item)"
-            >
-              edit
-            </v-icon>
-            <v-icon
-              small
-              @click="deleteItem(props.item)"
-            >
-              delete
-            </v-icon>
-          </td>
-        </template>
-      </v-data-table>
+     
+  <div>
+    <div>
+        <v-card>
+          <v-card-title class="headline primary lighten-3">
+              Articulos
+          </v-card-title>
+        </v-card>
+        <v-text-field
+          v-on:keyup ="findArticles(textFinder)"
+          label="Solo"
+          placeholder="Buscar"
+          solo
+          v-model="textFinder"
+        ></v-text-field>
     </div>
+    <v-toolbar flat color="white">
+      <v-spacer></v-spacer>
+      <v-dialog v-model="dialog" max-width="60%">
+        <template v-slot:activator="{ on }">
+          <v-btn color="primary" @click="statusNewItem(true)" dark class="mb-2" v-on="on">Nuevo Articulo</v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{ formTitle }}</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.productId" label="Id del prroducto" :rules="idMaxLength" validate-on-blur></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.description" label="Descripción" ></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.price_without_vat" disabled label="precio de compra sin iva"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.purchase_price" label="precio de compra"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.public_price" label="precio de venta"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field v-model="editedItem.units" label="unidades"></v-text-field>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
+            <v-btn color="blue darken-1" flat @click="save">Guardar</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-toolbar>
+
+    <v-data-table
+      :headers="headers"
+      :items="articles"
+      class="elevation-1"
+      :rows-per-page-items="rowsPerPage"
+      rows-per-page-text="Listados por pagina"
+      
+      
+    >
+      <template v-slot:items="props">
+        <td>{{ props.item.productId }}</td>
+        <td>{{ props.item.description }}</td>
+        <td>{{ props.item.price_without_vat }}</td>
+        <td>{{ props.item.purchase_price }}</td>
+        <td>{{ props.item.public_price }}</td>
+        <td>21</td>
+        <td>{{ props.item.units }}</td>
+        <td class="justify-center layout px-0 actions_icons">
+          <v-icon
+            small
+            class="mr-2 "
+            @click="editItem(props.item)"
+          >
+            edit
+          </v-icon>
+          <v-icon
+            small
+            @click="deleteItem(props.item)"
+          >
+            delete
+          </v-icon>
+        </td>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -91,7 +105,7 @@
       newItem:false,
       vat:21,
       idMaxLength:checkInputs.idMaxLength,
-      rowsPerPage:[10,25,50,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
+      rowsPerPage:[25,50,100,200,{"text":"$vuetify.dataIterator.rowsPerPageAll","value":-1}],
       dialog: false,
       headers: [
         { text: 'Id Articulo',value: 'productId'},
@@ -104,9 +118,10 @@
         { text: 'Acciones', value: 'name', sortable: false }
       ],
       desserts: [],
+      textFinder:'',
       editedIndex: -1,
       editedItem: {
-        productId: 0,
+        productId: '',
         description: null,
         units: null,
         purchase_price:null,
@@ -114,11 +129,11 @@
         public_price: null
       },
       defaultItem: {
-        productId: 0,
+        productId: '',
         description: null,
         units: null,
         purchase_price:null,
-        price_without_vat: null,
+        price_without_vat: 0,
         public_price: null
       }
   }),
@@ -202,3 +217,4 @@
   }) 
 }
 </script>
+
