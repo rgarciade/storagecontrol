@@ -140,7 +140,6 @@
             deep: true
         }    
   },
-
   created () {
     this.findArticles('')
   },
@@ -180,17 +179,18 @@
        await this.addNewArticle(article)
        this.findArticles('')
       } else {
-        let media = (this.articles[this.editedIndex].purchase_price + this.editedItem.purchase_price) /2
+        let media = (this.articles[this.editedIndex].purchase_price + this.editedItem.purchase_price) / 2
         let article = {
-          idarticle:this.editedItem.idarticle,
+          idarticles:parseInt(this.articles[this.editedIndex].idarticles),
           description:this.editedItem.description,
-          productId:this.editedItem.productId,
-          public_price:this.editedItem.public_price,
-          purchase_price:this.editedItem.purchase_price,
-          units:this.editedItem.units,
-          media:media,
+          productId:parseInt(this.editedItem.productId),
+          public_price:parseInt(this.editedItem.public_price),
+          purchase_price:parseInt(this.editedItem.purchase_price),
+          units:parseInt(this.editedItem.units),
+          media:parseInt(media),
         }
-        this.updateArticle(article)
+        await this.updateArticle(article)
+        this.findArticles('')
       }
       this.close()
     }

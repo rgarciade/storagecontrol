@@ -28,15 +28,15 @@ const DB_Articles = class {
     static async updateArticle(id, datas) {
         return knex
             .table(tableName)
-            .where('id', id)
+            .where('idarticles', id)
             .update(datas)
             .catch(error => { console.log(error) })
     }
-    static async deleteArticle(companyId) {
+    static async deleteArticle(id) {
 
         return knex
             .table(tableName)
-            .where('id', companyId)
+            .where('idarticles', id)
             .del()
             .catch(error => {
                 console.log(error)

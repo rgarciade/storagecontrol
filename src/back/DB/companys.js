@@ -13,7 +13,6 @@ const DB_Companys = class {
     }
 
     static async updateCompany(id, datas) {
-        debugger
         console.log('--', datas)
         return knex
             .table('companys')
