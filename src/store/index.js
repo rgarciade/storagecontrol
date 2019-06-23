@@ -3,6 +3,7 @@ import Vuex from "vuex"
 const { menuRoutes } = require('../front/router.js')
 const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
+const { basePrice } = require('../common/commonfunctions')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
 const createAlert = (store, text) => {
@@ -22,6 +23,7 @@ export default new Vuex.Store({
             telephone: '',
             email: ''
         },
+        articles: [],
         newCompanyDataId: 0,
         alert: "",
         companyDataContacts: [],
@@ -49,7 +51,35 @@ export default new Vuex.Store({
             store.commit('alert', '')
         },
         async findArticles(store, text) {
+            store.commit("charging")
+            if (text != '') {
+                store.commit('articles', await DB_Articles.findArticles(text))
+            } else {
+                store.commit('articles', await DB_Articles.findAllArticles())
+            }
+            store.commit('charged')
+        },
 
+        async addNewArticle(store, data) {
+            store.commit("charging")
+            await DB_Articles.insertArticle(data).then(value => {
+                value = value[0]
+                if (value) {
+                    createAlert(store, 'articulo creado')
+                }
+            }).catch(error => {
+                createAlert(store, 'se produjo un error al crear el articulo')
+            })
+            store.commit('charged')
+
+        },
+        async updateArticle(store, data) {
+            store.commit("charging")
+            console.log('data------', data)
+            let id = data.idarticle
+            delete data.idarticle
+            await DB_Articles.updateArticle(id, data)
+            createAlert(store, 'articulo actualizado')
         },
         async findCompanys(store, text) {
             store.commit('charging')
@@ -122,6 +152,14 @@ export default new Vuex.Store({
             });
             state.companys = temporalState
 
+        },
+        articles(state, finded) {
+            let temporalState = []
+            finded.forEach(function(element) {
+                element.price_without_vat = basePrice(element.public_price, 21)
+                temporalState.push(element)
+            });
+            state.articles = temporalState
         },
         alert(state, msg) {
             state.alert = msg
