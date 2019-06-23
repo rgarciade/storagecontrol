@@ -92,6 +92,9 @@ a {
 .router-link-exact-active {
     color: #95c527
 }
+.router-link-exact-active > i{
+    color: #95c527
+}
 .fixedmenu{
   position: fixed;
 }

@@ -52,10 +52,10 @@
           return {
             valid: true,
             companyData:{
-                name:'aaa',
-                contact:'aaa',
-                telephone:'999',
-                email:'aa@a'
+                name:'',
+                contact:'',
+                telephone:'',
+                email:''
             },
             nameRules: checkInputs.nameRules,
             emailRules: checkInputs.emailRules,

@@ -3,13 +3,17 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import colors from 'vuetify/es5/util/colors'
 
+//views
 import App from './views/app';
+import Companysfinder from './views/companysfinder';
+import articles from './views/articles';
+
+//components
 import Menu from './components/menu';
 import Prueba from './components/prueba';
 import Contacto from './components/contacto';
 import Progress from './components/progress';
 import Alerts from './components/alerts';
-import Companysfinder from './views/companysfinder';
 import newcompany from './components/newcompany';
 
 const { router } = require('./router.js')
@@ -37,6 +41,7 @@ Vue.component('Progress', Progress)
 Vue.component('Companysfinder', Companysfinder)
 Vue.component('Alerts', Alerts)
 Vue.component('Newcompany', newcompany)
+Vue.component('Articles', articles)
 new Vue({
     el: '#app',
     store,

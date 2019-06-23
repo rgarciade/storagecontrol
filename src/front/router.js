@@ -1,23 +1,20 @@
 import VueRouter from 'vue-router';
 import Companysfinder from './views/companysfinder';
+import Articles from './views/articles';
 import conpanyconfiguration from './views/conpanyconfiguration';
 
 const routes = [
-    /*     { path: '/', name: 'home', component: Prueba },
-     { path: '*', name: '*', component: Prueba } 
-    
-    { path: '/Contacto', name: 'Contacto', component: Contacto },*/
+    { path: '/Articles', name: 'Articles', component: Articles },
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
 
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
     { path: '*', name: '*', component: Companysfinder }
-    //{ path: '*', name: 'conpanyconfiguration', component: conpanyconfiguration }
 ];
 
 const menuRoutes = [
-    { title: 'home', icon: 'dashboard', route: '/' },
-    { title: 'Contacto', icon: 'question_answer', route: '/Contacto' },
-    { title: 'Empresas', icon: 'next_week', route: '/Empresas' }
+    { title: 'Articulos', icon: 'storage', route: '/Articles' },
+    { title: 'Empresas', icon: 'next_week', route: '/Empresas' },
+    { title: 'Configuración', icon: 'widgets', route: '/' },
 ]
 
 const router = new VueRouter({

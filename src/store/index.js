@@ -2,6 +2,7 @@ import Vue from "vue"
 import Vuex from "vuex"
 const { menuRoutes } = require('../front/router.js')
 const { DB_Companys } = require('../back/DB/companys')
+const { DB_Articles } = require('../back/DB/articles')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
 const createAlert = (store, text) => {
@@ -46,6 +47,9 @@ export default new Vuex.Store({
         },
         resetAlert(store) {
             store.commit('alert', '')
+        },
+        async findArticles(store, text) {
+
         },
         async findCompanys(store, text) {
             store.commit('charging')
