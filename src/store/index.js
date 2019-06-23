@@ -50,6 +50,9 @@ export default new Vuex.Store({
         resetAlert(store) {
             store.commit('alert', '')
         },
+        createStoreAlert(store, alert) {
+            createAlert(store, alert)
+        },
         async findArticles(store, text) {
             store.commit("charging")
             if (text != '') {
@@ -75,14 +78,12 @@ export default new Vuex.Store({
         },
         async updateArticle(store, data) {
             store.commit("charging")
-            console.log('data------', data)
             let id = data.idarticles
             delete data.idarticles
             await DB_Articles.updateArticle(id, data)
             store.commit('articles', await DB_Articles.findArticles())
             store.commit('charged')
             createAlert(store, 'articulo actualizado')
-                //deleteArticle
         },
         async deleteArticleFromId(store, data) {
             store.commit("charging")

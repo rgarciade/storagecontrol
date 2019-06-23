@@ -15,7 +15,7 @@
               <v-container grid-list-md>
                 <v-layout wrap>
                   <v-flex xs12 sm6 md4>
-                    <v-text-field v-model="editedItem.productId" label="Id del prroducto" :rules="idMaxLength"></v-text-field>
+                    <v-text-field v-model="editedItem.productId" label="Id del prroducto" :rules="idMaxLength" validate-on-blur></v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md4>
                     <v-text-field v-model="editedItem.description" label="Descripción" ></v-text-field>
@@ -144,7 +144,7 @@
     this.findArticles('')
   },
   methods: 
-    Object.assign({},mapActions(["addNewArticle","findArticles","updateArticle","deleteArticleFromId"]),{
+    Object.assign({},mapActions(["addNewArticle","findArticles","updateArticle","deleteArticleFromId","createStoreAlert"]),{
 
     statusNewItem(status = true){
       this.newItem = status
@@ -170,6 +170,10 @@
       }, 300)
     },
     async save () {
+      if(this.editedItem.productId.length > 13){
+        this.createStoreAlert('error en el forrmulario')
+        return ''
+      }
       if (this.newItem) {
         let article = {
           productId:parseInt(this.editedItem.productId),
