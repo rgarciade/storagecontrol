@@ -10,6 +10,7 @@ const findChangesInObjetExist = (initialObjet, newObjet) => {
     }
     return false
 }
+
 const checkInputs = {
     telephoneRules: [
         v => !!v || 'Teléfono requerido',
@@ -26,6 +27,7 @@ const checkInputs = {
     idMaxLength: [
         v => !!v || 'no es obligatorio',
         v => v.length < 13 || 'maximo 13 caracteres',
-    ]
+    ],
+    controlDigit: 1
 }
 module.exports = { basePrice, findChangesInObjetExist, checkInputs }

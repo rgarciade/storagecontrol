@@ -63,6 +63,7 @@
             <v-text-field
               :value="companyData.cta"
               id="c_cta"
+              :rules="controlDigit"
               label="cta"
             ></v-text-field>
           </v-flex>
@@ -207,7 +208,7 @@
 
 <script>
   import { mapState, mapActions } from "vuex"
-  import { findChangesInObjetExist,checkInputs } from "../functions/commonFunctions"
+  import { findChangesInObjetExist,checkInputs } from "../../common/commonfunctions"
 
   export default {
       name: 'conpanyconfiguration',
@@ -232,6 +233,7 @@
               newContactEmail:'',
               newContacttelephone:'',
               nameRules: checkInputs.nameRules,
+              controlDigit: checkInputs.controlDigit,
           }
       },
       computed: mapState(["companyData","companyDataContacts"]),

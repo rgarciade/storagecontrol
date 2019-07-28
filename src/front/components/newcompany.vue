@@ -45,7 +45,7 @@
 </template>
 <script>
     import { mapActions,mapState } from "vuex"
-    import { checkInputs } from "../functions/commonFunctions"
+    import { checkInputs } from "../../common/commonfunctions"
     export default {
         name: 'newcompany',
         data(){
