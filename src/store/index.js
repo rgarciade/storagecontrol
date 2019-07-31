@@ -23,7 +23,14 @@ export default new Vuex.Store({
             telephone: '',
             email: ''
         },
-        articles: [],
+        articles: [{
+            productid: null,
+            description: null,
+            units: null,
+            purchase_price: null,
+            price_without_vat: null,
+            public_price: null
+        }],
         newCompanyDataId: 0,
         alert: "",
         companyDataContacts: [],
@@ -158,7 +165,7 @@ export default new Vuex.Store({
         },
         companys(state, finded) {
             let temporalState = []
-            finded.forEach(function(element) {
+            finded.forEach(function (element) {
                 temporalState.push(element)
             });
             state.companys = temporalState
@@ -166,7 +173,7 @@ export default new Vuex.Store({
         },
         articles(state, finded) {
             let temporalState = []
-            finded.forEach(function(element) {
+            finded.forEach(function (element) {
                 element.price_without_vat = basePrice(element.public_price, 21)
                 temporalState.push(element)
             });

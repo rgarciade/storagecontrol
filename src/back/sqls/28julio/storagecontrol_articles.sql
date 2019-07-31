@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `articles`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `articles` (
   `idarticles` int(11) NOT NULL AUTO_INCREMENT,
-  `productId` int(13) DEFAULT NULL,
+  `productid` int(13) DEFAULT NULL,
   `description` varchar(45) DEFAULT NULL,
   `units` varchar(45) DEFAULT '0',
   `purchase_price` double DEFAULT '0',
