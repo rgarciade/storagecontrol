@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div style="-webkit-app-region: drag">
       <v-card>
         <v-card-title class="headline primary lighten-3">Articulos</v-card-title>
       </v-card>

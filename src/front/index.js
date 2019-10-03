@@ -15,13 +15,13 @@ const isDevMode = process.execPath.match(/[\\/]electron/);
 
 if (isDevMode) enableLiveReload();
 
-const createWindow = async() => {
+const createWindow = async () => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         minHeight: 500,
-        minWidth: 800,
+        minWidth: 1120,
         titleBarStyle: 'hidden'
     });
     mainWindow.setMenu(null);
