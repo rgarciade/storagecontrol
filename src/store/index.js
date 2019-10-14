@@ -31,6 +31,8 @@ export default new Vuex.Store({
             price_without_vat: null,
             public_price: null
         }],
+        storeCard: [],
+        priceStoreCard: 0,
         newCompanyDataId: 0,
         alert: "",
         companyDataContacts: [],
@@ -39,6 +41,11 @@ export default new Vuex.Store({
     },
 
     actions: {
+
+        async addToCard(store, idArticle) {
+            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+            store.commit("addStoreCard", newCardArticle)
+        },
         increment(store) {
             store.commit("increment")
         },
@@ -62,9 +69,11 @@ export default new Vuex.Store({
         },
         async findArticles(store, text) {
             store.commit("charging")
-            if (text != '') {
+            if (text != '' && text) {
                 store.commit('articles', await DB_Articles.findArticles(text))
-            } else {
+            } else if (text == "") {
+                store.commit('articles', [])
+            } else if (!text) {
                 store.commit('articles', await DB_Articles.findAllArticles())
             }
             store.commit('charged')
@@ -148,6 +157,29 @@ export default new Vuex.Store({
     },
 
     mutations: {
+        async addStoreCard(state, article) {
+            let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
+            let priceStoreCard = 0
+            if (prev.length == 0) {
+                article[0].numberOfArticles = 1
+                state.storeCard.push(article[0])
+            } else {
+                for (let index = 0; index < state.storeCard.length; index++) {
+                    const element = state.storeCard[index];
+                    if (element.idarticles == article[0].idarticles) {
+                        state.storeCard[index].numberOfArticles++
+                    }
+                }
+            }
+            for (let index = 0; index < state.storeCard.length; index++) {
+                const element = state.storeCard[index];
+                priceStoreCard += element.public_price * element.numberOfArticles
+            }
+            let a = 2
+            state.priceStoreCard = priceStoreCard
+
+
+        },
         count(state, initial = 1) {
             state.count = initial
         },
@@ -165,7 +197,7 @@ export default new Vuex.Store({
         },
         companys(state, finded) {
             let temporalState = []
-            finded.forEach(function (element) {
+            finded.forEach(function(element) {
                 temporalState.push(element)
             });
             state.companys = temporalState
@@ -173,7 +205,7 @@ export default new Vuex.Store({
         },
         articles(state, finded) {
             let temporalState = []
-            finded.forEach(function (element) {
+            finded.forEach(function(element) {
                 element.price_without_vat = basePrice(element.public_price, 21)
                 temporalState.push(element)
             });

@@ -2,6 +2,13 @@ const knex = require('./connection')
 const tableName = 'articles';
 const DB_Articles = class {
 
+    static async findIdArticles(id) {
+        return knex.select()
+            .table(tableName)
+            .where('idarticles', id)
+            .then((value) => value)
+            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
     static async findArticles(text = '') {
         return knex.select()
             .table(tableName)

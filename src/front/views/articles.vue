@@ -160,7 +160,7 @@ export default {
     }
   },
   created() {
-    this.findArticles("");
+    this.findArticles();
   },
   methods: Object.assign(
     {},
