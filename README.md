@@ -1,0 +1,3 @@
+# storagecontrol
+electron application for cash control, billing, articles and customers . 
+Developing...
