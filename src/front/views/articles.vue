@@ -219,8 +219,8 @@ export default {
             idarticles: parseInt(this.articles[this.editedIndex].idarticles),
             description: this.editedItem.description,
             productid: parseInt(this.editedItem.productid),
-            public_price: parseInt(this.editedItem.public_price),
-            purchase_price: parseInt(this.editedItem.purchase_price),
+            public_price: this.editedItem.public_price,
+            purchase_price: this.editedItem.purchase_price,
             units: parseInt(this.editedItem.units),
             media: parseInt(media)
           };

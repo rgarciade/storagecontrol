@@ -11,7 +11,9 @@
         "package": "electron-forge package",
         "publish": "electron-forge publish",
         "start": "electron-forge start",
-        "start-css": "npm run css-watch"
+        "start-css": "npm run css-watch",
+        "migrations-run": "cd ./database && ../node_modules/knex/bin/cli.js migrate:latest",
+        "migrations-rollback": "cd ./database && ../node_modules/knex/bin/cli.js migrate:rollback"
     },
     "dependencies": {
         "bulma": "^0.7.2",
