@@ -1,6 +1,5 @@
-
-exports.up = async function (knex, Promise) {
-    await knex.schema.createTable('contacts', function (table) {
+exports.up = async function(knex, Promise) {
+    await knex.schema.createTable('contacts', function(table) {
         table.charset('utf8');
         table.collate('utf8_general_ci');
         table.increments('idcontacts').notNullable().primary();
@@ -15,8 +14,7 @@ exports.up = async function (knex, Promise) {
 
 
 
-    await knex.table('contacts').insert([
-        {
+    await knex.table('contacts').insert([{
             'idcompany': 2,
             'email': 'caca@#g',
             'name': 'luis',
@@ -37,9 +35,6 @@ exports.up = async function (knex, Promise) {
 
 }
 
-exports.down = async function (knex, Promise) {
+exports.down = async function(knex, Promise) {
     await knex.schema.dropTableIfExists('contacts');
-
 }
-
-
