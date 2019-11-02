@@ -16,3 +16,15 @@
 .fincer {
     position: absolute;
 }
+
+.article-finder {
+    font-size: 13px;
+}
+
+.article-finder-box {
+    height: 93px;
+    line-height: normal;
+    padding-top: 9px;
+    padding-bottom: 0px;
+    margin-top: -17px;
+}

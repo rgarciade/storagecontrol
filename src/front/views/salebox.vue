@@ -24,22 +24,24 @@
           solo
           @click="openFinder()"
           v-model="textFinder"
+           autofocus
         ></v-text-field>
         <v-list three-line v-if="finderOpen">
-              <template v-for="(item, index) in  this.articles">
+              <template v-for="(item, index) in  this.articles" >
                   <v-list-tile
                     v-if="index < 5"
                     :key="item.index"
                     avatar
                     @click="addToCard(item.idarticles)"
+                     class='article-finder-box'
                   >
-                    <v-list-tile-avatar>
+                    <v-list-tile-avatar >
                       <v-icon>add_shopping_cart</v-icon>
                     </v-list-tile-avatar>
-                    <v-list-tile-content>
-                      <v-list-tile-title v-html="item.description"></v-list-tile-title>
-                      <v-list-tile-sub-title v-html="'codigo:'+item.productid"></v-list-tile-sub-title>
-                      <v-list-tile-sub-title v-html="item.public_price+'€'"></v-list-tile-sub-title>
+                    <v-list-tile-content  >
+                      <v-list-tile-title class="article-finder" v-html="item.description"></v-list-tile-title>
+                      <v-list-tile-sub-title class="article-finder" v-html="'codigo:'+item.productid"></v-list-tile-sub-title>
+                      <v-list-tile-sub-title class="article-finder" v-html="item.public_price+'€'"></v-list-tile-sub-title>
                       
                     </v-list-tile-content>
                   </v-list-tile>
@@ -99,9 +101,12 @@ export default {
   computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard"]), {}),
   methods: Object.assign({}, mapActions(["findArticles","addToCard"]), {
     openFinder(e) {
+      if(!e){
+        return 
+      }
       if (e && e.code == "Enter" && e.type == "keydown" && !this.finderOpen) {
         this.finderOpen = !this.finderOpen;
-      } else if (e.type == "click") {
+      } else if (e && e.type && e.type == "click") {
         this.finderOpen = !this.finderOpen;
       } else if (!e.type && e == "open") {
         this.finderOpen = true;
