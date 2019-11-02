@@ -46,6 +46,14 @@ export default new Vuex.Store({
             let newCardArticle = await DB_Articles.findIdArticles(idArticle)
             store.commit("addStoreCard", newCardArticle)
         },
+        async subtractOneToCard(store, idArticle) {
+            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+            store.commit("subtractToCard", { 'article': newCardArticle })
+        },
+        async subtractToCard(store, idArticle) {
+            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+            store.commit("subtractToCard", { 'article': newCardArticle, remove: true })
+        },
         increment(store) {
             store.commit("increment")
         },
@@ -175,10 +183,34 @@ export default new Vuex.Store({
                 const element = state.storeCard[index];
                 priceStoreCard += element.public_price * element.numberOfArticles
             }
-            let a = 2
             state.priceStoreCard = priceStoreCard
+        },
+        async subtractToCard(state, args) {
+            let article = args.article
+            let remove = args.remove
+            let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
+            let priceStoreCard = 0
+            if (prev[0].numberOfArticles == 1 || remove) {
+                for (let index = 0; index < state.storeCard.length; index++) {
+                    const element = state.storeCard[index];
+                    if (element.idarticles == article[0].idarticles) {
+                        state.storeCard.splice(index, 1)
+                    }
+                }
+            } else {
+                for (let index = 0; index < state.storeCard.length; index++) {
+                    const element = state.storeCard[index];
+                    if (element.idarticles == article[0].idarticles) {
+                        state.storeCard[index].numberOfArticles--
+                    }
+                }
 
-
+            }
+            for (let index = 0; index < state.storeCard.length; index++) {
+                const element = state.storeCard[index];
+                priceStoreCard += element.public_price * element.numberOfArticles
+            }
+            state.priceStoreCard = priceStoreCard
         },
         count(state, initial = 1) {
             state.count = initial

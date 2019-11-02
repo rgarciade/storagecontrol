@@ -3,6 +3,9 @@
     <div>
       <v-card>
         <v-card-title class="headline primary lighten-3">Punto de venta</v-card-title>
+          <h1 class="salebox-resume">
+            Total {{priceStoreCard}}€ <v-btn color="success" @click="saleDialog = true">Terminar</v-btn>
+          </h1>
       </v-card>
       <v-card
         v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
@@ -65,14 +68,61 @@
         <td>{{ props.item.public_price }} €</td>
         <td>{{ props.item.numberOfArticles }}</td>
         <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
+        <td >
+          <v-icon  class="mr-2" @click="addToCard(props.item.idarticles)">add_box</v-icon>
+          <v-icon  @click="subtractOneToCard(props.item.idarticles)">remove_circle</v-icon>
+        </td>
+        <td><v-icon @click="subtractToCard(props.item.idarticles)">delete</v-icon></td>
       </template>
-       <template v-slot:footer>
-        {{priceStoreCard}}€
-       </template>
-      
      </v-data-table>
-     
     </div>
+
+      <v-dialog v-model="saleDialog" max-width="500px">
+        <v-stepper v-model="e1">
+          <v-stepper-header>
+            <v-stepper-step :complete="e1 > 1" step="1">tipo de pago</v-stepper-step>
+      
+            <v-divider></v-divider>
+      
+            <v-stepper-step :complete="e1 > 2" step="2">Pago</v-stepper-step>
+      
+          </v-stepper-header>
+      
+          <v-stepper-items>
+            <v-stepper-content step="1">
+
+               <h1>
+                Total {{priceStoreCard}}€
+              </h1>
+              <v-btn
+                color="primary"
+                @click="e1 = 2"
+              > <v-icon>euro_symbol</v-icon>
+                Efectivo
+              </v-btn>
+      
+              <v-btn > <v-icon> credit_card</v-icon>tarjeta</v-btn>
+            </v-stepper-content>
+      
+            <v-stepper-content step="2">
+              <v-card
+                class="mb-5"
+                color="grey lighten-1"
+                height="200px"
+              ></v-card>
+      
+              <v-btn
+                color="primary"
+                @click="e1 = 3"
+              >
+                Continue
+              </v-btn>
+      
+              <v-btn flat>Cancel</v-btn>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>   
+      </v-dialog>
   </div>
 </template>
 
@@ -83,12 +133,15 @@ export default {
   data() {
     return {
       finderOpen: false,
+      saleDialog: false,
       textFinder:"",
           headers: [
             { text: "Descripción", value: "description" },
             { text: "Precio de venta", value: "public_price" },
             { text: "unidades", value: "units" },
-            { text: "precio", value: "units" }
+            { text: "precio", value: "units" },
+            { text: "Acciones", value: "name", sortable: false },
+            { text: "", value: "", sortable: false }
             /* ,
             { text: "", value: "name", sortable: false } */
       ]
@@ -99,7 +152,7 @@ export default {
     this.findArticles("");
   },
   computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard"]), {}),
-  methods: Object.assign({}, mapActions(["findArticles","addToCard"]), {
+  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard"]), {
     openFinder(e) {
       if(!e){
         return 
