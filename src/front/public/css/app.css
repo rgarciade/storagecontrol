@@ -34,3 +34,6 @@
     padding-right: 10%;
     width: 110%;
 }
+.selected{
+    background-color: darkgrey;
+}

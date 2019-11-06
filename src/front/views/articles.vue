@@ -84,7 +84,10 @@
         <td>{{ props.item.purchase_price }}</td>
         <td>{{ props.item.public_price }}</td>
         <td>21</td>
-        <td>{{ props.item.units }}</td>
+        <td>
+          <input type="number" />
+          {{ props.item.units }}
+        </td>
         <td class="justify-center layout px-0 actions_icons">
           <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
           <v-icon small @click="deleteItem(props.item)">delete</v-icon>

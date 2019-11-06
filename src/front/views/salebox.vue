@@ -1,5 +1,5 @@
 <template >
-  <div style="-webkit-app-region: drag" >
+  <div style="-webkit-app-region: drag">
     <div>
       <v-card>
         <v-card-title class="headline primary lighten-3">Punto de venta</v-card-title>
@@ -11,15 +11,17 @@
         v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
         class="align-self-start fincer"
         raised
+        id="articlesList"
       >
         <v-toolbar dark>
-          <v-btn icon  @click="openFinder">
+          <v-btn icon @click="openFinder">
             <v-icon>search</v-icon>
           </v-btn>
           <v-toolbar-title>busca</v-toolbar-title>
           <div class="flex-grow-1"></div>
         </v-toolbar>
         <v-text-field
+          autofocus
           v-if="finderOpen"
           v-on:keyup="findArticles(textFinder)"
           hide-details
@@ -27,16 +29,15 @@
           solo
           @click="openFinder()"
           v-model="textFinder"
-           autofocus
         ></v-text-field>
         <v-list three-line v-if="finderOpen">
               <template v-for="(item, index) in  this.articles" >
                   <v-list-tile
-                    v-if="index < 5"
+                    v-if="index < 5 && item.productid"
                     :key="item.index"
                     avatar
                     @click="addToCard(item.idarticles)"
-                     class='article-finder-box'
+                    class='article-finder-box'
                   >
                     <v-list-tile-avatar >
                       <v-icon>add_shopping_cart</v-icon>
@@ -56,12 +57,12 @@
       </v-card>
     </div>
     <div class="all_space" v-on:click="closeFinder()">
-      <v-data-table 
-      :headers="headers"
-      :items="storeCard"
-      hide-actions
-      class="elevator-0 marco_punto_venta"
-      no-data=2
+      <v-data-table
+        :headers="headers"
+        :items="storeCard"
+        hide-actions
+        class="elevator-0 marco_punto_venta"
+        no-data="2"
       >
       <template v-slot:items="props" class="elevator-1">
         <td>{{ props.item.description }}</td>
@@ -164,9 +165,17 @@ export default {
       } else if (!e.type && e == "open") {
         this.finderOpen = true;
       }
+      if (e && e.code == "Escape" && e.type == "keydown" && this.finderOpen) {
+        this.closeFinder();
+      }
     },
-    closeFinder(){
-      this.finderOpen = false
+    closeFinder() {
+      this.finderOpen = false;
+    },
+    editItem(item) {
+      this.editedIndex = this.desserts.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
     }
   })
 };

@@ -76,15 +76,20 @@ export default new Vuex.Store({
             createAlert(store, alert)
         },
         async findArticles(store, text) {
-            store.commit("charging")
-            if (text != '' && text) {
-                store.commit('articles', await DB_Articles.findArticles(text))
-            } else if (text == "") {
-                store.commit('articles', [])
-            } else if (!text) {
-                store.commit('articles', await DB_Articles.findAllArticles())
+            try {
+                store.commit("charging")
+                if (text != '' && text) {
+                    store.commit('articles', await DB_Articles.findArticles(text))
+                } else if (text == "") {
+                    store.commit('articles', [])
+                } else if (!text) {
+                    store.commit('articles', await DB_Articles.findAllArticles())
+                }
+                store.commit('charged')
+            } catch (error) {
+                console.error(error)
             }
-            store.commit('charged')
+
         },
 
         async addNewArticle(store, data) {
@@ -117,13 +122,18 @@ export default new Vuex.Store({
             createAlert(store, 'articulo eliminado')
         },
         async findCompanys(store, text) {
-            store.commit('charging')
-            if (text != '') {
-                store.commit('companys', await DB_Companys.findCompanys(text))
-            } else {
-                store.commit('companys', [])
+            try {
+                store.commit('charging')
+                if (text != '') {
+                    store.commit('companys', await DB_Companys.findCompanys(text))
+                } else {
+                    store.commit('companys', [])
+                }
+                store.commit('charged')
+            } catch (error) {
+                console.error(error)
             }
-            store.commit('charged')
+
         },
         async companyConfigurationView(store, companyId) {
             let companyData = await DB_Companys.findCompanyWithData(companyId)
@@ -229,7 +239,7 @@ export default new Vuex.Store({
         },
         companys(state, finded) {
             let temporalState = []
-            finded.forEach(function(element) {
+            finded.forEach(function (element) {
                 temporalState.push(element)
             });
             state.companys = temporalState
@@ -237,7 +247,7 @@ export default new Vuex.Store({
         },
         articles(state, finded) {
             let temporalState = []
-            finded.forEach(function(element) {
+            finded.forEach(function (element) {
                 element.price_without_vat = basePrice(element.public_price, 21)
                 temporalState.push(element)
             });
