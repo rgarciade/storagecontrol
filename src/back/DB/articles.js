@@ -7,7 +7,7 @@ const DB_Articles = class {
             .table(tableName)
             .where('idarticles', id)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async findArticles(text = '') {
         return knex.select()
@@ -15,13 +15,13 @@ const DB_Articles = class {
             .where('description', 'like', `%${text}%`)
             .orWhere('productid', 'like', `%${text}%`)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async findAllArticles() {
         return knex.select()
             .from(tableName)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async insertArticle(data) {
 
@@ -29,7 +29,7 @@ const DB_Articles = class {
             .table(tableName).insert(data)
             .then((value) => value)
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async updateArticle(id, datas) {
@@ -37,7 +37,7 @@ const DB_Articles = class {
             .table(tableName)
             .where('idarticles', id)
             .update(datas)
-            .catch(error => { console.log(error) })
+            .catch(error => { console.error(error) })
     }
     static async deleteArticle(id) {
 
@@ -46,7 +46,7 @@ const DB_Articles = class {
             .where('idarticles', id)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
 }

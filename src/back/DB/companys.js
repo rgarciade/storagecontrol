@@ -8,17 +8,17 @@ const DB_Companys = class {
             .where('name', 'like', `%${text}%`)
             .orWhere('cif', 'like', `%${text}%`)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 
     }
 
     static async updateCompany(id, datas) {
-        console.log('--', datas)
+        console.error('--', datas)
         return knex
             .table('companys')
             .where('id', id)
             .update(datas)
-            .catch(error => { console.log(error) })
+            .catch(error => { console.error(error) })
 
     }
     static async deleteCompany(companyId) {
@@ -28,7 +28,7 @@ const DB_Companys = class {
             .where('id', companyId)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async deleteContacts(idcontacts) {
@@ -38,7 +38,7 @@ const DB_Companys = class {
             .where('idcontacts', idcontacts)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async findCompanyDataContacts(companyId) {
@@ -46,7 +46,7 @@ const DB_Companys = class {
             .table('contacts')
             .where('idcompany', companyId)
             .then((value) => value)
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
 
     }
     static async findCompanyWithData(companyId) {
@@ -54,7 +54,7 @@ const DB_Companys = class {
             .table('companys')
             .where('id', companyId)
             .then((value) => value)
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
     }
     static async insertContactWithCompanyId(idcompany, email, name, telephone) {
 
@@ -62,7 +62,7 @@ const DB_Companys = class {
             .table('contacts').insert({ idcompany, email, name, telephone })
             .then((value) => value)
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async insertCompany(data) {
@@ -71,7 +71,7 @@ const DB_Companys = class {
             .table('companys').insert(data)
             .then((value) => value)
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async deleteContact(idcontacts) {
@@ -81,7 +81,7 @@ const DB_Companys = class {
             .where('idcontacts', idcontacts)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async updateContact(idcontacts, datas) {
@@ -91,7 +91,7 @@ const DB_Companys = class {
             .where('idcontacts', idcontacts)
             .update(datas)
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
     static async deleteAllCompanyContacts(companyId) {
@@ -101,7 +101,7 @@ const DB_Companys = class {
             .where('idcompany', companyId)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
 }

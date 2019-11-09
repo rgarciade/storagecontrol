@@ -124,6 +124,7 @@
           </v-stepper-items>
         </v-stepper>   
       </v-dialog>
+      <v-btn @click="inserFacturation()"> <v-icon> credit_card</v-icon>aaaa</v-btn>
   </div>
 </template>
 
@@ -153,7 +154,7 @@ export default {
     this.findArticles("");
   },
   computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard"]), {}),
-  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard"]), {
+  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation"]), {
     openFinder(e) {
       if(!e){
         return 

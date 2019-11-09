@@ -3,6 +3,7 @@ import Vuex from "vuex"
 const { menuRoutes } = require('../front/router.js')
 const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
+const { DB_Facturation } = require('../back/DB/facturation')
 const { basePrice } = require('../common/commonfunctions')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
@@ -171,6 +172,29 @@ export default new Vuex.Store({
             store.commit('charged')
             createAlert(store, 'Comnpañia creada')
             store.commit('addNewCompanyDataId', newId)
+        },
+        async inserFacturation(store, companyId) {
+            store.commit("charging")
+            let cartToinsert = []
+            store.state.storeCard.forEach(element => {
+                cartToinsert.push({
+                    articleId: element.idarticles,
+                    price: element.public_price,
+                    units: element.numberOfArticles
+                })
+            });
+
+            let newId = await DB_Facturation.insertFacturation({
+                    facturation: { price: store.state.priceStoreCard },
+                    extra: cartToinsert
+                })
+                .then(resp => createAlert(store, 'Nueva factura creada'))
+                .catch(error => {
+                    console.error(error.message)
+                    createAlert(store, 'error al insertar En facturación')
+                })
+            store.commit('charged')
+
         }
     },
 
@@ -239,7 +263,7 @@ export default new Vuex.Store({
         },
         companys(state, finded) {
             let temporalState = []
-            finded.forEach(function (element) {
+            finded.forEach(function(element) {
                 temporalState.push(element)
             });
             state.companys = temporalState
@@ -247,7 +271,7 @@ export default new Vuex.Store({
         },
         articles(state, finded) {
             let temporalState = []
-            finded.forEach(function (element) {
+            finded.forEach(function(element) {
                 element.price_without_vat = basePrice(element.public_price, 21)
                 temporalState.push(element)
             });

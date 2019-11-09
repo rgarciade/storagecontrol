@@ -236,7 +236,7 @@ export default {
           street: document.getElementById("c_street").value,
           notas: document.getElementById("c_notas").value
         };
-        console.log(company);
+        console.error(company);
         if (findChangesInObjetExist(company, this.companyData)) {
           this.updateCompanyData(company);
         }

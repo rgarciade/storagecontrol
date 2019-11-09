@@ -187,7 +187,7 @@ export default {
       deleteItem(item) {
         this.statusNewItem(false);
         const index = this.articles.indexOf(item);
-        console.log(item);
+        console.error(item);
         this.deleteArticleFromId(item);
         //confirm('Are you sure you want to delete this item?') && this.articles.splice(index, 1)
       },

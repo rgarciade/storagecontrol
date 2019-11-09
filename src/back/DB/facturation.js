@@ -6,58 +6,71 @@ const DB_Facturation = class {
     static async fidFacturationId(id) {
         return knex.select()
             .table(principalTableName)
-            .innerJoin(secundaryTableName, ()=> {
+            .innerJoin(secundaryTableName, () => {
                 this.on(`${principalTableName}.id`, `${principalTableName}.facturationId`)
-              })
+            })
             .where('id', id)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async fidFacturationfromEmail(email) {
         return knex.select()
             .table(principalTableName)
-            .innerJoin(secundaryTableName, ()=> {
+            .innerJoin(secundaryTableName, () => {
                 this.on(`${principalTableName}.id`, `${principalTableName}.facturationId`)
-              })
+            })
             .where('email', 'like', `%${email}%`)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async fidFacturationfromCompanyId(id) {
         return knex.select()
             .table(principalTableName)
-            .innerJoin(secundaryTableName, ()=> {
+            .innerJoin(secundaryTableName, () => {
                 this.on(`${principalTableName}.id`, `${principalTableName}.facturationId`)
-              })
+            })
             .where('companyId', id)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async findAllFacturation() {
         return knex.select()
             .from(principalTableName)
             .then((value) => value)
-            .catch(error => console.log(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async insertFacturation(data) {
 
-        return knex
-            .table(principalTableName).insert(data)
-            .returning('id')
-            .then((value) => value)
-            .then((id) => {
-                    console.log(id[0]);  //id here
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        return new Promise((resolve, reject) => {
+            knex
+                .table(principalTableName).insert(data.facturation)
+                .returning('id')
+                .then((response) => {
+                    if (!response[0]) reject(new Error(`error al insertar en ${principalTableName}`))
+                    let facturationId = { facturationId: response[0] }
+                    let newData = [];
+                    data.extra.forEach(element => {
+                        newData.push(Object.assign({}, facturationId, element))
+                    });
+                    knex
+                        .table(secundaryTableName).insert(newData)
+                        .then(resp => resolve(response))
+                        .catch(error => {
+                            reject(new Error(`error al insertar en ${secundaryTableName} error: ${error}`))
+                        })
+
+                })
+                .catch(error => {
+                    reject(new Error(`error al insertar en ${principalTableName} ${secundaryTableName} error: ${error}`))
+                })
+        })
     }
     static async updatefacturation(id, datas) {
         return knex
             .table(principalTableName)
             .where('id', id)
             .update(datas)
-            .catch(error => { console.log(error) })
+            .catch(error => { console.error(error) })
     }
     static async deleteFacturation(id) {
 
@@ -66,7 +79,7 @@ const DB_Facturation = class {
             .where('id', id)
             .del()
             .catch(error => {
-                console.log(error)
+                console.error(error)
             })
     }
 }

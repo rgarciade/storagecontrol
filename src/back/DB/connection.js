@@ -9,10 +9,10 @@ let knex = require('knex')({
         database: DB.database
     },
     warn(message) {
-        console.log(message)
+        console.error(message)
     },
     error(message) {
-        console.log(message)
+        console.error(message)
     },
 })
 module.exports = knex
