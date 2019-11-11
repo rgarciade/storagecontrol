@@ -4,6 +4,7 @@ const { menuRoutes } = require('../front/router.js')
 const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
+const { DB_Sales } = require('../back/DB/sales')
 const { basePrice } = require('../common/commonfunctions')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
@@ -192,6 +193,29 @@ export default new Vuex.Store({
                 .catch(error => {
                     console.error(error.message)
                     createAlert(store, 'error al insertar En facturación')
+                })
+            store.commit('charged')
+
+        },
+        async inserSale(store) {
+            store.commit("charging")
+            let cartToinsert = []
+            store.state.storeCard.forEach(element => {
+                cartToinsert.push({
+                    articleId: element.idarticles,
+                    price: element.public_price,
+                    units: element.numberOfArticles
+                })
+            });
+
+            let newId = await DB_Sales.insertSales({
+                    sale: { price: store.state.priceStoreCard },
+                    extra: cartToinsert
+                })
+                .then(resp => createAlert(store, 'Nueva factura creada'))
+                .catch(error => {
+                    console.error(error.message)
+                    createAlert(store, 'error al insertar En Sales')
                 })
             store.commit('charged')
 
