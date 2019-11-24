@@ -18,7 +18,6 @@ const DB_Companys = class {
             .table('companys')
             .where('id', id)
             .update(datas)
-            .catch(error => { console.error(error) })
 
     }
     static async deleteCompany(companyId) {

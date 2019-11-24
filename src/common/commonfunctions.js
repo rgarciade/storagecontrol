@@ -12,6 +12,10 @@ const findChangesInObjetExist = (initialObjet, newObjet) => {
 }
 
 const checkInputs = {
+    numberRules:[
+        v => !!v || 'Solo admite numeros',
+        v => !isNaN(v) || 'solo se admiten caracteres numricos'
+    ],
     telephoneRules: [
         v => !!v || 'Teléfono requerido',
         v => !isNaN(v) || 'solo se admiten caracteres numricos'

@@ -18,8 +18,8 @@ if (isDevMode) enableLiveReload();
 const createWindow = async() => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1120,
+        height: 500,
         minHeight: 500,
         minWidth: 1120,
         titleBarStyle: 'hidden'

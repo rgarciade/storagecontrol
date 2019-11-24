@@ -13,10 +13,11 @@ exports.up = async function (knex, Promise) {
         table.string('street', 255).defaultTo(null);
         table.string('city', 45).defaultTo(null);
         table.string('province', 45).defaultTo(null);
+        table.string('cta', 45).defaultTo(null);
         table.string('state', 45).defaultTo(null);
         table.string('postalcode', 45).defaultTo(null);
         table.string('banck', 45).defaultTo(null);
-        table.string('movile', 45).defaultTo(null);
+        table.string('mobile', 45).defaultTo(null);
         table.string('notas', 510).defaultTo(null);
     })
 
@@ -35,7 +36,7 @@ exports.up = async function (knex, Promise) {
             state: 'madrid',
             postalcode: '28231',
             banck: 'BN12414',
-            movile: '45454545454',
+            mobile: '45454545454',
             notas: 'sadasdasdasd'
         },
         {
@@ -51,7 +52,7 @@ exports.up = async function (knex, Promise) {
             state: 'madrid',
             postalcode: '28231',
             banck: 'BN12411',
-            movile: '45454545454',
+            mobile: '45454545454',
             notas: 'fafsafa'
         },
         {
@@ -67,7 +68,7 @@ exports.up = async function (knex, Promise) {
             state: 'madrid',
             postalcode: '28231',
             banck: 'BN12413',
-            movile: '45454545454',
+            mobile: '45454545454',
             notas: 'fafsafa'
         }
     ])

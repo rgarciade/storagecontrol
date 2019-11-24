@@ -61,7 +61,7 @@
         :headers="headers"
         :items="storeCard"
         hide-actions
-        class="elevator-0 marco_punto_venta"
+        class="elevator-0 marco_punto_venta "
         no-data="2"
       >
       <template v-slot:items="props" class="elevator-1">
@@ -78,7 +78,7 @@
      </v-data-table>
     </div>
 
-      <v-dialog v-model="saleDialog" max-width="500px">
+      <v-dialog v-model="saleDialog" max-width="611px">
         <v-stepper v-model="e1">
           <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">tipo de pago</v-stepper-step>
@@ -97,21 +97,62 @@
               </h1>
               <v-btn
                 color="primary"
-                @click="e1 = 2"
+                @click="e1 = 2; selectPaymentType(1)"
               > <v-icon>euro_symbol</v-icon>
                 Efectivo
               </v-btn>
       
-              <v-btn > <v-icon> credit_card</v-icon>tarjeta</v-btn>
+              <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
             </v-stepper-content>
       
             <v-stepper-content step="2">
               <v-card
-                class="mb-5"
-                color="grey lighten-1"
-                height="200px"
-              ></v-card>
-      
+                color=""
+                style="max-height: 20em;
+                overflow: auto;"
+                
+              >
+              <v-data-table
+                :headers="headersResumen"
+                :items="storeCard"
+                hide-actions
+                class="elevator-0 marco_punto_venta"
+                style="padding-bottom: 10%; padding-top:1%"
+                no-data="2"
+              >
+                <template v-slot:items="props" class="elevator-1">
+                  <td>{{ props.item.description }}</td>
+                  <td>{{ props.item.public_price }} €</td>
+                  <td>{{ props.item.numberOfArticles }}</td>
+                  <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
+                </template>
+              </v-data-table>
+              
+              </v-card>
+              <v-layout>
+                <v-flex xs3 md1
+                style="padding-top: 4%; position: fixed;">
+                  <span>Paga</span>
+                </v-flex>
+                <v-flex xs3 md1>
+                    <v-text-field
+                    :value="salebox.paymentAmount"
+                    :rules="numberRules"
+                    style="position: fixed; padding-top: 6%;"
+                    ></v-text-field>
+                  
+                </v-flex>
+                  <v-flex xs3 md1
+                  style="padding-top: 4%;">
+                    <span style="padding-top: 4%;">vuelta</span>
+                  </v-flex>
+                  <v-flex xs3 md1>
+                    <v-text-field
+                      :value="salebox.moneyBack"
+                      disabled=true
+                    ></v-text-field>
+                  </v-flex>
+              </v-layout>
               <v-btn
                 color="primary"
                 @click="e1 = 3"
@@ -119,7 +160,7 @@
                 Continue
               </v-btn>
       
-              <v-btn flat>Cancel</v-btn>
+              <v-btn  @click="e1 = 1" flat>atrasss</v-btn>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>   
@@ -137,25 +178,30 @@ export default {
     return {
       finderOpen: false,
       saleDialog: false,
+      e1:0,
       textFinder:"",
-          headers: [
+      headers: [
             { text: "Descripción", value: "description" },
             { text: "Precio de venta", value: "public_price" },
             { text: "unidades", value: "units" },
             { text: "precio", value: "units" },
             { text: "Acciones", value: "name", sortable: false },
             { text: "", value: "", sortable: false }
-            /* ,
-            { text: "", value: "name", sortable: false } */
-      ]
+      ],
+      headersResumen: [
+        { text: "Descripción", value: "description" },
+        { text: "Precio de venta", value: "public_price" },
+        { text: "unidades", value: "units" },
+        { text: "precio", value: "units" }
+      ],
     };
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
     this.findArticles("");
   },
-  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard"]), {}),
-  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale"]), {
+  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","salebox"]), {}),
+  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","selectPaymentType"]), {
     openFinder(e) {
       if(!e){
         return 

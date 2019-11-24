@@ -1,17 +1,10 @@
 import Vue from "vue"
 import Vuex from "vuex"
 const { menuRoutes } = require('../front/router.js')
-const { DB_Companys } = require('../back/DB/companys')
-const { DB_Articles } = require('../back/DB/articles')
-const { DB_Facturation } = require('../back/DB/facturation')
-const { DB_Sales } = require('../back/DB/sales')
-const { basePrice } = require('../common/commonfunctions')
+const actions = require('./actions')
+const mutations = require('./mutations')
 import { createSharedMutations } from "vuex-electron"
 Vue.use(Vuex)
-const createAlert = (store, text) => {
-    store.commit('alert', '')
-    store.commit('alert', text)
-}
 export default new Vuex.Store({
     state: {
         count: 3,
@@ -33,6 +26,11 @@ export default new Vuex.Store({
             price_without_vat: null,
             public_price: null
         }],
+        salebox :{
+            paymentAmount:12,
+            moneyBack:0
+        },
+        paymentType: 1,
         storeCard: [],
         priceStoreCard: 0,
         newCompanyDataId: 0,
@@ -41,279 +39,8 @@ export default new Vuex.Store({
         progresActive: false,
         companys: []
     },
-
-    actions: {
-
-        async addToCard(store, idArticle) {
-            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
-            store.commit("addStoreCard", newCardArticle)
-        },
-        async subtractOneToCard(store, idArticle) {
-            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
-            store.commit("subtractToCard", { 'article': newCardArticle })
-        },
-        async subtractToCard(store, idArticle) {
-            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
-            store.commit("subtractToCard", { 'article': newCardArticle, remove: true })
-        },
-        increment(store) {
-            store.commit("increment")
-        },
-        decrement(store) {
-            store.commit("decrement")
-        },
-        charging(store) {
-            store.commit("charging")
-        },
-        charged(store) {
-            store.commit("charged")
-        },
-        initCount(store, initial) {
-            store.commit('count', initial)
-        },
-        resetAlert(store) {
-            store.commit('alert', '')
-        },
-        createStoreAlert(store, alert) {
-            createAlert(store, alert)
-        },
-        async findArticles(store, text) {
-            try {
-                store.commit("charging")
-                if (text != '' && text) {
-                    store.commit('articles', await DB_Articles.findArticles(text))
-                } else if (text == "") {
-                    store.commit('articles', [])
-                } else if (!text) {
-                    store.commit('articles', await DB_Articles.findAllArticles())
-                }
-                store.commit('charged')
-            } catch (error) {
-                console.error(error)
-            }
-
-        },
-
-        async addNewArticle(store, data) {
-            store.commit("charging")
-            await DB_Articles.insertArticle(data).then(value => {
-                value = value[0]
-                if (value) {
-                    createAlert(store, 'articulo creado')
-                }
-            }).catch(error => {
-                createAlert(store, 'se produjo un error al crear el articulo')
-            })
-            store.commit('charged')
-
-        },
-        async updateArticle(store, data) {
-            store.commit("charging")
-            let id = data.idarticles
-            delete data.idarticles
-            await DB_Articles.updateArticle(id, data)
-            store.commit('articles', await DB_Articles.findArticles())
-            store.commit('charged')
-            createAlert(store, 'articulo actualizado')
-        },
-        async deleteArticleFromId(store, data) {
-            store.commit("charging")
-            await DB_Articles.deleteArticle(data.idarticles)
-            store.commit('articles', await DB_Articles.findArticles())
-            store.commit('charged')
-            createAlert(store, 'articulo eliminado')
-        },
-        async findCompanys(store, text) {
-            try {
-                store.commit('charging')
-                if (text != '') {
-                    store.commit('companys', await DB_Companys.findCompanys(text))
-                } else {
-                    store.commit('companys', [])
-                }
-                store.commit('charged')
-            } catch (error) {
-                console.error(error)
-            }
-
-        },
-        async companyConfigurationView(store, companyId) {
-            let companyData = await DB_Companys.findCompanyWithData(companyId)
-            let companyDataContacts = await DB_Companys.findCompanyDataContacts(companyData[0].id)
-            store.commit('companyData', companyData)
-            store.commit('companyDataContacts', companyDataContacts)
-        },
-        async addNewContact(store, data) {
-            store.commit("charging")
-            await DB_Companys.insertContactWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
-            let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.id)
-            store.commit('companyDataContacts', companyDataContacts)
-            store.commit('charged')
-            createAlert(store, 'contacto añadido')
-        },
-        async deleteContactFromId(store, data) {
-            store.commit("charging")
-            await DB_Companys.deleteContacts(data.deleteFocustId)
-            let companyDataContacts = await DB_Companys.findCompanyDataContacts(data.companyId)
-            store.commit('companyDataContacts', companyDataContacts)
-            store.commit('charged')
-            createAlert(store, 'contacto eliminado')
-        },
-        async updateCompanyData(store, data) {
-            store.commit("charging")
-            let id = data.companyId
-            delete data.companyId
-            await DB_Companys.updateCompany(id, data)
-            store.commit('charged')
-            createAlert(store, 'datos actualizados')
-        },
-        async createCompany(store, data) {
-            store.commit("charging")
-            let newId = await DB_Companys.insertCompany(data).then(value => value[0])
-            store.commit('charged')
-            createAlert(store, 'Comnpañia creada')
-            store.commit('addNewCompanyDataId', newId)
-        },
-        async inserFacturation(store, companyId) {
-            store.commit("charging")
-            let cartToinsert = []
-            store.state.storeCard.forEach(element => {
-                cartToinsert.push({
-                    articleId: element.idarticles,
-                    price: element.public_price,
-                    units: element.numberOfArticles
-                })
-            });
-
-            let newId = await DB_Facturation.insertFacturation({
-                    facturation: { price: store.state.priceStoreCard },
-                    extra: cartToinsert
-                })
-                .then(resp => createAlert(store, 'Nueva factura creada'))
-                .catch(error => {
-                    console.error(error.message)
-                    createAlert(store, 'error al insertar En facturación')
-                })
-            store.commit('charged')
-
-        },
-        async inserSale(store) {
-            store.commit("charging")
-            let cartToinsert = []
-            store.state.storeCard.forEach(element => {
-                cartToinsert.push({
-                    articleId: element.idarticles,
-                    price: element.public_price,
-                    units: element.numberOfArticles
-                })
-            });
-
-            let newId = await DB_Sales.insertSales({
-                    sale: { price: store.state.priceStoreCard },
-                    extra: cartToinsert
-                })
-                .then(resp => createAlert(store, 'Nueva factura creada'))
-                .catch(error => {
-                    console.error(error.message)
-                    createAlert(store, 'error al insertar En Sales')
-                })
-            store.commit('charged')
-
-        }
-    },
-
-    mutations: {
-        async addStoreCard(state, article) {
-            let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
-            let priceStoreCard = 0
-            if (prev.length == 0) {
-                article[0].numberOfArticles = 1
-                state.storeCard.push(article[0])
-            } else {
-                for (let index = 0; index < state.storeCard.length; index++) {
-                    const element = state.storeCard[index];
-                    if (element.idarticles == article[0].idarticles) {
-                        state.storeCard[index].numberOfArticles++
-                    }
-                }
-            }
-            for (let index = 0; index < state.storeCard.length; index++) {
-                const element = state.storeCard[index];
-                priceStoreCard += element.public_price * element.numberOfArticles
-            }
-            state.priceStoreCard = priceStoreCard
-        },
-        async subtractToCard(state, args) {
-            let article = args.article
-            let remove = args.remove
-            let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
-            let priceStoreCard = 0
-            if (prev[0].numberOfArticles == 1 || remove) {
-                for (let index = 0; index < state.storeCard.length; index++) {
-                    const element = state.storeCard[index];
-                    if (element.idarticles == article[0].idarticles) {
-                        state.storeCard.splice(index, 1)
-                    }
-                }
-            } else {
-                for (let index = 0; index < state.storeCard.length; index++) {
-                    const element = state.storeCard[index];
-                    if (element.idarticles == article[0].idarticles) {
-                        state.storeCard[index].numberOfArticles--
-                    }
-                }
-
-            }
-            for (let index = 0; index < state.storeCard.length; index++) {
-                const element = state.storeCard[index];
-                priceStoreCard += element.public_price * element.numberOfArticles
-            }
-            state.priceStoreCard = priceStoreCard
-        },
-        count(state, initial = 1) {
-            state.count = initial
-        },
-        increment(state) {
-            state.count++
-        },
-        decrement(state) {
-            state.count--
-        },
-        charging(state) {
-            state.progresActive = true
-        },
-        charged(state) {
-            state.progresActive = false
-        },
-        companys(state, finded) {
-            let temporalState = []
-            finded.forEach(function(element) {
-                temporalState.push(element)
-            });
-            state.companys = temporalState
-
-        },
-        articles(state, finded) {
-            let temporalState = []
-            finded.forEach(function(element) {
-                element.price_without_vat = basePrice(element.public_price, 21)
-                temporalState.push(element)
-            });
-            state.articles = temporalState
-        },
-        alert(state, msg) {
-            state.alert = msg
-        },
-        companyData(state, data) {
-            state.companyData = data[0]
-        },
-        addNewCompanyDataId(state, id) {
-            state.newCompanyDataId = id
-        },
-        companyDataContacts(state, data) {
-            state.companyDataContacts = data
-        }
-    },
+    actions,
+    mutations,
     plugins: [createSharedMutations()],
     strict: process.env.NODE_ENV !== "production"
 })
