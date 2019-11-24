@@ -26,10 +26,6 @@ export default new Vuex.Store({
             price_without_vat: null,
             public_price: null
         }],
-        salebox :{
-            paymentAmount:12,
-            moneyBack:0
-        },
         paymentType: 1,
         storeCard: [],
         priceStoreCard: 0,

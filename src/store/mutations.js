@@ -1,6 +1,11 @@
 const { basePrice } = require('../common/commonfunctions')
 const mutations = {
-    async addStoreCard(state, article) {
+    clearnStoreCard(state) {
+        state.storeCard = []
+        state.priceStoreCard = 0
+        state.paymentType = 1
+    },
+    addStoreCard(state, article) {
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
         let priceStoreCard = 0
         if (prev.length == 0) {
@@ -20,8 +25,8 @@ const mutations = {
         }
         state.priceStoreCard = priceStoreCard
     },
-    paymentType(state, type){
-        state.priceStoreCard = type
+    paymentType(state, type) {
+        state.paymentType = type
     },
     async subtractToCard(state, args) {
         let article = args.article

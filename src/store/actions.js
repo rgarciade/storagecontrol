@@ -7,12 +7,12 @@ const createAlert = (store, text) => {
     store.commit('alert', text)
 }
 const actions = {
-    selectPaymentType(store, type){
-        
-        if(type == 1 || type == 2){
+    selectPaymentType(store, type) {
+
+        if (type == 1 || type == 2) {
             //1 normal sale
             //2facturation sale
-            store.commit('paymentType',type)
+            store.commit('paymentType', type)
         }
     },
     async addToCard(store, idArticle) {
@@ -134,15 +134,15 @@ const actions = {
         store.commit("charging")
         let id = data.companyId
         delete data.companyId
-        await DB_Companys.updateCompany(id, data).then(()=>{
-            createAlert(store, 'datos actualizados')
-        })
-        .catch(e => {
-            console.error('error--',e)
-            createAlert(store, 'Error al actualizar datos')
-        })
+        await DB_Companys.updateCompany(id, data).then(() => {
+                createAlert(store, 'datos actualizados')
+            })
+            .catch(e => {
+                console.error('error--', e)
+                createAlert(store, 'Error al actualizar datos')
+            })
         store.commit('charged')
-        
+
     },
     async createCompany(store, data) {
         store.commit("charging")
@@ -166,7 +166,10 @@ const actions = {
                 facturation: { price: store.state.priceStoreCard },
                 extra: cartToinsert
             })
-            .then(resp => createAlert(store, 'Nueva factura creada'))
+            .then(resp => {
+                store.commit("clearnStoreCard")
+                createAlert(store, 'Nueva factura creada')
+            })
             .catch(error => {
                 console.error(error.message)
                 createAlert(store, 'error al insertar En facturación')
@@ -189,7 +192,10 @@ const actions = {
                 sale: { price: store.state.priceStoreCard },
                 extra: cartToinsert
             })
-            .then(resp => createAlert(store, 'Nueva factura creada'))
+            .then(resp => {
+                store.commit("clearnStoreCard")
+                createAlert(store, 'Nueva venta Realizada')
+            })
             .catch(error => {
                 console.error(error.message)
                 createAlert(store, 'error al insertar En Sales')

@@ -78,7 +78,7 @@
      </v-data-table>
     </div>
 
-      <v-dialog v-model="saleDialog" max-width="611px">
+      <v-dialog v-model="saleDialog" max-width="711px">
         <v-stepper v-model="e1">
           <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">tipo de pago</v-stepper-step>
@@ -120,7 +120,7 @@
                 style="padding-bottom: 10%; padding-top:1%"
                 no-data="2"
               >
-                <template v-slot:items="props" class="elevator-1">
+                <template v-if="items" v-slot:items="props" class="elevator-1">
                   <td>{{ props.item.description }}</td>
                   <td>{{ props.item.public_price }} €</td>
                   <td>{{ props.item.numberOfArticles }}</td>
@@ -130,43 +130,48 @@
               
               </v-card>
               <v-layout>
-                <v-flex xs3 md1
-                style="padding-top: 4%; position: fixed;">
-                  <span>Paga</span>
+                <v-flex xs2
+                 style="padding-top: 3.5%;">
+                  <span>Total: {{priceStoreCard}} €</span>
                 </v-flex>
-                <v-flex xs3 md1>
+                <v-flex xs1
+                 style="padding-top: 3.5%;">
+                  <span>Paga:</span>
+                </v-flex>
+                <v-flex xs1>
                     <v-text-field
-                    :value="salebox.paymentAmount"
+                    v-model="paymentAmount"
                     :rules="numberRules"
-                    style="position: fixed; padding-top: 6%;"
+                    style=""
                     ></v-text-field>
-                  
                 </v-flex>
-                  <v-flex xs3 md1
-                  style="padding-top: 4%;">
-                    <span style="padding-top: 4%;">vuelta</span>
-                  </v-flex>
-                  <v-flex xs3 md1>
-                    <v-text-field
-                      :value="salebox.moneyBack"
-                      disabled=true
-                    ></v-text-field>
-                  </v-flex>
+                <v-flex xs1
+                style="padding-top: 3.5%;">
+                  <span >vuelta:</span>
+                </v-flex>
+                <v-flex xs1>
+                  <v-text-field
+                     v-model="moneyBack"
+                    :disabled=true
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs1>
+                </v-flex>
+              <v-flex xs5 style="padding-top: 2.5%;padding-left: 7%;">
+
+                <v-btn  @click="e1 = 1" flat>atras</v-btn>
+                <v-btn
+                  color="primary"
+                  @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
+                >
+                  Terminar
+                </v-btn>
+             </v-flex>
               </v-layout>
-              <v-btn
-                color="primary"
-                @click="e1 = 3"
-              >
-                Continue
-              </v-btn>
-      
-              <v-btn  @click="e1 = 1" flat>atrasss</v-btn>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>   
       </v-dialog>
-      <v-btn @click="inserFacturation()"> <v-icon> credit_card</v-icon>facturacion</v-btn>
-      <v-btn @click="inserSale()"> <v-icon> credit_card</v-icon>sales</v-btn>
   </div>
 </template>
 
@@ -179,6 +184,8 @@ export default {
       finderOpen: false,
       saleDialog: false,
       e1:0,
+      paymentAmount:0,
+      moneyBack:0,
       textFinder:"",
       headers: [
             { text: "Descripción", value: "description" },
@@ -195,13 +202,19 @@ export default {
         { text: "precio", value: "units" }
       ],
     };
+  
+  },
+  watch: {
+    paymentAmount: function (val) {
+      this.moneyBack = -(this.priceStoreCard - this.paymentAmount)
+    }
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
     this.findArticles("");
   },
-  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","salebox"]), {}),
-  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","selectPaymentType"]), {
+  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","paymentType"]), {}),
+  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
     openFinder(e) {
       if(!e){
         return 
@@ -224,7 +237,19 @@ export default {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
-    }
+    },
+    async insertPaiment( payed) {
+      if (payed < this.priceStoreCard) {
+        this.createStoreAlert('Importe de pago menor al requerido');
+        return
+      }
+      if (this.paymentType == 2) {
+          await this.inserFacturation()
+      } else {
+          await this.inserSale()
+      }
+      this.paymentAmount = 0;
+    },
   })
 };
 </script>
