@@ -4,7 +4,7 @@
       <v-card>
         <v-card-title class="headline primary lighten-3">Punto de venta</v-card-title>
           <h1 class="salebox-resume">
-            Total {{priceStoreCard}}€ <v-btn color="success" @click="saleDialog = true">Terminar</v-btn>
+            Total {{priceStoreCard}}€ <v-btn :disabled=candFinish color="success" @click="saleDialog = true">Terminar</v-btn>
           </h1>
       </v-card>
       <v-card
@@ -33,7 +33,6 @@
         <v-list three-line v-if="finderOpen">
               <template v-for="(item, index) in  this.articles" >
                   <v-list-tile
-                    v-if="index < 5 && item.productid"
                     :key="item.index"
                     avatar
                     @click="addToCard(item.idarticles)"
@@ -82,9 +81,11 @@
         <v-stepper v-model="e1">
           <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">tipo de pago</v-stepper-step>
-      
             <v-divider></v-divider>
-      
+<!--             <v-stepper-step :complete="e1 > 1" step="1">factura</v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 1" step="1">busqueda empresa</v-stepper-step>
+            <v-divider></v-divider> -->
             <v-stepper-step :complete="e1 > 2" step="2">Pago</v-stepper-step>
       
           </v-stepper-header>
@@ -120,7 +121,7 @@
                 style="padding-bottom: 10%; padding-top:1%"
                 no-data="2"
               >
-                <template v-if="items" v-slot:items="props" class="elevator-1">
+                <template v-slot:items="props" class="elevator-1">
                   <td>{{ props.item.description }}</td>
                   <td>{{ props.item.public_price }} €</td>
                   <td>{{ props.item.numberOfArticles }}</td>
@@ -136,7 +137,7 @@
                 </v-flex>
                 <v-flex xs1
                  style="padding-top: 3.5%;">
-                  <span>Paga:</span>
+                  <span>Entrega:</span>
                 </v-flex>
                 <v-flex xs1>
                     <v-text-field
@@ -147,7 +148,7 @@
                 </v-flex>
                 <v-flex xs1
                 style="padding-top: 3.5%;">
-                  <span >vuelta:</span>
+                  <span >Cambio:</span>
                 </v-flex>
                 <v-flex xs1>
                   <v-text-field
@@ -213,7 +214,11 @@ export default {
     window.addEventListener("keydown", this.openFinder);
     this.findArticles("");
   },
-  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","paymentType"]), {}),
+  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","paymentType"]), {
+    candFinish() {
+      return this.storeCard.length <= 0 ? true : false;
+    }
+  }),
   methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
     openFinder(e) {
       if(!e){
