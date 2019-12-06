@@ -30,7 +30,7 @@
           @click="openFinder()"
           v-model="textFinder"
         ></v-text-field>
-        <v-list three-line v-if="finderOpen">
+        <v-list three-line v-if="finderOpen" class="scroll-find-arttticles">
               <template v-for="(item, index) in  this.articles" >
                   <v-list-tile
                     :key="item.index"
@@ -62,12 +62,19 @@
         hide-actions
         class="elevator-0 marco_punto_venta "
         no-data="2"
+        no-data-text="No hay artículos seleccionados"
       >
       <template v-slot:items="props" class="elevator-1">
         <td>{{ props.item.description }}</td>
-        <td>{{ props.item.public_price }} €</td>
-        <td>{{ props.item.numberOfArticles }}</td>
-        <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
+        <td>
+          <input type="text" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+              @change="changeItemPrice({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
+        </td>
+        <td>
+          <input type="text" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+            @change="changeItemUnitsNumber({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
+        </td>
+        <td><input type="text" :value="props.item.numberOfArticles * props.item.public_price"></td>
         <td >
           <v-icon  class="mr-2" @click="addToCard(props.item.idarticles)">add_box</v-icon>
           <v-icon  @click="subtractOneToCard(props.item.idarticles)">remove_circle</v-icon>
@@ -208,7 +215,13 @@ export default {
   watch: {
     paymentAmount: function (val) {
       this.moneyBack = -(this.priceStoreCard - this.paymentAmount)
-    }
+    } /* ,
+    storeCard: function (data) {
+      console.log('-->',data)
+       data.forEach(element => {
+        console.log('-->',element)
+      }); 
+    } */
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
@@ -219,7 +232,7 @@ export default {
       return this.storeCard.length <= 0 ? true : false;
     }
   }),
-  methods: Object.assign({}, mapActions(["findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+  methods: Object.assign({}, mapActions(["changeItemPrice","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
     openFinder(e) {
       if(!e){
         return 
@@ -242,6 +255,9 @@ export default {
       this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+    },
+    getValueFromNameAndId(elementName,id){
+      return document.getElementById(elementName+id).value
     },
     async insertPaiment( payed) {
       if (payed < this.priceStoreCard) {

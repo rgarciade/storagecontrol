@@ -34,6 +34,12 @@
     padding-right: 10%;
     width: 110%;
 }
-.selected{
+
+.selected {
     background-color: darkgrey;
+}
+
+.scroll-find-arttticles {
+    max-height: 43em;
+    overflow: auto;
 }

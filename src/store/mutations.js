@@ -5,9 +5,38 @@ const mutations = {
         state.priceStoreCard = 0
         state.paymentType = 1
     },
+    paymentType(state, type) {
+        state.paymentType = type
+    },
+    changeArticlePrice(state, args) {
+        let article = args.article
+        for (let index = 0; index < state.storeCard.length; index++) {
+
+            if (state.storeCard[index].idarticles == article[0].idarticles) {
+                state.storeCard[index].public_price = article[0].public_price
+            }
+        }
+        this.commit('recalculatePrice')
+    },
+    changeArticleUnitsNumber(state, args) {
+        let article = args.article
+        for (let index = 0; index < state.storeCard.length; index++) {
+            if (state.storeCard[index].idarticles == article[0].idarticles) {
+                state.storeCard[index].numberOfArticles = article[0].numberOfArticles
+            }
+        }
+        this.commit('recalculatePrice')
+    },
+    reFillArticles(state) {
+        state.storeCard = state.storeCardTemp
+    },
+    clearArticles(state) {
+        state.storeCardTemp = state.storeCard;
+        state.storeCard = []
+    },
     addStoreCard(state, article) {
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
-        let priceStoreCard = 0
+
         if (prev.length == 0) {
             article[0].numberOfArticles = 1
             state.storeCard.push(article[0])
@@ -16,23 +45,21 @@ const mutations = {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {
                     state.storeCard[index].numberOfArticles++
+                        if (state.storeCard[index].numberOfArticles > state.storeCard[index].units) {
+                            this.commit('alert', '')
+                            this.commit('alert', `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`)
+                            this.commit('recalculatePrice')
+                        }
                 }
             }
         }
-        for (let index = 0; index < state.storeCard.length; index++) {
-            const element = state.storeCard[index];
-            priceStoreCard += element.public_price * element.numberOfArticles
-        }
-        state.priceStoreCard = priceStoreCard
-    },
-    paymentType(state, type) {
-        state.paymentType = type
+        this.commit('recalculatePrice')
     },
     async subtractToCard(state, args) {
         let article = args.article
         let remove = args.remove
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
-        let priceStoreCard = 0
+
         if (prev[0].numberOfArticles == 1 || remove) {
             for (let index = 0; index < state.storeCard.length; index++) {
                 const element = state.storeCard[index];
@@ -45,10 +72,19 @@ const mutations = {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {
                     state.storeCard[index].numberOfArticles--
+                        if (state.storeCard[index].numberOfArticles > state.storeCard[index].units) {
+                            this.commit('alert', '')
+                            this.commit('alert', `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`)
+                            this.commit('recalculatePrice')
+                        }
                 }
             }
 
         }
+        this.commit('recalculatePrice')
+    },
+    recalculatePrice(state) {
+        let priceStoreCard = 0
         for (let index = 0; index < state.storeCard.length; index++) {
             const element = state.storeCard[index];
             priceStoreCard += element.public_price * element.numberOfArticles

@@ -17,7 +17,25 @@ const actions = {
     },
     async addToCard(store, idArticle) {
         let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        let units = newCardArticle[0].units
         store.commit("addStoreCard", newCardArticle)
+    },
+
+    async changeItemPrice(store, articleObject) {
+        let newCardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)
+        newCardArticle[0].public_price = articleObject.price
+        store.commit("changeArticlePrice", { 'article': newCardArticle })
+    },
+    async changeItemUnitsNumber(store, articleObject) {
+        let newCardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)
+
+        let units = newCardArticle[0].units
+        let description = newCardArticle[0].description
+        if (units < articleObject.units) {
+            createAlert(store, `Error, solo tenemos ${ units } unidades de ${description} en stock`)
+        }
+        newCardArticle[0].numberOfArticles = articleObject.units
+        store.commit("changeArticleUnitsNumber", { 'article': newCardArticle })
     },
     async subtractOneToCard(store, idArticle) {
         let newCardArticle = await DB_Articles.findIdArticles(idArticle)
@@ -26,6 +44,10 @@ const actions = {
     async subtractToCard(store, idArticle) {
         let newCardArticle = await DB_Articles.findIdArticles(idArticle)
         store.commit("subtractToCard", { 'article': newCardArticle, remove: true })
+    },
+    clearArticles(store) {
+        store.commit("clearArticles")
+        store.commit("reFillArticles")
     },
     increment(store) {
         store.commit("increment")
