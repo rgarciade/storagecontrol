@@ -7,7 +7,7 @@
         stateless
         absolute
         dark
-        class='background_img fixedmenu'
+        class='background_img fixedmenu position_menu'
       >
         <v-list class="pa-1 list_background">
           <v-list-tile v-if="mini" @click.stop="mini = !mini">
@@ -70,6 +70,9 @@
 <style scoped>
 .menu_arrow_right {
     margin-left: -6px;
+}
+.position_menu{
+  z-index: 999;
 }
 
 a {

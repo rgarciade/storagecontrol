@@ -4,7 +4,7 @@
       <v-card>
         <v-card-title class="headline primary lighten-3">Punto de venta</v-card-title>
           <h1 class="salebox-resume">
-            Total {{priceStoreCard}}€ <v-btn :disabled=candFinish color="success" @click="saleDialog = true">Terminar</v-btn>
+            Total {{priceStoreCard}}€ <v-btn :disabled=candFinish color="success" @click="saleDialog = true; closeFinder()">Terminar</v-btn>
           </h1>
       </v-card>
       <v-card
@@ -145,26 +145,28 @@
             </v-stepper-content>
             <v-stepper-content step="3">
               <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
-               <h1>
-                 Buscar compañia
-               </h1>
-               <h2 v-if="companyData.id > 0">
-                 Seleccionada: {{companyData.name}}
-               </h2>
-                <v-text-field
-                  v-on:keyup="findCompanys(textFinder)"
-                  label="Solo"
-                  placeholder="Buscar"
-                  solo
-                  v-model="textFinder"
-                ></v-text-field>
-                <v-layout
-                v-for="company in companys"
-                :key="company.name"
-                row
-                justify-space-around
-                style="margin-top: 1em"
-                >
+                <v-btn  @click="activeNewCompany = true">
+                  Nueva Compañia
+                </v-btn>
+                <h1>
+                  Buscar compañia
+                </h1>
+                <h2 v-if="companyData.id > 0">
+                  Seleccionada: {{companyData.name}}
+                </h2>
+                  <v-text-field
+                    label="Solo"
+                    placeholder="Buscar"
+                    solo
+                    v-model="textFinderCompany"
+                  ></v-text-field>
+                  <v-layout
+                  v-for="company in companys"
+                  :key="company.name"
+                  row
+                  justify-space-around
+                  style="margin-top: 1em"
+                  >
                   <v-flex xs9>
                     <v-hover>
                       <v-card
@@ -263,6 +265,7 @@
           </v-stepper-items>
         </v-stepper>   
       </v-dialog>
+      <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
   </div>
 </template>
 
@@ -279,6 +282,8 @@ export default {
       paymentAmount:0,
       moneyBack:0,
       textFinder:"",
+      textFinderCompany:"",
+      activeNewCompany: false,
       headers: [
             { text: "Descripción", value: "description",width:"80%" },
             { text: "Precio de venta", value: "public_price"},
@@ -299,7 +304,10 @@ export default {
   watch: {
     paymentAmount: function (val) {
       this.moneyBack = - (this.priceStoreCard - this.paymentAmount)
-    } 
+    },
+    textFinderCompany: function (val) {
+      this.findCompanys(val)
+    }
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
