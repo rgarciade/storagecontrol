@@ -9,6 +9,12 @@ const DB_Articles = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
+    static async returnStructure() {
+        return knex.table(tableName)
+            .columnInfo()
+            .then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
     static async findArticles(text = '') {
         return knex.select()
             .table(tableName)

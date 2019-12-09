@@ -7,33 +7,33 @@ exports.up = async function(knex, Promise) {
         table.integer('saleId', 11).defaultTo(0);
         table.dateTime('creation_date').notNullable().defaultTo(knex.fn.now());
         table.integer('articleId', 11).notNullable();
+        table.string('description', 450).defaultTo('');
         table.double('price', 11).notNullable();
         table.integer('units', 11).notNullable();
     })
-    await knex.table('sales_facturation_list').insert([
-        {
+    await knex.table('sales_facturation_list').insert([{
             'facturationId': 1,
             'articleId': 1,
-            'price':22.4,
-            'units':1
+            'price': 22.4,
+            'units': 1
         },
         {
             'facturationId': 2,
             'articleId': 2,
-            'price':44.1,
-            'units':2
+            'price': 44.1,
+            'units': 2
         },
         {
             'saleId': 1,
             'articleId': 3,
-            'price':55.6,
-            'units':2
+            'price': 55.6,
+            'units': 2
         },
         {
             'saleId': 1,
             'articleId': 1,
-            'price':22.6,
-            'units':1
+            'price': 22.6,
+            'units': 1
         }
     ])
 

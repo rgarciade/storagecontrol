@@ -9,7 +9,7 @@
       </v-card>
       <v-card
         v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
-        class="align-self-start fincer"
+        class="align-self-start fincer busqueda-agregar-articulo"
         raised
         id="articlesList"
       >
@@ -56,6 +56,12 @@
       </v-card>
     </div>
     <div class="all_space" v-on:click="closeFinder()">
+       <v-btn
+          color="primary"
+          @click="addToCard()"
+          class = "add-new-article-line"
+        > <v-icon>add</v-icon>
+      </v-btn>
       <v-data-table
         :headers="headers"
         :items="storeCard"
@@ -65,16 +71,22 @@
         no-data-text="No hay artículos seleccionados"
       >
       <template v-slot:items="props" class="elevator-1">
-        <td>{{ props.item.description }}</td>
+        <td v-if="props.item.idarticles > 0">
+          {{ props.item.description }}
+        </td>
+        <td v-if="props.item.idarticles < 0">
+          <textarea type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
+              @change="changeItemDescription({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
+        </td>
         <td>
-          <input type="text" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+          <input type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
               @change="changeItemPrice({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
         </td>
         <td>
-          <input type="text" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+          <input type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
             @change="changeItemUnitsNumber({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
         </td>
-        <td><input type="text" :value="props.item.numberOfArticles * props.item.public_price"></td>
+        <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
         <td >
           <v-icon  class="mr-2" @click="addToCard(props.item.idarticles)">add_box</v-icon>
           <v-icon  @click="subtractOneToCard(props.item.idarticles)">remove_circle</v-icon>
@@ -82,6 +94,7 @@
         <td><v-icon @click="subtractToCard(props.item.idarticles)">delete</v-icon></td>
       </template>
      </v-data-table>
+     
     </div>
 
       <v-dialog v-model="saleDialog" max-width="711px">
@@ -232,7 +245,7 @@ export default {
       return this.storeCard.length <= 0 ? true : false;
     }
   }),
-  methods: Object.assign({}, mapActions(["changeItemPrice","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+  methods: Object.assign({}, mapActions(["changeItemPrice","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
     openFinder(e) {
       if(!e){
         return 

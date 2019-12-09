@@ -27,6 +27,7 @@ export default new Vuex.Store({
             public_price: null
         }],
         paymentType: 1,
+        tempItemNumber: -2,
         storeCard: [],
         priceStoreCard: 0,
         newCompanyDataId: 0,

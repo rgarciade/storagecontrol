@@ -8,12 +8,21 @@ const mutations = {
     paymentType(state, type) {
         state.paymentType = type
     },
+    changeArticleDescription(state, args) {
+        let article = args.article
+        console.error('arrtii->', article)
+        for (let index = 0; index < state.storeCard.length; index++) {
+            if (state.storeCard[index].idarticles == article.idarticles) {
+                state.storeCard[index].description = article.description
+            }
+        }
+    },
     changeArticlePrice(state, args) {
         let article = args.article
         for (let index = 0; index < state.storeCard.length; index++) {
 
-            if (state.storeCard[index].idarticles == article[0].idarticles) {
-                state.storeCard[index].public_price = article[0].public_price
+            if (state.storeCard[index].idarticles == article.idarticles) {
+                state.storeCard[index].public_price = article.public_price
             }
         }
         this.commit('recalculatePrice')
@@ -21,8 +30,8 @@ const mutations = {
     changeArticleUnitsNumber(state, args) {
         let article = args.article
         for (let index = 0; index < state.storeCard.length; index++) {
-            if (state.storeCard[index].idarticles == article[0].idarticles) {
-                state.storeCard[index].numberOfArticles = article[0].numberOfArticles
+            if (state.storeCard[index].idarticles == article.idarticles) {
+                state.storeCard[index].numberOfArticles = article.numberOfArticles
             }
         }
         this.commit('recalculatePrice')
@@ -33,6 +42,11 @@ const mutations = {
     clearArticles(state) {
         state.storeCardTemp = state.storeCard;
         state.storeCard = []
+    },
+    addEmptyArticleToStoreCard(state, article) {
+        article.idarticles = state.tempItemNumber
+        state.tempItemNumber--
+            state.storeCard.push(article)
     },
     addStoreCard(state, article) {
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)

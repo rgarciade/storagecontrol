@@ -1,19 +1,17 @@
-
-exports.up = async function (knex, Promise) {
-    await knex.schema.createTable('articles', function (table) {
+exports.up = async function(knex, Promise) {
+    await knex.schema.createTable('articles', function(table) {
         table.charset('utf8');
         table.collate('utf8_general_ci');
         table.increments('idarticles', 11).notNullable().primary();
         table.integer('productid', 10).defaultTo(null);
-        table.string('description', 45).defaultTo(0);
-        table.string('units', 45).defaultTo(0);
+        table.string('description', 450).defaultTo(0);
+        table.integer('units', 10).defaultTo(0);
         table.double('purchase_price').defaultTo(0);
         table.double('public_price').defaultTo(0);
         table.double('media').defaultTo(0);
     })
 
-    await knex.table('articles').insert([
-        {
+    await knex.table('articles').insert([{
             productid: '1231',
             description: 'pantalla',
             units: '2',
@@ -72,8 +70,6 @@ exports.up = async function (knex, Promise) {
     ])
 }
 
-exports.down = async function (knex, Promise) {
+exports.down = async function(knex, Promise) {
     await knex.schema.dropTableIfExists('articles');
 }
-
-

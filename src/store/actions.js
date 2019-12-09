@@ -15,27 +15,53 @@ const actions = {
             store.commit('paymentType', type)
         }
     },
-    async addToCard(store, idArticle) {
-        let newCardArticle = await DB_Articles.findIdArticles(idArticle)
-        let units = newCardArticle[0].units
-        store.commit("addStoreCard", newCardArticle)
+    async addToCard(store, idArticle = '') {
+        if (idArticle == '') {
+            let structure = await DB_Articles.returnStructure()
+            let newArticle = {};
+            for (var key in structure) {
+                let numberTypes = ['int', 'double']
+                if (numberTypes.includes(structure[key].type)) {
+                    newArticle[key] = 0
+                } else {
+                    newArticle[key] = ''
+                }
+                newArticle['numberOfArticles'] = 0
+            }
+            store.commit("addEmptyArticleToStoreCard", newArticle)
+        } else {
+            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+            let units = newCardArticle[0].units
+            store.commit("addStoreCard", newCardArticle)
+        }
     },
 
     async changeItemPrice(store, articleObject) {
-        let newCardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)
-        newCardArticle[0].public_price = articleObject.price
-        store.commit("changeArticlePrice", { 'article': newCardArticle })
+
+        if (articleObject.idarticles > 0) {
+            articleObject.public_price = articleObject.price
+            store.commit("changeArticlePrice", { 'article': articleObject })
+        } else {
+            articleObject.public_price = articleObject.price
+            store.commit("changeArticlePrice", { 'article': articleObject })
+        }
+    },
+    async changeItemDescription(store, articleObject) {
+        store.commit("changeArticleDescription", { 'article': articleObject })
     },
     async changeItemUnitsNumber(store, articleObject) {
-        let newCardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)
+        let cardArticle = articleObject
+        if (articleObject.idarticles > 0) {
+            cardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)[0]
 
-        let units = newCardArticle[0].units
-        let description = newCardArticle[0].description
-        if (units < articleObject.units) {
-            createAlert(store, `Error, solo tenemos ${ units } unidades de ${description} en stock`)
+            let units = cardArticle.units
+            let description = cardArticle.description
+            if (units < articleObject.units) {
+                createAlert(store, `Error, solo tenemos ${ units } unidades de ${description} en stock`)
+            }
         }
-        newCardArticle[0].numberOfArticles = articleObject.units
-        store.commit("changeArticleUnitsNumber", { 'article': newCardArticle })
+        cardArticle.numberOfArticles = articleObject.units
+        store.commit("changeArticleUnitsNumber", { 'article': cardArticle })
     },
     async subtractOneToCard(store, idArticle) {
         let newCardArticle = await DB_Articles.findIdArticles(idArticle)
@@ -112,6 +138,7 @@ const actions = {
     async deleteArticleFromId(store, data) {
         store.commit("charging")
         await DB_Articles.deleteArticle(data.idarticles)
+
         store.commit('articles', await DB_Articles.findArticles())
         store.commit('charged')
         createAlert(store, 'articulo eliminado')
@@ -180,7 +207,8 @@ const actions = {
             cartToinsert.push({
                 articleId: element.idarticles,
                 price: element.public_price,
-                units: element.numberOfArticles
+                units: element.numberOfArticles,
+                description: element.description
             })
         });
 
@@ -206,7 +234,8 @@ const actions = {
             cartToinsert.push({
                 articleId: element.idarticles,
                 price: element.public_price,
-                units: element.numberOfArticles
+                units: element.numberOfArticles,
+                description: element.description
             })
         });
 
