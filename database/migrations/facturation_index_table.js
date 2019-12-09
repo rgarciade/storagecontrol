@@ -3,18 +3,16 @@ exports.up = async function(knex, Promise) {
         table.charset('utf8');
         table.collate('utf8_general_ci');
         table.increments('id').notNullable().primary();
-        table.integer('companyId', 11).defaultTo(0);
-        table.string('email', 45).defaultTo(null);
+        table.integer('company_id', 11).defaultTo(0);
+        table.integer('credit_card', 1).defaultTo(0);
         table.dateTime('creation_date').notNullable().defaultTo(knex.fn.now());
         table.double('price', 11).defaultTo(0);
     })
     await knex.table('facturation_index').insert([{
-            'companyId': 2,
-            'email': 'caca@#g',
+            'company_id': 2,
             'price': 127
         },
         {
-            'email': 'caca@#g',
             'price': 200
         },
         {

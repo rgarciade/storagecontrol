@@ -39,29 +39,29 @@
     background-color: darkgrey;
 }
 
-.scroll-find-arttticles {
+.scroll-find-articles {
     max-height: 43em;
     overflow: auto;
 }
 
 .add-new-article-line {
-    top: 32%;
-    left: 15%;
-    position: fixed;
-}
-
-.add-new-article-line {
-    top: 32%;
-    left: 15%;
-    position: fixed;
+    margin-top: 5%;
+    margin-bottom: -12%;
+    left: 9%;
+    position: relative;
 }
 
 .add-new-article-line:hover {
-    top: 32%;
-    left: 15%;
-    position: fixed;
+    margin-top: 5%;
+    margin-bottom: -12%;
+    left: 9%;
+    position: relative;
 }
 
 .busqueda-agregar-articulo {
     z-index: 100;
+}
+
+.imput-number {
+    width: 4em;
 }

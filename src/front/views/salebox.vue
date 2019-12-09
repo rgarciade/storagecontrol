@@ -30,7 +30,7 @@
           @click="openFinder()"
           v-model="textFinder"
         ></v-text-field>
-        <v-list three-line v-if="finderOpen" class="scroll-find-arttticles">
+        <v-list three-line v-if="finderOpen" class="scroll-find-articles">
               <template v-for="(item, index) in  this.articles" >
                   <v-list-tile
                     :key="item.index"
@@ -69,25 +69,28 @@
         class="elevator-0 marco_punto_venta "
         no-data="2"
         no-data-text="No hay artículos seleccionados"
+        expand
       >
       <template v-slot:items="props" class="elevator-1">
-        <td v-if="props.item.idarticles > 0">
-          {{ props.item.description }}
-        </td>
-        <td v-if="props.item.idarticles < 0">
-          <textarea type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
-              @change="changeItemDescription({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
-        </td>
+        <dir>
+          <td v-if="props.item.idarticles > 0">
+            {{ props.item.description }}
+          </td>
+          <td v-if="props.item.idarticles < 0" style="width:3000em">
+            <textarea style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
+                @change="changeItemDescription({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
+          </td>
+        </dir>
         <td>
-          <input type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+          <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
               @change="changeItemPrice({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
         </td>
         <td>
-          <input type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+          <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
             @change="changeItemUnitsNumber({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
         </td>
         <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
-        <td >
+        <td>
           <v-icon  class="mr-2" @click="addToCard(props.item.idarticles)">add_box</v-icon>
           <v-icon  @click="subtractOneToCard(props.item.idarticles)">remove_circle</v-icon>
         </td>
@@ -100,13 +103,13 @@
       <v-dialog v-model="saleDialog" max-width="711px">
         <v-stepper v-model="e1">
           <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1">tipo de pago</v-stepper-step>
+            <v-stepper-step :complete="e1 > 1" step="1">Tipo de pago</v-stepper-step>
             <v-divider></v-divider>
-<!--             <v-stepper-step :complete="e1 > 1" step="1">factura</v-stepper-step>
+            <v-stepper-step :complete="(e1 > 2 && (paymentType || creditCard ))? true : false" step="2">Factura</v-stepper-step>
             <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 1" step="1">busqueda empresa</v-stepper-step>
-            <v-divider></v-divider> -->
-            <v-stepper-step :complete="e1 > 2" step="2">Pago</v-stepper-step>
+            <v-stepper-step :complete="(e1 > 3 && paymentType)? true : false" step="3">Busqueda empresa <span v-if="companyData.id > 0 && paymentType"> {{companyData.name}}</span></v-stepper-step>
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 4" step="4">Pago</v-stepper-step>
       
           </v-stepper-header>
       
@@ -118,15 +121,75 @@
               </h1>
               <v-btn
                 color="primary"
-                @click="e1 = 2; selectPaymentType(1)"
+                @click="e1 = 2; selectPaymentType(0)"
               > <v-icon>euro_symbol</v-icon>
                 Efectivo
               </v-btn>
-      
               <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
             </v-stepper-content>
-      
             <v-stepper-content step="2">
+              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
+              <h1>
+                ¿Necesita Factura?
+              </h1>
+              <v-btn
+                color="primary"
+                @click="e1 = 3; needFacturation(1); textFinder =''"
+              > SI
+              </v-btn>
+              <v-btn
+                color="primary"
+                @click="e1 = 4; needFacturation(0); textFinder =''"
+              > no
+              </v-btn>
+            </v-stepper-content>
+            <v-stepper-content step="3">
+              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
+               <h1>
+                 Buscar compañia
+               </h1>
+               <h2 v-if="companyData.id > 0">
+                 Seleccionada: {{companyData.name}}
+               </h2>
+                <v-text-field
+                  v-on:keyup="findCompanys(textFinder)"
+                  label="Solo"
+                  placeholder="Buscar"
+                  solo
+                  v-model="textFinder"
+                ></v-text-field>
+                <v-layout
+                v-for="company in companys"
+                :key="company.name"
+                row
+                justify-space-around
+                style="margin-top: 1em"
+                >
+                  <v-flex xs9>
+                    <v-hover>
+                      <v-card
+                      color="blue-grey darken-2"
+                      slot-scope="{ hover }"
+                      :class="`elevation-${hover ? 24 : 2}`"
+                      class="white--text"
+                      >
+                        <v-card-title primary-title>
+                          <div>
+                            <div class="headline">{{company.name}}</div>
+                            <span>telefono: {{company.telephone}}</span>
+                            <span>cif: {{company.cif}}</span>
+                            <v-card-actions>
+                                <v-btn flat color="orange" @click="companyConfigurationView(company.id); e1 = 4">seleccionar</v-btn>
+                            </v-card-actions>
+                          </div>
+                        </v-card-title>
+                      </v-card>
+                    </v-hover>
+                  </v-flex>
+                </v-layout>
+            </v-stepper-content>
+            <v-stepper-content step="4">
+              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
               <v-card
                 color=""
                 style="max-height: 20em;
@@ -151,38 +214,45 @@
               
               </v-card>
               <v-layout>
-                <v-flex xs2
-                 style="padding-top: 3.5%;">
+                <v-flex xs2 style="padding-top: 3.5%;">
                   <span>Total: {{priceStoreCard}} €</span>
                 </v-flex>
-                <v-flex xs1
-                 style="padding-top: 3.5%;">
-                  <span>Entrega:</span>
+                <v-flex xs1 style="padding-top: 3.5%;">
+                  <span v-if="!creditCard" >Entrega:</span>
                 </v-flex>
-                <v-flex xs1>
+                <v-flex xs2 >
                     <v-text-field
+                    type="number"
+                    v-if="!creditCard"
                     v-model="paymentAmount"
                     :rules="numberRules"
                     style=""
                     ></v-text-field>
                 </v-flex>
-                <v-flex xs1
-                style="padding-top: 3.5%;">
-                  <span >Cambio:</span>
+                <v-flex xs1 style="padding-top: 3.5%;">
+                  <span v-if="!creditCard">Cambio:</span>
                 </v-flex>
-                <v-flex xs1>
+                <v-flex xs2>
                   <v-text-field
-                     v-model="moneyBack"
+                    v-if="!creditCard"
+                    v-model="moneyBack"
                     :disabled=true
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs1>
                 </v-flex>
-              <v-flex xs5 style="padding-top: 2.5%;padding-left: 7%;">
-
-                <v-btn  @click="e1 = 1" flat>atras</v-btn>
+                <v-flex xs1>
+                  <v-checkbox
+                  color="primary"
+                    v-model="print"
+                    label="Imprimir"
+                  ></v-checkbox>
+                </v-flex>
+             
+                <v-flex xs4 style="padding-top: 2.5%;padding-left: 7%;">
                 <v-btn
                   color="primary"
+                  :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
                   @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
                 >
                   Terminar
@@ -204,16 +274,17 @@ export default {
     return {
       finderOpen: false,
       saleDialog: false,
+      print: true,
       e1:0,
       paymentAmount:0,
       moneyBack:0,
       textFinder:"",
       headers: [
-            { text: "Descripción", value: "description" },
-            { text: "Precio de venta", value: "public_price" },
+            { text: "Descripción", value: "description",width:"80%" },
+            { text: "Precio de venta", value: "public_price"},
             { text: "unidades", value: "units" },
             { text: "precio", value: "units" },
-            { text: "Acciones", value: "name", sortable: false },
+            { text: "Acciones", value: "name", sortable: false,width:"10%" },
             { text: "", value: "", sortable: false }
       ],
       headersResumen: [
@@ -227,29 +298,24 @@ export default {
   },
   watch: {
     paymentAmount: function (val) {
-      this.moneyBack = -(this.priceStoreCard - this.paymentAmount)
-    } /* ,
-    storeCard: function (data) {
-      console.log('-->',data)
-       data.forEach(element => {
-        console.log('-->',element)
-      }); 
-    } */
+      this.moneyBack = - (this.priceStoreCard - this.paymentAmount)
+    } 
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
     this.findArticles("");
   },
-  computed: Object.assign({}, mapState(["articles","storeCard","priceStoreCard","paymentType"]), {
+  computed: Object.assign({}, mapState(["articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
     candFinish() {
       return this.storeCard.length <= 0 ? true : false;
     }
   }),
-  methods: Object.assign({}, mapActions(["changeItemPrice","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+  methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
     openFinder(e) {
-      if(!e){
+      if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
       }
+  
       if (e && e.code == "Enter" && e.type == "keydown" && !this.finderOpen) {
         this.finderOpen = !this.finderOpen;
       } else if (e && e.type && e.type == "click") {
@@ -273,12 +339,10 @@ export default {
       return document.getElementById(elementName+id).value
     },
     async insertPaiment( payed) {
-      if (payed < this.priceStoreCard) {
-        this.createStoreAlert('Importe de pago menor al requerido');
-        return
-      }
-      if (this.paymentType == 2) {
+      if (this.creditCard == 1 && this.companyData.id <= 0) {
           await this.inserFacturation()
+      }else if( this.paymentType ==1 && this.companyData.id > 0){
+        await this.inserFacturation(this.companyData.id )
       } else {
           await this.inserSale()
       }

@@ -8,12 +8,13 @@ const createAlert = (store, text) => {
 }
 const actions = {
     selectPaymentType(store, type) {
-
-        if (type == 1 || type == 2) {
-            //1 normal sale
-            //2facturation sale
-            store.commit('paymentType', type)
-        }
+        store.commit('creditCard', type)
+    },
+    needFacturation(store, type) {
+        //paymentType
+        //1 facturation
+        //0 normal 
+        store.commit('paymentType', type)
     },
     async addToCard(store, idArticle = '') {
         if (idArticle == '') {
@@ -29,10 +30,17 @@ const actions = {
                 newArticle['numberOfArticles'] = 0
             }
             store.commit("addEmptyArticleToStoreCard", newArticle)
+            store.commit("recalculatePrice")
+        } else if (idArticle < -1) {
+            let newCardArticle = [{
+                'idarticles': idArticle
+            }]
+            store.commit("addStoreCard", newCardArticle)
+            store.commit("recalculatePrice")
         } else {
             let newCardArticle = await DB_Articles.findIdArticles(idArticle)
-            let units = newCardArticle[0].units
             store.commit("addStoreCard", newCardArticle)
+            store.commit("recalculatePrice")
         }
     },
 
@@ -41,9 +49,11 @@ const actions = {
         if (articleObject.idarticles > 0) {
             articleObject.public_price = articleObject.price
             store.commit("changeArticlePrice", { 'article': articleObject })
+            store.commit("recalculatePrice")
         } else {
             articleObject.public_price = articleObject.price
             store.commit("changeArticlePrice", { 'article': articleObject })
+            store.commit("recalculatePrice")
         }
     },
     async changeItemDescription(store, articleObject) {
@@ -52,8 +62,8 @@ const actions = {
     async changeItemUnitsNumber(store, articleObject) {
         let cardArticle = articleObject
         if (articleObject.idarticles > 0) {
-            cardArticle = await DB_Articles.findIdArticles(articleObject.idarticles)[0]
-
+            let cardArticles = await DB_Articles.findIdArticles(articleObject.idarticles)
+            cardArticle = cardArticles[0]
             let units = cardArticle.units
             let description = cardArticle.description
             if (units < articleObject.units) {
@@ -62,14 +72,31 @@ const actions = {
         }
         cardArticle.numberOfArticles = articleObject.units
         store.commit("changeArticleUnitsNumber", { 'article': cardArticle })
+        store.commit("recalculatePrice")
     },
     async subtractOneToCard(store, idArticle) {
-        let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        let newCardArticle = []
+        if (idArticle > 0) {
+            newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        } else {
+            newCardArticle = [{
+                'idarticles': idArticle
+            }]
+        }
         store.commit("subtractToCard", { 'article': newCardArticle })
+        store.commit("recalculatePrice")
     },
     async subtractToCard(store, idArticle) {
-        let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        let newCardArticle = []
+        if (idArticle > 0) {
+            newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        } else {
+            newCardArticle = [{
+                'idarticles': idArticle
+            }]
+        }
         store.commit("subtractToCard", { 'article': newCardArticle, remove: true })
+        store.commit("recalculatePrice")
     },
     clearArticles(store) {
         store.commit("clearArticles")
@@ -200,7 +227,7 @@ const actions = {
         createAlert(store, 'Comnpañia creada')
         store.commit('addNewCompanyDataId', newId)
     },
-    async inserFacturation(store, companyId) {
+    async inserFacturation(store, companyId = 0) {
         store.commit("charging")
         let cartToinsert = []
         store.state.storeCard.forEach(element => {
@@ -213,7 +240,11 @@ const actions = {
         });
 
         let newId = await DB_Facturation.insertFacturation({
-                facturation: { price: store.state.priceStoreCard },
+                facturation: {
+                    company_id: companyId,
+                    price: store.state.priceStoreCard,
+                    credit_card: store.state.creditCard
+                },
                 extra: cartToinsert
             })
             .then(resp => {
@@ -232,7 +263,7 @@ const actions = {
         let cartToinsert = []
         store.state.storeCard.forEach(element => {
             cartToinsert.push({
-                articleId: element.idarticles,
+                articleid: element.idarticles,
                 price: element.public_price,
                 units: element.numberOfArticles,
                 description: element.description

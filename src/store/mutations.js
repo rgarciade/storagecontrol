@@ -10,7 +10,6 @@ const mutations = {
     },
     changeArticleDescription(state, args) {
         let article = args.article
-        console.error('arrtii->', article)
         for (let index = 0; index < state.storeCard.length; index++) {
             if (state.storeCard[index].idarticles == article.idarticles) {
                 state.storeCard[index].description = article.description
@@ -25,7 +24,6 @@ const mutations = {
                 state.storeCard[index].public_price = article.public_price
             }
         }
-        this.commit('recalculatePrice')
     },
     changeArticleUnitsNumber(state, args) {
         let article = args.article
@@ -34,7 +32,6 @@ const mutations = {
                 state.storeCard[index].numberOfArticles = article.numberOfArticles
             }
         }
-        this.commit('recalculatePrice')
     },
     reFillArticles(state) {
         state.storeCard = state.storeCardTemp
@@ -59,22 +56,20 @@ const mutations = {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {
                     state.storeCard[index].numberOfArticles++
-                        if (state.storeCard[index].numberOfArticles > state.storeCard[index].units) {
-                            this.commit('alert', '')
-                            this.commit('alert', `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`)
-                            this.commit('recalculatePrice')
+                        if ((state.storeCard[index].numberOfArticles > state.storeCard[index].units) && state.storeCard[index].idarticles > 0) {
+                            state.alert = ''
+                            state.alert = `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`
                         }
                 }
             }
         }
-        this.commit('recalculatePrice')
     },
     async subtractToCard(state, args) {
         let article = args.article
         let remove = args.remove
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
 
-        if (prev[0].numberOfArticles == 1 || remove) {
+        if (prev[0].numberOfArticles <= 1 || remove) {
             for (let index = 0; index < state.storeCard.length; index++) {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {
@@ -86,16 +81,14 @@ const mutations = {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {
                     state.storeCard[index].numberOfArticles--
-                        if (state.storeCard[index].numberOfArticles > state.storeCard[index].units) {
-                            this.commit('alert', '')
-                            this.commit('alert', `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`)
-                            this.commit('recalculatePrice')
+                        if ((state.storeCard[index].numberOfArticles > state.storeCard[index].units) && state.storeCard[index].idarticles > 0) {
+                            state.alert = ''
+                            state.alert = `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`
                         }
                 }
             }
 
         }
-        this.commit('recalculatePrice')
     },
     recalculatePrice(state) {
         let priceStoreCard = 0
@@ -147,6 +140,9 @@ const mutations = {
     },
     companyDataContacts(state, data) {
         state.companyDataContacts = data
+    },
+    creditCard(state, data) {
+        state.creditCard = data
     }
 }
 module.exports = mutations
