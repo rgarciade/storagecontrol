@@ -20,7 +20,7 @@
         "electron-compile": "^6.4.3",
         "electron-devtools-installer": "^2.2.4",
         "electron-squirrel-startup": "^1.0.0",
-        "knex": "^0.15.2",
+        "knex": ">=0.19.5",
         "mysql": "^2.16.0",
         "node-sass": "^4.10.0",
         "vue": "^2.5.17",
