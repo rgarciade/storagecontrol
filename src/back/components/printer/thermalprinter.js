@@ -34,10 +34,9 @@ const printTicket = async ( id, articles, time = null ) => {
             {
                 'initial': [
                     'MICRO-TEX INFORMATICA', 'C.C. LAS ROZAS (MADRID) 28231 ','CIF :B80898224', time
-                ]
-                ,
+                ],
                 'articles': articles,
-                'final': [`id de venta:${id}`,'Gracias por su visita'],
+                'final': [`id de venta:${id}`,'Gracias por su visita']
             }
         ),
         config: ['thermalprinter']
