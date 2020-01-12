@@ -346,7 +346,7 @@ export default {
     getValueFromNameAndId(elementName,id){
       return document.getElementById(elementName+id).value
     },
-    async insertPaiment( payed) {
+    async insertPaiment( payed ) {
       if (this.creditCard == 1 && this.companyData.id <= 0) {
           await this.inserFacturation()
       }else if( this.paymentType ==1 && this.companyData.id > 0){

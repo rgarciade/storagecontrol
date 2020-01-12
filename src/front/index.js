@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-const {createPrintWindow,createTicket} = require('simple-electron-printer-and-thermalprinter');
+import { createTicket } from '../back/components/printer/thermalprinter'
 
 import store from "../store"
 const knex = require('../back/DB/connection')
@@ -50,44 +50,7 @@ const createWindow = async() => {
 app.on('ready', () => {
     // Example of usage of Vuex Store from the main process
     // Results of action will be automatically passed to all renderer processes
-    createPrintWindow({
-
-        html: createTicket(
-            {
-                'initial': [
-                    'MICRO-TEX INFORMATICA', 'C.C. LAS ROZAS (MADRID) 28231 ','CIF :B80898224', '03-01-20 HORA: 18:12:15'
-                ]
-                ,
-                'articles': [
-                    {
-                        'quantity':12,
-                        'product':'pantallasxxxxxxxdddddd',
-                        'price':148
-                    },
-                    {
-                        'quantity':3,
-                        'product':'raton',
-                        'price':14
-                    },
-                    {
-                        'quantity':1,
-                        'product':'teclado',
-                        'price':5
-                    }
-                ],
-                'final': ['Gracias por su visita'],
-                'imgUrl': 'http://www.micro-tex.com/wp-content/uploads/2015/04/pc2.png'
-            }
-        ),
-        config: ['thermalprinter']
-        
-        })
-
-
-
     store.commit('count', 2)
-    
-
     createWindow()
 });
 

@@ -2,6 +2,8 @@ const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
+const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
+
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
@@ -249,6 +251,8 @@ const actions = {
             })
             .then(resp => {
                 store.commit("clearnStoreCard")
+                let idFacturation = resp[0]
+                printThermalPrinterFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
             })
             .catch(error => {
@@ -276,6 +280,8 @@ const actions = {
             })
             .then(resp => {
                 store.commit("clearnStoreCard")
+                let idSales = resp[0]
+                printThermalPrinterSales(idSales)
                 createAlert(store, 'Nueva venta Realizada')
             })
             .catch(error => {
