@@ -1,15 +1,11 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-import { createTicket } from '../back/components/printer/thermalprinter'
 
+import {createPrintWindow} from 'simple-electron-printer-and-thermalprinter';
 import store from "../store"
 const knex = require('../back/DB/connection')
 
-//knex.select().table('books').then(a => console.error(a)).catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
@@ -52,6 +48,41 @@ app.on('ready', () => {
     // Results of action will be automatically passed to all renderer processes
     store.commit('count', 2)
     createWindow()
+    ipcMain.on('text-fact', () => {
+        createPrintWindow({html:`
+        <img style='width: 100%;height: 129px;' src='${__dirname}/public/imgs/facturation/microtex.jpg'/>
+        <div style='width: 100%; height: 200px;'>
+            <div style='width: 40%;
+            border-left-style: solid;
+            padding-left: 7px;
+            padding-right: 7px;
+            margin-left: 7px;
+            line-height: 4px;
+            max-height: 60%;
+            border: 2px solid black;'>
+                <p>Factura N.12213</p>
+                <p>Fecha: 2020-01-01</p>
+                <p>N. cliente : 2124</p>
+            </div>
+            <div style='width: 40%;
+                border-left-style: solid;
+                padding-left: 7px;
+                padding-right: 7px;
+                margin-left: 51%;
+                margin-top: -11%;
+                line-height: 4px;
+                max-height: 60%;
+                border: 2px solid black;'>
+                    <p>Raúl garcia de la fuente</p>
+                    <p>c/menorca 2 1ºC</p>
+                    <p>las rozas</p>
+                    <p>28232</p>
+                    <p>cif: B272827262</p>
+            </div>
+        </div>
+        
+        `})
+    })
 });
 
 // Quit when all windows are closed.

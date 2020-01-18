@@ -266,11 +266,13 @@
         </v-stepper>   
       </v-dialog>
       <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
+    <button @click="pp()">aaaaa</button>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+const ipcRenderer = require('electron').ipcRenderer;
 export default {
   name: "salebox",
   data() {
@@ -319,6 +321,9 @@ export default {
     }
   }),
   methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+    pp(){
+      ipcRenderer.send('text-fact')
+    },
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
