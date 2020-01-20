@@ -1,0 +1,192 @@
+thead {
+    width: 100%;
+    height: 20px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    text-align: left;
+    padding: 8px;
+}
+
+body {
+    color: black;
+}
+
+
+/*     .img-top {
+width: 100%;
+height: 129px;
+} */
+
+.top-left {
+    width: 40%;
+    position: absolute;
+    border-left-style: solid;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-left: -8px;
+    line-height: 4px;
+    max-height: 60%;
+    border: 1px solid black;
+}
+
+.top-right {
+    width: 40%;
+    position: absolute;
+    border-left-style: solid;
+    padding-left: 7px;
+    margin-left: 51%;
+    line-height: 4px;
+    border: 1px solid black;
+}
+
+.top-group {
+    position: relative;
+    height: 150px;
+}
+
+.articles {
+    width: 95%;
+    border-collapse: collapse;
+    border-left-style: solid;
+    padding-left: 7px;
+    padding-bottom: 9px;
+    border: 2px solid #dddddd;
+}
+
+.articles tbody tr td,
+.articles tbody tr th {
+    border: 1px solid #dddddd;
+}
+
+.resume-table {
+    width: 96%;
+}
+
+.table-blue-fotter {
+    position: absolute;
+    float: bottom;
+    /* for bottom gap */
+    margin-top: -250px;
+    bottom: 0;
+}
+
+.table-blue-fotter tr td {
+    border: 0px;
+}
+
+.bot-left {
+    width: 40%;
+    position: relative;
+    border-left-style: solid;
+    padding: 7px;
+    border: 1px solid black;
+}
+
+.bot-right {
+    width: 40%;
+    position: absolute;
+    float: right;
+    padding: 7px;
+    top: -3%;
+    right: 0;
+}
+
+.bot-right-box {
+    border: 1px solid black;
+    padding: 7px;
+}
+
+.bot-bot {
+    margin-top: 7%;
+}
+
+.bot-group {
+    width: 100%;
+}
+
+.botton-color {
+    color: blue;
+    line-height: 3px;
+    bottom: 0px;
+    position: relative;
+}
+
+.group-top-content {
+    width: 104%;
+}
+
+.tb-bot {
+    border: 0px
+}
+
+.tb-bot td {
+    border: 1px solid black;
+    text-align: -webkit-center;
+    color: blue;
+    padding: 0px;
+}
+
+.footer-table-left {
+    width: 40%;
+    text-align: -webkit-center;
+    color: blue;
+    padding: 0px;
+}
+
+.footer-table-center {
+    width: 20%;
+}
+
+.footer-table-right {
+    width: 40%;
+    color: blue;
+    padding: 0px;
+}
+
+.left-bot-box {
+    width: 30%;
+    max-width: 30%;
+}
+
+.right-bot-box {
+    width: 40%;
+    max-width: 30%;
+}
+
+.table-bot-blue {
+    border-bottom: 1px solid blue;
+}
+
+.first-table-bot {
+    padding-top: 2px;
+}
+
+.last-table-bot {
+    padding-bottom: 2px;
+    border-bottom: 1px solid blue;
+}
+
+body {
+    word-break: break-all;
+}
+
+@media print {
+    .foo {
+        position: fixed;
+        bottom: 15px;
+        left: 2.5%;
+        max-width: 95%;
+    }
+}
+
+@media screen {
+    .foo {}
+}
