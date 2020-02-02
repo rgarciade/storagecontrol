@@ -352,13 +352,16 @@ export default {
       return document.getElementById(elementName+id).value
     },
     async insertPaiment( payed ) {
+      let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
-          await this.inserFacturation()
+        newId = await this.inserFacturation()
       }else if( this.paymentType ==1 && this.companyData.id > 0){
-        await this.inserFacturation(this.companyData.id )
+        newId = await this.inserFacturation(this.companyData.id )
       } else {
-          await this.inserSale()
+        newId = await this.inserSale()
       }
+      //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales
+      ///// y mover printThermalPrinterFacturation y la otra de donde esta a aqui fuera
       this.paymentAmount = 0;
     },
   })

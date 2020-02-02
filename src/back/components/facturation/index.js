@@ -1,9 +1,8 @@
 const fs = require('fs');
 const { createPrintWindow, createTicket } = require('simple-electron-printer-and-thermalprinter');
 
-const printFacturation = () => {
+const printFacturation = (articles, facturationNumber, date, clientNumber, cliet, streat, city, postalCode, cif) => {
     const cssFile = `${__dirname}/facturation.css`;
-    let css = '';
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
             if (!err) {
@@ -14,52 +13,16 @@ const printFacturation = () => {
         })
     })
     let topleft = [
-        'Factura N.12213',
-        'Fecha: 2020-01-01',
-        'N. cliente : 2124',
+        `Factura N.${facturationNumber}`,
+        `Fecha: ${date}`,
+        `N.cliente : ${clientNumber}`
     ]
     let topright = [
-        'Raúl garcia de la fuente',
-        'c/menorca 2 1ºC',
-        'las rozas',
-        '28232',
-        'cif: B272827262',
-    ]
-    let articles = [{
-            texto: 'Ordenador de sobremesa <br> Ordenador de sobremesa',
-            cantidad: '2',
-            precio: '200',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        },
-        {
-            texto: 'portatil',
-            cantidad: '2',
-            precio: '100',
-        }
+        `${cliet}`,
+        `${streat}`,
+        `${city}`,
+        `${postalCode}`,
+        `cif: ${cif}`,
     ]
     let formaDePago = 'transferencia'
     let impuesto = 21
@@ -73,7 +36,16 @@ const printFacturation = () => {
 }
 
 
-
+const printFacturationFromFacturation = async ( id ) => {
+    let facturation =  await DB_Facturation.fidFacturationId(id) 
+    let articles = await createArticlesToTicket(facturation)
+    printTicket( id, articles )
+}
+const printFacturationFromSales = async ( id ) => {
+    let sales =  await DB_Sales.fidSalesId(id) 
+    let articles = await createArticlesToTicket(sales)
+    printTicket(id, articles)
+}
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
     let topLeftHtml = ''
