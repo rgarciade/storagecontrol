@@ -241,7 +241,7 @@ const actions = {
             })
         });
 
-        let newId = await DB_Facturation.insertFacturation({
+        return await DB_Facturation.insertFacturation({
                 facturation: {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
@@ -254,13 +254,13 @@ const actions = {
                 let idFacturation = resp[0]
                 printThermalPrinterFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
+                store.commit('charged')
             })
             .catch(error => {
                 console.error(error.message)
                 createAlert(store, 'error al insertar En facturación')
+                store.commit('charged')
             })
-        store.commit('charged')
-        return newId
     },
     async inserSale(store) {
         store.commit("charging")

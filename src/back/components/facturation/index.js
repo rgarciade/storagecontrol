@@ -1,5 +1,8 @@
 const fs = require('fs');
 const { createPrintWindow, createTicket } = require('simple-electron-printer-and-thermalprinter');
+const { DB_Facturation } = require('../../DB/facturation')
+const { DB_Sales } = require('../../DB/sales')
+const { createArticlesToTicket } = require('../printer/thermalprinter')
 
 const printFacturation = (articles, facturationNumber, date, clientNumber, cliet, streat, city, postalCode, cif) => {
     const cssFile = `${__dirname}/facturation.css`;
@@ -36,15 +39,15 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, cliet
 }
 
 
-const printFacturationFromFacturation = async ( id ) => {
-    let facturation =  await DB_Facturation.fidFacturationId(id) 
+const printFacturationFromFacturation = async(id) => {
+    let facturation = await DB_Facturation.fidFacturationId(id)
     let articles = await createArticlesToTicket(facturation)
-    printTicket( id, articles )
+    printFacturation(id, articles)
 }
-const printFacturationFromSales = async ( id ) => {
-    let sales =  await DB_Sales.fidSalesId(id) 
+const printFacturationFromSales = async(id) => {
+    let sales = await DB_Sales.fidSalesId(id)
     let articles = await createArticlesToTicket(sales)
-    printTicket(id, articles)
+    printFacturation(id, articles)
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
@@ -240,4 +243,4 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
 
 }
 
-module.exports = { printFacturation }
+module.exports = { printFacturation, printFacturationFromSales, printFacturationFromFacturation }

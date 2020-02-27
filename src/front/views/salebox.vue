@@ -273,6 +273,8 @@
 <script>
 import { mapState, mapActions } from "vuex";
 const ipcRenderer = require('electron').ipcRenderer;
+import { printFacturationFromFacturation } from "../../back/components/facturation";
+import { printThermalPrinterSales, printThermalPrinterFacturation } from "../../back/components/printer/thermalprinter";
 export default {
   name: "salebox",
   data() {
@@ -354,11 +356,18 @@ export default {
     async insertPaiment( payed ) {
       let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
-        newId = await this.inserFacturation()
+        await this.inserFacturation()
+        if(this.print){
+          printFacturationFromFacturation(20)
+        }
       }else if( this.paymentType ==1 && this.companyData.id > 0){
-        newId = await this.inserFacturation(this.companyData.id )
+
+        await this.inserFacturation(this.companyData.id )
+        if(this.print){
+          printFacturationFromFacturation(20)
+        }
       } else {
-        newId = await this.inserSale()
+        await this.inserSale()
       }
       //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales
       ///// y mover printThermalPrinterFacturation y la otra de donde esta a aqui fuera

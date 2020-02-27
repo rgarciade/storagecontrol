@@ -6,7 +6,7 @@ const DB_Facturation = class {
     static async fidFacturationId(id) {
         return knex.select()
             .table(principalTableName)
-            .innerJoin(secundaryTableName,`${principalTableName}.id`,'=',`${secundaryTableName}.facturationId`)
+            .innerJoin(secundaryTableName, `${principalTableName}.id`, '=', `${secundaryTableName}.facturationId`)
             .where(`${principalTableName}.id`, id)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
