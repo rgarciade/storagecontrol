@@ -3,7 +3,7 @@ const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
-
+const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
@@ -249,10 +249,11 @@ const actions = {
                 },
                 extra: cartToinsert
             })
-            .then(resp => {
+            .then(async resp => {
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
                 printThermalPrinterFacturation(idFacturation)
+                printFacturationFromFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
                 store.commit('charged')
             })

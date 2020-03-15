@@ -39,12 +39,12 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, cliet
 }
 
 
-const printFacturationFromFacturation = async(id) => {
+const printFacturationFromFacturation = async (id) => {
     let facturation = await DB_Facturation.fidFacturationId(id)
     let articles = await createArticlesToTicket(facturation)
     printFacturation(id, articles)
 }
-const printFacturationFromSales = async(id) => {
+const printFacturationFromSales = async (id) => {
     let sales = await DB_Sales.fidSalesId(id)
     let articles = await createArticlesToTicket(sales)
     printFacturation(id, articles)
