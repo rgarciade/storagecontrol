@@ -3,7 +3,7 @@ const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
-
+const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
@@ -241,7 +241,7 @@ const actions = {
             })
         });
 
-        let newId = await DB_Facturation.insertFacturation({
+        return await DB_Facturation.insertFacturation({
                 facturation: {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
@@ -249,18 +249,19 @@ const actions = {
                 },
                 extra: cartToinsert
             })
-            .then(resp => {
+            .then(async resp => {
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
                 printThermalPrinterFacturation(idFacturation)
+                printFacturationFromFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
+                store.commit('charged')
             })
             .catch(error => {
                 console.error(error.message)
                 createAlert(store, 'error al insertar En facturación')
+                store.commit('charged')
             })
-        store.commit('charged')
-        return newId
     },
     async inserSale(store) {
         store.commit("charging")
