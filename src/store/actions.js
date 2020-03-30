@@ -260,7 +260,7 @@ const actions = {
                 createAlert(store, 'error al insertar En facturación')
             })
         store.commit('charged')
-
+        return newId
     },
     async inserSale(store) {
         store.commit("charging")
@@ -289,6 +289,7 @@ const actions = {
                 createAlert(store, 'error al insertar En Sales')
             })
         store.commit('charged')
+        return newId
     }
 }
 module.exports = actions

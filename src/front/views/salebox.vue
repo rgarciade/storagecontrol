@@ -266,11 +266,13 @@
         </v-stepper>   
       </v-dialog>
       <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
+    <button @click="pp()">aaaaa</button>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+const ipcRenderer = require('electron').ipcRenderer;
 export default {
   name: "salebox",
   data() {
@@ -319,6 +321,9 @@ export default {
     }
   }),
   methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+    pp(){
+      ipcRenderer.send('text-fact')
+    },
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
@@ -347,13 +352,16 @@ export default {
       return document.getElementById(elementName+id).value
     },
     async insertPaiment( payed ) {
+      let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
-          await this.inserFacturation()
+        newId = await this.inserFacturation()
       }else if( this.paymentType ==1 && this.companyData.id > 0){
-        await this.inserFacturation(this.companyData.id )
+        newId = await this.inserFacturation(this.companyData.id )
       } else {
-          await this.inserSale()
+        newId = await this.inserSale()
       }
+      //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales
+      ///// y mover printThermalPrinterFacturation y la otra de donde esta a aqui fuera
       this.paymentAmount = 0;
     },
   })
