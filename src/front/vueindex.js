@@ -15,6 +15,7 @@ import Contacto from './components/contacto';
 import Progress from './components/progress';
 import Alerts from './components/alerts';
 import newcompany from './components/newcompany';
+import cardGrid from './components/cardGrid';
 
 const { router } = require('./router.js')
 import store from "../store"
@@ -41,6 +42,7 @@ Vue.component('Progress', Progress)
 Vue.component('Companysfinder', Companysfinder)
 Vue.component('Alerts', Alerts)
 Vue.component('Newcompany', newcompany)
+Vue.component('cardGrid', cardGrid)
 Vue.component('Articles', articles)
 new Vue({
     el: '#app',

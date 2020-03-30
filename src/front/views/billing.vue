@@ -21,6 +21,7 @@
           <td>{{ props.item.price }}</td>
         </template>
       </v-data-table>
+      <cardGrid :isStorecard=true :headers=headersCardGrid />
     </div>
 </template>
 
@@ -28,6 +29,14 @@
 export default {
   name: "billing",
   data: () => ({
+    headersCardGrid: [
+            { text: "Descripción", value: "description",width:"80%" },
+            { text: "Precio de venta", value: "public_price"},
+            { text: "unidades", value: "units" },
+            { text: "precio", value: "units" },
+            { text: "Acciones", value: "name", sortable: false,width:"10%" },
+            { text: "", value: "", sortable: false }
+    ],
     rowsPerPage: [
       25,
       50,
