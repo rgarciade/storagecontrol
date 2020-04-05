@@ -2,7 +2,13 @@ const knex = require('./connection')
 const principalTableName = 'facturation_index';
 const secundaryTableName = 'sales_facturation_list';
 const DB_Facturation = class {
-
+    static async fidFacturationData(ids) {
+        return knex.select()
+        .table(principalTableName)
+        .whereIn(`${principalTableName}.id`, ids)
+        .then((value) => value)
+        .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
     static async fidFacturationId(id) {
         return knex.select()
             .table(principalTableName)
@@ -11,23 +17,11 @@ const DB_Facturation = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
-    static async fidFacturationfromEmail(email) {
-        return knex.select()
-            .table(principalTableName)
-            .innerJoin(secundaryTableName, () => {
-                this.on(`${principalTableName}.id`, `${principalTableName}.facturationId`)
-            })
-            .where('email', 'like', `%${email}%`)
-            .then((value) => value)
-            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
-    }
     static async fidFacturationfromCompanyId(id) {
         return knex.select()
             .table(principalTableName)
-            .innerJoin(secundaryTableName, () => {
-                this.on(`${principalTableName}.id`, `${principalTableName}.facturationId`)
-            })
-            .where('companyId', id)
+            .innerJoin(secundaryTableName, `${principalTableName}.id`,'=', `${secundaryTableName}.facturationId`)
+            .where('company_id', id)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }

@@ -11,7 +11,6 @@ const findChangesInObjetExist = (initialObjet, newObjet) => {
     return false
 }
 const currencyFormat = (num) => {
-   console.error('num',num)
    if(!num.toFixed) return num
     return (
       num

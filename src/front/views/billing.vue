@@ -3,13 +3,32 @@
       <v-card>
         <v-card-title class="headline primary lighten-3">Facturación</v-card-title>
       </v-card>
-      <v-text-field
-        v-on:keyup="findFacturation(textFinder)"
-        label="Solo"
-        placeholder="Buscar"
-        solo
-        v-model="textFinder"
-      ></v-text-field>
+      <v-card-text>
+        <v-layout row>
+          <v-flex xs1>
+            <v-btn icon @click="fidFacturation(numberFinder)">
+              <v-icon>search</v-icon>
+            </v-btn>
+          </v-flex>
+          <v-flex xs7>
+            <v-text-field
+              :mask="mask"
+              v-model="numberFinder"
+            ></v-text-field>
+          </v-flex>
+          <v-flex xs1>
+          </v-flex>
+          <v-flex xs4>
+            <v-select
+                :items="finders"
+                label="selecciona"
+                v-model="finder"
+                solo
+              ></v-select>
+          </v-flex>
+        </v-layout>
+      </v-card-text>
+     
       <v-data-table
         :headers="headers"
         :items="facturations"
@@ -37,6 +56,12 @@ import { mapActions,mapState } from "vuex"
 export default {
   name: "billing",
   data: () => ({
+    mask: "#############",
+    finder: 'id Factura',
+    finders: [
+      'id Empresa',
+      'id Factura'
+    ],
     headersCardGrid: [
             { text: "Descripción", value: "description",width:"80%" },
             { text: "Precio de venta", value: "public_price"},
@@ -48,8 +73,6 @@ export default {
     rowsPerPage: [
       25,
       50,
-      100,
-      200,
       { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
     ],
     headers: [
@@ -60,9 +83,18 @@ export default {
   }),
   computed: Object.assign({}, mapState(["facturations"]), {}),
   methods: Object.assign({},mapActions([
-      "findFacturation",
+      "fidFacturationfromCompanyId",
+      "fidFacturationfromFacturationId",
       "findAllFacturation"
-  ]),{}),
+  ]),{
+    fidFacturation(){
+      if(this.finder == 'id Factura'){
+        this.fidFacturationfromFacturationId(this.numberFinder)
+      }else{
+        this.fidFacturationfromCompanyId(this.numberFinder)
+      }
+    }
+  }),
   created() {
     this.findAllFacturation()
   }

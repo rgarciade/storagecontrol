@@ -225,6 +225,28 @@ const actions = {
     async findAllFacturation(store, text){
         store.commit('facturations', await DB_Facturation.findAllFacturation())
     },
+    async fidFacturationfromCompanyId(store,id){
+        let fidFacturationfromCompanyId = await DB_Facturation.fidFacturationfromCompanyId(id)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturationfromCompanyId.length; index++) {
+            const element = fidFacturationfromCompanyId[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
+    async fidFacturationfromFacturationId(store,id){
+        let fidFacturationFacturationId = await DB_Facturation.fidFacturationId(id)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturationFacturationId.length; index++) {
+            const element = fidFacturationFacturationId[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
     async findFacturation(store, text) {
         try {
             store.commit("charging")

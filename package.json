@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "My Electron application description",
     "author": "raul",
+    "icon": "icons/pc2_eub_icon.ico",
     "scripts": {
         "lint": "echo \"No linting configured\"",
         "css-build": "node-sass --omit-source-map-url src/public/css/app.scss src/public/css/app.css",
@@ -60,10 +61,14 @@
                 ]
             },
             "electronPackagerConfig": {
-                "packageManager": "npm"
+                "packageManager": "npm",
+                "icon": "icons/pc2_eub_icon.ico"
             },
             "electronWinstallerConfig": {
-                "name": "storagecontrol"
+                "name": "storagecontrol",
+                "icon": "icons/pc2_eub_icon.ico",
+                "setupIcon": "icons/pc2_eub_icon.ico",
+                "setupExe": "Setup.exe"
             },
             "electronInstallerDebian": {},
             "electronInstallerRedhat": {},

@@ -20,7 +20,8 @@ const createWindow = async() => {
         height: 500,
         minHeight: 500,
         minWidth: 1270,
-        titleBarStyle: 'hidden'
+        titleBarStyle: 'hidden',
+        icon:`${__dirname}/../../icons/pc2_i4T_icon64x64.ico`
     });
     mainWindow.setMenu(null);
     // and load the index.html of the app.
