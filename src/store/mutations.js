@@ -5,6 +5,11 @@ const mutations = {
         state.priceStoreCard = 0
         state.paymentType = 1
     },
+    clearnPriceStoreCard(state) {
+        state.purchaseToModify = []
+        state.pricePurchaseToModify = 0
+        state.paymentType = 1
+    },
     paymentType(state, type) {
         state.paymentType = type
     },
@@ -172,6 +177,14 @@ const mutations = {
             priceStoreCard += element.public_price * element.numberOfArticles
         }
         state.priceStoreCard = priceStoreCard
+    },
+    recalculatePricePurchaseModification(state) {
+        let pricePurchaseToModify = 0
+        for (let index = 0; index < state.PurchaseToModify.length; index++) {
+            const element = state.PurchaseToModify[index];
+            pricePurchaseToModify += element.public_price * element.numberOfArticles
+        }
+        state.pricePurchaseToModify = pricePurchaseToModify
     },
     count(state, initial = 1) {
         state.count = initial

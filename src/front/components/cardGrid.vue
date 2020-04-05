@@ -128,8 +128,8 @@
             this.findArticles("");
         },
         destroyed: function(){
-            if(this.isPurchaseToModify && !this.isStorecard){
-                this.purchaseToModify = [] 
+            if(this.isPurchaseToModify){
+                this.clearnPriceStoreCard() 
             }
         },
         props: {
@@ -152,6 +152,7 @@
             "addToCard",
             "addToPurchaseModification",
             "findArticles",
+            "clearnPriceStoreCard",
             "itemsCardList",
             "subtractOneToCard",
             "subtractOneToPurchaseModification",

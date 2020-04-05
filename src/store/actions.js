@@ -59,17 +59,17 @@ const actions = {
                 newArticle['numberOfArticles'] = 0
             }
             store.commit("addEmptyArticleToPurchaseModification", newArticle)
-            store.commit("recalculatePrice")
+            store.commit("recalculatePricePurchaseModification")
         } else if (idArticle < -1) {
             let newCardArticle = [{
                 'idarticles': idArticle
             }]
             store.commit("addPurchaseModification", newCardArticle)
-            store.commit("recalculatePrice")
+            store.commit("recalculatePricePurchaseModification")
         } else {
             let newCardArticle = await DB_Articles.findIdArticles(idArticle)
             store.commit("addPurchaseModification", newCardArticle)
-            store.commit("recalculatePrice")
+            store.commit("recalculatePricePurchaseModification")
         }
     },
 
@@ -90,11 +90,11 @@ const actions = {
         if (articleObject.idarticles > 0) {
             articleObject.public_price = articleObject.price
             store.commit("changePurchaseModificationArticlePrice", { 'article': articleObject })
-            store.commit("recalculatePrice")
+            store.commit("recalculatePricePurchaseModification")
         } else {
             articleObject.public_price = articleObject.price
             store.commit("changePurchaseModificationArticlePrice", { 'article': articleObject })
-            store.commit("recalculatePrice")
+            store.commit("recalculatePricePurchaseModification")
         }
     },
     async changeItemDescription(store, articleObject) {
@@ -131,7 +131,7 @@ const actions = {
         }
         cardArticle.numberOfArticles = articleObject.units
         store.commit("changePurchaseModificationArticleUnitsNumber", { 'article': cardArticle })
-        store.commit("recalculatePrice")
+        store.commit("recalculatePricePurchaseModification")
     },
     async subtractOneToCard(store, idArticle) {
         let newCardArticle = []
@@ -155,7 +155,7 @@ const actions = {
             }]
         }
         store.commit("subtractToPurchaseModification", { 'article': newCardArticle })
-        store.commit("recalculatePrice")
+        store.commit("recalculatePricePurchaseModification")
     },
     async subtractToCard(store, idArticle) {
         let newCardArticle = []
@@ -179,7 +179,7 @@ const actions = {
             }]
         }
         store.commit("subtractToPurchaseModification", { 'article': newCardArticle, remove: true })
-        store.commit("recalculatePrice")
+        store.commit("recalculatePricePurchaseModification")
     },
     clearArticles(store) {
         store.commit("clearArticles")
@@ -372,6 +372,9 @@ const actions = {
             })
         store.commit('charged')
         return newId
+    },
+    clearnPriceStoreCard(store){
+        store.commit("clearnPriceStoreCard") 
     }
 }
 module.exports = actions
