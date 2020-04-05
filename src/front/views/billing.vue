@@ -21,7 +21,7 @@
           <td>{{ props.item.price }}</td>
         </template>
       </v-data-table>
-      <cardGrid :isStorecard=true :headers=headersCardGrid />
+      <cardGrid :isPurchaseToModify=true :headers=headersCardGrid />
     </div>
 </template>
 

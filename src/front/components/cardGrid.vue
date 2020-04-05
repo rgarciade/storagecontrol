@@ -1,45 +1,99 @@
 
 <template>
-<!-- añadi v-on:click="closeFinder() por props en el template
--->
-    <div>
-        <v-data-table
-            :headers="headers"
-            :items="itemsList"
-            hide-actions
-            class="elevator-0 marco_punto_venta "
-            no-data="2"
-            no-data-text="No hay artículos seleccionados"
-            expand
-        >
-            <template v-slot:items="props" class="elevator-1">
-                <dir>
-                    <td v-if="props.item.idarticles > 0">
-                    {{ props.item.description }}
+    <div>    
+        <div>
+            <v-card
+                v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
+                class="align-self-start fincer busqueda-agregar-articulo"
+                raised
+                id="articlesList"
+            >
+                <v-toolbar dark>
+                    <v-btn icon @click="openFinder">
+                        <v-icon>search</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>busca</v-toolbar-title>
+                    <div class="flex-grow-1"></div>
+                </v-toolbar>
+                <v-text-field
+                    autofocus
+                    v-if="finderOpen"
+                    v-on:keyup="findArticles(textFinder)"
+                    hide-details
+                    placeholder="Buscar"
+                    solo
+                    @click="openFinder()"
+                    v-model="textFinder"
+                ></v-text-field>
+                <v-list three-line v-if="finderOpen" class="scroll-find-articles">
+                    <template v-for="(item, index) in  this.articles" >
+                        <v-list-tile
+                            :key="item.index"
+                            avatar
+                            @click="addElement(item.idarticles)"
+                            class='article-finder-box'
+                        >
+                            <v-list-tile-avatar >
+                                <v-icon>add_shopping_cart</v-icon>
+                            </v-list-tile-avatar>
+                            <v-list-tile-content >
+                                <v-list-tile-title class="article-finder" v-html="item.description"></v-list-tile-title>
+                                <v-list-tile-sub-title class="article-finder" v-html="'codigo:'+item.productid"></v-list-tile-sub-title>
+                                <v-list-tile-sub-title class="article-finder" v-html="item.public_price+'€'"></v-list-tile-sub-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-divider
+                            :key="index"
+                        ></v-divider>
+                    </template>
+                    </v-list>
+            </v-card>
+        </div>
+        <div class="all_space" v-on:click="closeFinder()">
+            <v-btn
+                color="primary"
+                @click="addElement()"
+                class = "add-new-article-line"
+                > <v-icon>add</v-icon>
+            </v-btn>
+            <v-data-table
+                :headers="headers"
+                :items="itemsList"
+                hide-actions
+                class="elevator-0 marco_punto_venta "
+                no-data="2"
+                no-data-text="No hay artículos seleccionados"
+                expand
+            >
+                <template v-slot:items="props" class="elevator-1">
+                    <dir>
+                        <td v-if="props.item.idarticles > 0">
+                        {{ props.item.description }}
+                        </td>
+                        <td v-if="props.item.idarticles < 0" style="width:3000em">
+                        <textarea style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
+                            @change="changeItemDescriptionElement({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
+                        </td>
+                    </dir>
+                    <td>
+                        <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+                            @change="changeItemPriceElemeny({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
                     </td>
-                    <td v-if="props.item.idarticles < 0" style="width:3000em">
-                    <textarea style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
-                        @change="changeItemDescription({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
+                    <td>
+                        <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+                        @change="changeItemUnitsNumberElement({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
                     </td>
-                </dir>
-                <td>
-                    <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
-                        @change="changeItemPrice({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
-                </td>
-                <td>
-                    <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
-                    @change="changeItemUnitsNumber({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
-                </td>
-                <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
-                <td>
-                    <v-icon  class="mr-2" @click="addElement( props.item.idarticles)">add_box</v-icon>
-                    <v-icon  @click="subtractOneToCardElement( props.item.idarticles)">remove_circle</v-icon>
-                </td>
-                <td>
-                    <v-icon @click="subtractToCardElement( props.item.idarticles)">delete</v-icon>
-                </td>
-            </template>
-        </v-data-table>
+                    <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
+                    <td>
+                        <v-icon  class="mr-2" @click="addElement( props.item.idarticles)">add_box</v-icon>
+                        <v-icon  @click="subtractOneToCardElement( props.item.idarticles)">remove_circle</v-icon>
+                    </td>
+                    <td>
+                        <v-icon @click="subtractToCardElement( props.item.idarticles)">delete</v-icon>
+                    </td>
+                </template>
+            </v-data-table>
+        </div>
     </div>
 </template>
 <script>
@@ -48,19 +102,30 @@
         name: 'cardGrid',
         data:() => ({
             itemsList: [],
+            finderOpen: false
         }),
         created() {
             if(this.isPurchaseToModify){
-                this.itemsList = purchaseToModify
-                this.addElement = () =>{console.log('add')}
-                this.substracElement = () =>{console.log('substrac')}
+                this.itemsList = this.purchaseToModify
+                this.addElement = this.addToPurchaseModification
+                this.subtractToCardElement = this.subtractToPurchaseModification
+                this.subtractOneToCardElement = this.subtractOneToPurchaseModification
+                this.changeItemPriceElemeny = this.changePurchaseModificationItemPrice
+                this.changeItemDescriptionElement = this.changePurchaseModificationItemDescription
+                this.changeItemUnitsNumberElement = this.changePurchaseModificationItemUnitsNumber
+                
             }
             if(this.isStorecard){
                 this.itemsList = this.storeCard
                 this.addElement = this.addToCard
                 this.subtractToCardElement = this.subtractToCard
                 this.subtractOneToCardElement = this.subtractOneToCard
+                this.changeItemPriceElemeny = this.changeItemPrice
+                this.changeItemDescriptionElement = this.changeItemDescription
+                this.changeItemUnitsNumberElement = this.changeItemUnitsNumber
             }
+            window.addEventListener("keydown", this.openFinder);
+            this.findArticles("");
         },
         destroyed: function(){
             if(this.isPurchaseToModify && !this.isStorecard){
@@ -79,14 +144,41 @@
         }),
         methods: Object.assign({},mapActions([
             "changeItemPrice",
+            "changePurchaseModificationItemPrice",
             "changeItemDescription",
+            "changePurchaseModificationItemDescription",
             "changeItemUnitsNumber",
+            "changePurchaseModificationItemUnitsNumber",
             "addToCard",
+            "addToPurchaseModification",
+            "findArticles",
             "itemsCardList",
             "subtractOneToCard",
-            "subtractToCard"]),{
+            "subtractOneToPurchaseModification",
+            "subtractToCard",
+            "subtractToPurchaseModification"
+            ]),{
             getValueFromNameAndId(elementName,id){
                 return document.getElementById(elementName+id).value
+            },
+            openFinder(e) {
+                if(!e || e.target.nodeName == 'TEXTAREA'){
+                    return 
+                }
+
+                if (e && e.code == "Enter" && e.type == "keydown" && !this.finderOpen) {
+                this.finderOpen = !this.finderOpen;
+                } else if (e && e.type && e.type == "click") {
+                    this.finderOpen = !this.finderOpen;
+                } else if (!e.type && e == "open") {
+                    this.finderOpen = true;
+                }
+                if (e && e.code == "Escape" && e.type == "keydown" && this.finderOpen) {
+                    this.closeFinder();
+                }
+            },
+            closeFinder() {
+                this.finderOpen = false;
             },
             addElement(){},
             subtractToCardElement(){},

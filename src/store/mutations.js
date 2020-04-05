@@ -16,6 +16,14 @@ const mutations = {
             }
         }
     },
+    changePurchaseModificationArticleDescription(state, args) {
+        let article = args.article
+        for (let index = 0; index < state.purchaseToModify.length; index++) {
+            if (state.purchaseToModify[index].idarticles == article.idarticles) {
+                state.purchaseToModify[index].description = article.description
+            }
+        }
+    },
     changeArticlePrice(state, args) {
         let article = args.article
         for (let index = 0; index < state.storeCard.length; index++) {
@@ -25,11 +33,28 @@ const mutations = {
             }
         }
     },
+    changePurchaseModificationArticlePrice(state, args) {
+        let article = args.article
+        for (let index = 0; index < state.purchaseToModify.length; index++) {
+
+            if (state.purchaseToModify[index].idarticles == article.idarticles) {
+                state.purchaseToModify[index].public_price = article.public_price
+            }
+        }
+    },
     changeArticleUnitsNumber(state, args) {
         let article = args.article
         for (let index = 0; index < state.storeCard.length; index++) {
             if (state.storeCard[index].idarticles == article.idarticles) {
                 state.storeCard[index].numberOfArticles = article.numberOfArticles
+            }
+        }
+    },
+    changePurchaseModificationArticleUnitsNumber(state, args) {
+        let article = args.article
+        for (let index = 0; index < state.purchaseToModify.length; index++) {
+            if (state.purchaseToModify[index].idarticles == article.idarticles) {
+                state.purchaseToModify[index].numberOfArticles = article.numberOfArticles
             }
         }
     },
@@ -45,6 +70,11 @@ const mutations = {
         state.tempItemNumber--
             state.storeCard.push(article)
     },
+    addEmptyArticleToPurchaseModification(state, article) {
+        article.idarticles = state.tempItemNumber
+        state.tempItemNumber--
+            state.purchaseToModify.push(article)
+    },
     addStoreCard(state, article) {
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
 
@@ -59,6 +89,25 @@ const mutations = {
                         if ((state.storeCard[index].numberOfArticles > state.storeCard[index].units) && state.storeCard[index].idarticles > 0) {
                             state.alert = ''
                             state.alert = `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`
+                        }
+                }
+            }
+        }
+    },
+    addPurchaseModification(state, article){
+        let prev = state.purchaseToModify.filter(d => d.idarticles == article[0].idarticles)
+
+        if (prev.length == 0) {
+            article[0].numberOfArticles = 1
+            state.purchaseToModify.push(article[0])
+        } else {
+            for (let index = 0; index < state.purchaseToModify.length; index++) {
+                const element = state.purchaseToModify[index];
+                if (element.idarticles == article[0].idarticles) {
+                    state.purchaseToModify[index].numberOfArticles++
+                        if ((state.purchaseToModify[index].numberOfArticles > state.purchaseToModify[index].units) && state.purchaseToModify[index].idarticles > 0) {
+                            state.alert = ''
+                            state.alert = `Error, solo tenemos ${ state.purchaseToModify[index].units } unidades de ${state.purchaseToModify[index].description} en stock`
                         }
                 }
             }
@@ -84,6 +133,32 @@ const mutations = {
                         if ((state.storeCard[index].numberOfArticles > state.storeCard[index].units) && state.storeCard[index].idarticles > 0) {
                             state.alert = ''
                             state.alert = `Error, solo tenemos ${ state.storeCard[index].units } unidades de ${state.storeCard[index].description} en stock`
+                        }
+                }
+            }
+
+        }
+    },
+    async subtractToPurchaseModification(state, args) {
+        let article = args.article
+        let remove = args.remove
+        let prev = state.purchaseToModify.filter(d => d.idarticles == article[0].idarticles)
+
+        if (prev[0].numberOfArticles <= 1 || remove) {
+            for (let index = 0; index < state.purchaseToModify.length; index++) {
+                const element = state.purchaseToModify[index];
+                if (element.idarticles == article[0].idarticles) {
+                    state.purchaseToModify.splice(index, 1)
+                }
+            }
+        } else {
+            for (let index = 0; index < state.purchaseToModify.length; index++) {
+                const element = state.purchaseToModify[index];
+                if (element.idarticles == article[0].idarticles) {
+                    state.purchaseToModify[index].numberOfArticles--
+                        if ((state.purchaseToModify[index].numberOfArticles > state.purchaseToModify[index].units) && state.purchaseToModify[index].idarticles > 0) {
+                            state.alert = ''
+                            state.alert = `Error, solo tenemos ${ state.purchaseToModify[index].units } unidades de ${state.purchaseToModify[index].description} en stock`
                         }
                 }
             }

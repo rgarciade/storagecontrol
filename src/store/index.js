@@ -30,6 +30,7 @@ export default new Vuex.Store({
         creditCard: 0,
         tempItemNumber: -2,
         storeCard: [],
+        purchaseToModify: [],
         itemsCardList: [],
         priceStoreCard: 0,
         newCompanyDataId: 0,
