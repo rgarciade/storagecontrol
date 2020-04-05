@@ -1,4 +1,5 @@
-const { basePrice } = require('../common/commonfunctions')
+const { basePrice,currencyFormat } = require('../common/commonfunctions')
+const moment = require('moment')
 const mutations = {
     clearnStoreCard(state) {
         state.storeCard = []
@@ -231,6 +232,17 @@ const mutations = {
     },
     creditCard(state, data) {
         state.creditCard = data
+    },
+    facturations(state, data) {
+        let temporalFacturationState = []
+        moment.locale('es');
+        data.forEach(function(element) {
+            element.facturationId = element.id
+            element.date = moment(element.creation_date).format('LLLL');
+            element.price = currencyFormat(element.price)
+            temporalFacturationState.push(element)
+        });
+        state.facturations = temporalFacturationState
     }
 }
 module.exports = mutations

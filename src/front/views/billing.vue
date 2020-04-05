@@ -3,9 +3,16 @@
       <v-card>
         <v-card-title class="headline primary lighten-3">Facturación</v-card-title>
       </v-card>
+      <v-text-field
+        v-on:keyup="findFacturation(textFinder)"
+        label="Solo"
+        placeholder="Buscar"
+        solo
+        v-model="textFinder"
+      ></v-text-field>
       <v-data-table
         :headers="headers"
-        :items="facturation"
+        :items="facturations"
         class="elevation-1"
         :rows-per-page-items="rowsPerPage"
         rows-per-page-text="Listados por pagina"
@@ -21,11 +28,12 @@
           <td>{{ props.item.price }}</td>
         </template>
       </v-data-table>
-      <cardGrid :isPurchaseToModify=true :headers=headersCardGrid />
+      <cardGrid :isPurchaseToModify=true :headers="headersCardGrid" />
     </div>
 </template>
 
 <script>
+import { mapActions,mapState } from "vuex"
 export default {
   name: "billing",
   data: () => ({
@@ -49,7 +57,15 @@ export default {
       { text: "date", value: "fecha"},
       { text: "precio", value: "price" }
     ]
-  })
+  }),
+  computed: Object.assign({}, mapState(["facturations"]), {}),
+  methods: Object.assign({},mapActions([
+      "findFacturation",
+      "findAllFacturation"
+  ]),{}),
+  created() {
+    this.findAllFacturation()
+  }
 };
 </script>
 

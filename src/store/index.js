@@ -38,7 +38,8 @@ export default new Vuex.Store({
         alert: "",
         companyDataContacts: [],
         progresActive: false,
-        companys: []
+        companys: [],
+        facturations:[]
     },
     actions,
     mutations,

@@ -222,6 +222,24 @@ const actions = {
         }
 
     },
+    async findAllFacturation(store, text){
+        store.commit('facturations', await DB_Facturation.findAllFacturation())
+    },
+    async findFacturation(store, text) {
+        try {
+            store.commit("charging")
+            if (text != '' && text) {
+                store.commit('facturations', await DB_Facturation.findArticles(text))
+            } else if (text == "") {
+                store.commit('facturations', [])
+            } else if (!text) {
+                store.commit('facturations', await DB_Facturation.findAllArticles())
+            }
+            store.commit('charged')
+        } catch (error) {
+            console.error(error)
+        }
+    },
 
     async addNewArticle(store, data) {
         store.commit("charging")
