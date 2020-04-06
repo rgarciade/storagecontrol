@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "My Electron application description",
     "author": "raul",
+    "icon": "icons/pc2_eub_icon.ico",
     "scripts": {
         "lint": "echo \"No linting configured\"",
         "css-build": "node-sass --omit-source-map-url src/public/css/app.scss src/public/css/app.css",
@@ -12,8 +13,8 @@
         "publish": "electron-forge publish",
         "start": "electron-forge start",
         "start-css": "npm run css-watch",
-        "migrations-run": "cd ./database && ../node_modules/knex/bin/cli.js migrate:latest",
-        "migrations-rollback": "cd ./database && ../node_modules/knex/bin/cli.js migrate:rollback"
+        "migrations-run": "cd database && knex migrate:latest",
+        "migrations-rollback": "cd database && knex migrate:rollback"
     },
     "dependencies": {
         "bulma": "^0.7.2",
@@ -23,10 +24,10 @@
         "knex": "^0.20.7",
         "moment": "^2.24.0",
         "mysql": "^2.16.0",
-        "node-sass": "^4.13.0",
-        "simple-electron-printer-and-thermalprinter": "^1.0.2",
+        "node-sass": "^4.13.1",
+        "simple-electron-printer-and-thermalprinter": "^1.0.6",
         "vue": "^2.6.11",
-        "vue-router": "^3.1.3",
+        "vue-router": "^3.1.5",
         "vue-style-loader": "^4.1.2",
         "vue-template-compiler": "^2.6.11",
         "vueify": "^9.4.1",
@@ -60,10 +61,14 @@
                 ]
             },
             "electronPackagerConfig": {
-                "packageManager": "npm"
+                "packageManager": "npm",
+                "icon": "icons/pc2_eub_icon.ico"
             },
             "electronWinstallerConfig": {
-                "name": "storagecontrol"
+                "name": "storagecontrol",
+                "icon": "icons/pc2_eub_icon.ico",
+                "setupIcon": "icons/pc2_eub_icon.ico",
+                "setupExe": "Setup.exe"
             },
             "electronInstallerDebian": {},
             "electronInstallerRedhat": {},

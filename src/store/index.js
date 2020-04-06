@@ -30,12 +30,16 @@ export default new Vuex.Store({
         creditCard: 0,
         tempItemNumber: -2,
         storeCard: [],
+        purchaseToModify: [],
+        itemsCardList: [],
         priceStoreCard: 0,
+        pricePurchaseToModify: 0,
         newCompanyDataId: 0,
         alert: "",
         companyDataContacts: [],
         progresActive: false,
-        companys: []
+        companys: [],
+        facturations:[]
     },
     actions,
     mutations,

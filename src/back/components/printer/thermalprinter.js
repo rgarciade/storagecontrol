@@ -24,7 +24,7 @@ const printThermalPrinterFacturation = async ( id ) => {
 const printThermalPrinterSales = async ( id ) => {
     let sales =  await DB_Sales.fidSalesId(id) 
     let articles = await createArticlesToTicket(sales)
-    printTicket(articles)
+    printTicket(id, articles)
 }
 const printTicket = async ( id, articles, time = null ) => {
     time = (!time)? moment.utc().format('YYYY-MM-DD HH:mm:ss') : time

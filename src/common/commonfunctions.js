@@ -10,6 +10,15 @@ const findChangesInObjetExist = (initialObjet, newObjet) => {
     }
     return false
 }
+const currencyFormat = (num) => {
+   if(!num.toFixed) return num
+    return (
+      num
+        .toFixed(2) // always two decimal digits
+        .replace('.', ',') // replace decimal point character with ,
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' €'
+    ) // use . as a separator
+  }
 
 const checkInputs = {
     numberRules: [
@@ -38,4 +47,4 @@ const checkInputs = {
     ],
     controlDigit: 1
 }
-module.exports = { basePrice, findChangesInObjetExist, checkInputs }
+module.exports = { basePrice, findChangesInObjetExist, checkInputs, currencyFormat }

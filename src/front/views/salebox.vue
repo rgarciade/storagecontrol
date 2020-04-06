@@ -7,270 +7,183 @@
             Total {{priceStoreCard}}€ <v-btn :disabled=candFinish color="success" @click="saleDialog = true; closeFinder()">Terminar</v-btn>
           </h1>
       </v-card>
-      <v-card
-        v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
-        class="align-self-start fincer busqueda-agregar-articulo"
-        raised
-        id="articlesList"
-      >
-        <v-toolbar dark>
-          <v-btn icon @click="openFinder">
-            <v-icon>search</v-icon>
-          </v-btn>
-          <v-toolbar-title>busca</v-toolbar-title>
-          <div class="flex-grow-1"></div>
-        </v-toolbar>
-        <v-text-field
-          autofocus
-          v-if="finderOpen"
-          v-on:keyup="findArticles(textFinder)"
-          hide-details
-          placeholder="Buscar"
-          solo
-          @click="openFinder()"
-          v-model="textFinder"
-        ></v-text-field>
-        <v-list three-line v-if="finderOpen" class="scroll-find-articles">
-              <template v-for="(item, index) in  this.articles" >
-                  <v-list-tile
-                    :key="item.index"
-                    avatar
-                    @click="addToCard(item.idarticles)"
-                    class='article-finder-box'
-                  >
-                    <v-list-tile-avatar >
-                      <v-icon>add_shopping_cart</v-icon>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content  >
-                      <v-list-tile-title class="article-finder" v-html="item.description"></v-list-tile-title>
-                      <v-list-tile-sub-title class="article-finder" v-html="'codigo:'+item.productid"></v-list-tile-sub-title>
-                      <v-list-tile-sub-title class="article-finder" v-html="item.public_price+'€'"></v-list-tile-sub-title>
-                      
-                    </v-list-tile-content>
-                  </v-list-tile>
-                  <v-divider
-                    :key="index"
-                  ></v-divider>
-              </template>
-            </v-list>
-      </v-card>
+      <cardGrid :isStorecard=true :headers=headers />
     </div>
-    <div class="all_space" v-on:click="closeFinder()">
-       <v-btn
-          color="primary"
-          @click="addToCard()"
-          class = "add-new-article-line"
-        > <v-icon>add</v-icon>
-      </v-btn>
-      <v-data-table
-        :headers="headers"
-        :items="storeCard"
-        hide-actions
-        class="elevator-0 marco_punto_venta "
-        no-data="2"
-        no-data-text="No hay artículos seleccionados"
-        expand
-      >
-      <template v-slot:items="props" class="elevator-1">
-        <dir>
-          <td v-if="props.item.idarticles > 0">
-            {{ props.item.description }}
-          </td>
-          <td v-if="props.item.idarticles < 0" style="width:3000em">
-            <textarea style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
-                @change="changeItemDescription({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
-          </td>
-        </dir>
-        <td>
-          <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
-              @change="changeItemPrice({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
-        </td>
-        <td>
-          <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
-            @change="changeItemUnitsNumber({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
-        </td>
-        <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
-        <td>
-          <v-icon  class="mr-2" @click="addToCard(props.item.idarticles)">add_box</v-icon>
-          <v-icon  @click="subtractOneToCard(props.item.idarticles)">remove_circle</v-icon>
-        </td>
-        <td><v-icon @click="subtractToCard(props.item.idarticles)">delete</v-icon></td>
-      </template>
-     </v-data-table>
-     
-    </div>
+    <v-dialog v-model="saleDialog" max-width="711px">
+      <v-stepper v-model="e1">
+        <v-stepper-header>
+          <v-stepper-step :complete="e1 > 1" step="1">Tipo de pago</v-stepper-step>
+          <v-divider></v-divider>
+          <v-stepper-step :complete="(e1 > 2 && (paymentType || creditCard ))? true : false" step="2">Factura</v-stepper-step>
+          <v-divider></v-divider>
+          <v-stepper-step :complete="(e1 > 3 && paymentType)? true : false" step="3">Busqueda empresa <span v-if="companyData.id > 0 && paymentType"> {{companyData.name}}</span></v-stepper-step>
+          <v-divider></v-divider>
+          <v-stepper-step :complete="e1 > 4" step="4">Pago</v-stepper-step>
+    
+        </v-stepper-header>
+    
+        <v-stepper-items>
+          <v-stepper-content step="1">
 
-      <v-dialog v-model="saleDialog" max-width="711px">
-        <v-stepper v-model="e1">
-          <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1">Tipo de pago</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step :complete="(e1 > 2 && (paymentType || creditCard ))? true : false" step="2">Factura</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step :complete="(e1 > 3 && paymentType)? true : false" step="3">Busqueda empresa <span v-if="companyData.id > 0 && paymentType"> {{companyData.name}}</span></v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 4" step="4">Pago</v-stepper-step>
-      
-          </v-stepper-header>
-      
-          <v-stepper-items>
-            <v-stepper-content step="1">
-
-               <h1>
-                Total {{priceStoreCard}}€
-              </h1>
-              <v-btn
-                color="primary"
-                @click="e1 = 2; selectPaymentType(0)"
-              > <v-icon>euro_symbol</v-icon>
-                Efectivo
-              </v-btn>
-              <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="2">
-              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
               <h1>
-                ¿Necesita Factura?
+              Total {{priceStoreCard}}€
+            </h1>
+            <v-btn
+              color="primary"
+              @click="e1 = 2; selectPaymentType(0)"
+            > <v-icon>euro_symbol</v-icon>
+              Efectivo
+            </v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
+          </v-stepper-content>
+          <v-stepper-content step="2">
+            <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
+            <h1>
+              ¿Necesita Factura?
+            </h1>
+            <v-btn
+              color="primary"
+              @click="e1 = 3; needFacturation(1); textFinder =''"
+            > SI
+            </v-btn>
+            <v-btn
+              color="primary"
+              @click="e1 = 4; needFacturation(0); textFinder =''"
+            > no
+            </v-btn>
+          </v-stepper-content>
+          <v-stepper-content step="3">
+            <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
+              <v-btn  @click="activeNewCompany = true">
+                Nueva Compañia
+              </v-btn>
+              <h1>
+                Buscar compañia
               </h1>
-              <v-btn
-                color="primary"
-                @click="e1 = 3; needFacturation(1); textFinder =''"
-              > SI
-              </v-btn>
-              <v-btn
-                color="primary"
-                @click="e1 = 4; needFacturation(0); textFinder =''"
-              > no
-              </v-btn>
-            </v-stepper-content>
-            <v-stepper-content step="3">
-              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
-                <v-btn  @click="activeNewCompany = true">
-                  Nueva Compañia
-                </v-btn>
-                <h1>
-                  Buscar compañia
-                </h1>
-                <h2 v-if="companyData.id > 0">
-                  Seleccionada: {{companyData.name}}
-                </h2>
-                  <v-text-field
-                    label="Solo"
-                    placeholder="Buscar"
-                    solo
-                    v-model="textFinderCompany"
-                  ></v-text-field>
-                  <v-layout
-                  v-for="company in companys"
-                  :key="company.name"
-                  row
-                  justify-space-around
-                  style="margin-top: 1em"
-                  >
-                  <v-flex xs9>
-                    <v-hover>
-                      <v-card
-                      color="blue-grey darken-2"
-                      slot-scope="{ hover }"
-                      :class="`elevation-${hover ? 24 : 2}`"
-                      class="white--text"
-                      >
-                        <v-card-title primary-title>
-                          <div>
-                            <div class="headline">{{company.name}}</div>
-                            <span>telefono: {{company.telephone}}</span>
-                            <span>cif: {{company.cif}}</span>
-                            <v-card-actions>
-                                <v-btn flat color="orange" @click="companyConfigurationView(company.id); e1 = 4">seleccionar</v-btn>
-                            </v-card-actions>
-                          </div>
-                        </v-card-title>
-                      </v-card>
-                    </v-hover>
-                  </v-flex>
-                </v-layout>
-            </v-stepper-content>
-            <v-stepper-content step="4">
-              <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
-              <v-card
-                color=""
-                style="max-height: 20em;
-                overflow: auto;"
-                
-              >
-              <v-data-table
-                :headers="headersResumen"
-                :items="storeCard"
-                hide-actions
-                class="elevator-0 marco_punto_venta"
-                style="padding-bottom: 10%; padding-top:1%"
-                no-data="2"
-              >
-                <template v-slot:items="props" class="elevator-1">
-                  <td>{{ props.item.description }}</td>
-                  <td>{{ props.item.public_price }} €</td>
-                  <td>{{ props.item.numberOfArticles }}</td>
-                  <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
-                </template>
-              </v-data-table>
-              
-              </v-card>
-              <v-layout>
-                <v-flex xs2 style="padding-top: 3.5%;">
-                  <span>Total: {{priceStoreCard}} €</span>
-                </v-flex>
-                <v-flex xs1 style="padding-top: 3.5%;">
-                  <span v-if="!creditCard" >Entrega:</span>
-                </v-flex>
-                <v-flex xs2 >
-                    <v-text-field
-                    type="number"
-                    v-if="!creditCard"
-                    v-model="paymentAmount"
-                    :rules="numberRules"
-                    style=""
-                    ></v-text-field>
-                </v-flex>
-                <v-flex xs1 style="padding-top: 3.5%;">
-                  <span v-if="!creditCard">Cambio:</span>
-                </v-flex>
-                <v-flex xs2>
-                  <v-text-field
-                    v-if="!creditCard"
-                    v-model="moneyBack"
-                    :disabled=true
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs1>
-                </v-flex>
-                <v-flex xs1>
-                  <v-checkbox
-                  color="primary"
-                    v-model="print"
-                    label="Imprimir"
-                  ></v-checkbox>
-                </v-flex>
-             
-                <v-flex xs4 style="padding-top: 2.5%;padding-left: 7%;">
-                <v-btn
-                  color="primary"
-                  :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
-                  @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
+              <h2 v-if="companyData.id > 0">
+                Seleccionada: {{companyData.name}}
+              </h2>
+                <v-text-field
+                  label="Solo"
+                  placeholder="Buscar"
+                  solo
+                  v-model="textFinderCompany"
+                ></v-text-field>
+                <v-layout
+                v-for="company in companys"
+                :key="company.name"
+                row
+                justify-space-around
+                style="margin-top: 1em"
                 >
-                  Terminar
-                </v-btn>
-             </v-flex>
+                <v-flex xs9>
+                  <v-hover>
+                    <v-card
+                    color="blue-grey darken-2"
+                    slot-scope="{ hover }"
+                    :class="`elevation-${hover ? 24 : 2}`"
+                    class="white--text"
+                    >
+                      <v-card-title primary-title>
+                        <div>
+                          <div class="headline">{{company.name}}</div>
+                          <span>telefono: {{company.telephone}}</span>
+                          <span>cif: {{company.cif}}</span>
+                          <v-card-actions>
+                              <v-btn flat color="orange" @click="companyConfigurationView(company.id); e1 = 4">seleccionar</v-btn>
+                          </v-card-actions>
+                        </div>
+                      </v-card-title>
+                    </v-card>
+                  </v-hover>
+                </v-flex>
               </v-layout>
-            </v-stepper-content>
-          </v-stepper-items>
-        </v-stepper>   
-      </v-dialog>
-      <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
+          </v-stepper-content>
+          <v-stepper-content step="4">
+            <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
+            <v-card
+              color=""
+              style="max-height: 20em;
+              overflow: auto;"
+              
+            >
+            <v-data-table
+              :headers="headersResumen"
+              :items="storeCard"
+              hide-actions
+              class="elevator-0 marco_punto_venta"
+              style="padding-bottom: 10%; padding-top:1%"
+              no-data="2"
+            >
+              <template v-slot:items="props" class="elevator-1">
+                <td>{{ props.item.description }}</td>
+                <td>{{ props.item.public_price }} €</td>
+                <td>{{ props.item.numberOfArticles }}</td>
+                <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
+              </template>
+            </v-data-table>
+            
+            </v-card>
+            <v-layout>
+              <v-flex xs2 style="padding-top: 3.5%;">
+                <span>Total: {{priceStoreCard}} €</span>
+              </v-flex>
+              <v-flex xs1 style="padding-top: 3.5%;">
+                <span v-if="!creditCard" >Entrega:</span>
+              </v-flex>
+              <v-flex xs2 >
+                  <v-text-field
+                  type="number"
+                  v-if="!creditCard"
+                  v-model="paymentAmount"
+                  :rules="numberRules"
+                  style=""
+                  ></v-text-field>
+              </v-flex>
+              <v-flex xs1 style="padding-top: 3.5%;">
+                <span v-if="!creditCard">Cambio:</span>
+              </v-flex>
+              <v-flex xs2>
+                <v-text-field
+                  v-if="!creditCard"
+                  v-model="moneyBack"
+                  :disabled=true
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs1>
+              </v-flex>
+              <v-flex xs1>
+                <v-checkbox
+                color="primary"
+                  v-model="print"
+                  label="Imprimir"
+                ></v-checkbox>
+              </v-flex>
+            
+              <v-flex xs4 style="padding-top: 2.5%;padding-left: 7%;">
+              <v-btn
+                color="primary"
+                :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
+                @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
+              >
+                Terminar
+              </v-btn>
+            </v-flex>
+            </v-layout>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>   
+    </v-dialog>
+    <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
+    <button @click="pp()">aaaaa</button>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+const ipcRenderer = require('electron').ipcRenderer;
+import { printFacturationFromFacturation } from "../../back/components/facturation";
+import { printThermalPrinterSales, printThermalPrinterFacturation } from "../../back/components/printer/thermalprinter";
 export default {
   name: "salebox",
   data() {
@@ -319,6 +232,9 @@ export default {
     }
   }),
   methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+    pp(){
+      ipcRenderer.send('text-fact')
+    },
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
@@ -347,13 +263,23 @@ export default {
       return document.getElementById(elementName+id).value
     },
     async insertPaiment( payed ) {
+      let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
-          await this.inserFacturation()
+        await this.inserFacturation()
+        if(this.print){
+          printFacturationFromFacturation(20)
+        }
       }else if( this.paymentType ==1 && this.companyData.id > 0){
+
         await this.inserFacturation(this.companyData.id )
+        if(this.print){
+          printFacturationFromFacturation(20)
+        }
       } else {
-          await this.inserSale()
+        await this.inserSale()
       }
+      //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales
+      ///// y mover printThermalPrinterFacturation y la otra de donde esta a aqui fuera
       this.paymentAmount = 0;
     },
   })

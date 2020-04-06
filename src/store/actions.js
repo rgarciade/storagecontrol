@@ -3,7 +3,7 @@ const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
-
+const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
@@ -45,6 +45,33 @@ const actions = {
             store.commit("recalculatePrice")
         }
     },
+    async addToPurchaseModification(store, idArticle = '') {
+        if (idArticle == '') {
+            let structure = await DB_Articles.returnStructure()
+            let newArticle = {};
+            for (var key in structure) {
+                let numberTypes = ['int', 'double']
+                if (numberTypes.includes(structure[key].type)) {
+                    newArticle[key] = 0
+                } else {
+                    newArticle[key] = ''
+                }
+                newArticle['numberOfArticles'] = 0
+            }
+            store.commit("addEmptyArticleToPurchaseModification", newArticle)
+            store.commit("recalculatePricePurchaseModification")
+        } else if (idArticle < -1) {
+            let newCardArticle = [{
+                'idarticles': idArticle
+            }]
+            store.commit("addPurchaseModification", newCardArticle)
+            store.commit("recalculatePricePurchaseModification")
+        } else {
+            let newCardArticle = await DB_Articles.findIdArticles(idArticle)
+            store.commit("addPurchaseModification", newCardArticle)
+            store.commit("recalculatePricePurchaseModification")
+        }
+    },
 
     async changeItemPrice(store, articleObject) {
 
@@ -58,8 +85,23 @@ const actions = {
             store.commit("recalculatePrice")
         }
     },
+    async changePurchaseModificationItemPrice(store, articleObject) {
+
+        if (articleObject.idarticles > 0) {
+            articleObject.public_price = articleObject.price
+            store.commit("changePurchaseModificationArticlePrice", { 'article': articleObject })
+            store.commit("recalculatePricePurchaseModification")
+        } else {
+            articleObject.public_price = articleObject.price
+            store.commit("changePurchaseModificationArticlePrice", { 'article': articleObject })
+            store.commit("recalculatePricePurchaseModification")
+        }
+    },
     async changeItemDescription(store, articleObject) {
         store.commit("changeArticleDescription", { 'article': articleObject })
+    },
+    async changePurchaseModificationItemDescription(store, articleObject) {
+        store.commit("changePurchaseModificationArticleDescription", { 'article': articleObject })
     },
     async changeItemUnitsNumber(store, articleObject) {
         let cardArticle = articleObject
@@ -76,6 +118,21 @@ const actions = {
         store.commit("changeArticleUnitsNumber", { 'article': cardArticle })
         store.commit("recalculatePrice")
     },
+    async changePurchaseModificationItemUnitsNumber(store, articleObject) {
+        let cardArticle = articleObject
+        if (articleObject.idarticles > 0) {
+            let cardArticles = await DB_Articles.findIdArticles(articleObject.idarticles)
+            cardArticle = cardArticles[0]
+            let units = cardArticle.units
+            let description = cardArticle.description
+            if (units < articleObject.units) {
+                createAlert(store, `Error, solo tenemos ${ units } unidades de ${description} en stock`)
+            }
+        }
+        cardArticle.numberOfArticles = articleObject.units
+        store.commit("changePurchaseModificationArticleUnitsNumber", { 'article': cardArticle })
+        store.commit("recalculatePricePurchaseModification")
+    },
     async subtractOneToCard(store, idArticle) {
         let newCardArticle = []
         if (idArticle > 0) {
@@ -88,6 +145,18 @@ const actions = {
         store.commit("subtractToCard", { 'article': newCardArticle })
         store.commit("recalculatePrice")
     },
+    async subtractOneToPurchaseModification(store, idArticle) {
+        let newCardArticle = []
+        if (idArticle > 0) {
+            newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        } else {
+            newCardArticle = [{
+                'idarticles': idArticle
+            }]
+        }
+        store.commit("subtractToPurchaseModification", { 'article': newCardArticle })
+        store.commit("recalculatePricePurchaseModification")
+    },
     async subtractToCard(store, idArticle) {
         let newCardArticle = []
         if (idArticle > 0) {
@@ -99,6 +168,18 @@ const actions = {
         }
         store.commit("subtractToCard", { 'article': newCardArticle, remove: true })
         store.commit("recalculatePrice")
+    },
+    async subtractToPurchaseModification(store, idArticle) {
+        let newCardArticle = []
+        if (idArticle > 0) {
+            newCardArticle = await DB_Articles.findIdArticles(idArticle)
+        } else {
+            newCardArticle = [{
+                'idarticles': idArticle
+            }]
+        }
+        store.commit("subtractToPurchaseModification", { 'article': newCardArticle, remove: true })
+        store.commit("recalculatePricePurchaseModification")
     },
     clearArticles(store) {
         store.commit("clearArticles")
@@ -140,6 +221,46 @@ const actions = {
             console.error(error)
         }
 
+    },
+    async findAllFacturation(store, text){
+        store.commit('facturations', await DB_Facturation.findAllFacturation())
+    },
+    async fidFacturationfromCompanyId(store,id){
+        let fidFacturationfromCompanyId = await DB_Facturation.fidFacturationfromCompanyId(id)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturationfromCompanyId.length; index++) {
+            const element = fidFacturationfromCompanyId[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
+    async fidFacturationfromFacturationId(store,id){
+        let fidFacturationFacturationId = await DB_Facturation.fidFacturationId(id)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturationFacturationId.length; index++) {
+            const element = fidFacturationFacturationId[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
+    async findFacturation(store, text) {
+        try {
+            store.commit("charging")
+            if (text != '' && text) {
+                store.commit('facturations', await DB_Facturation.findArticles(text))
+            } else if (text == "") {
+                store.commit('facturations', [])
+            } else if (!text) {
+                store.commit('facturations', await DB_Facturation.findAllArticles())
+            }
+            store.commit('charged')
+        } catch (error) {
+            console.error(error)
+        }
     },
 
     async addNewArticle(store, data) {
@@ -241,7 +362,7 @@ const actions = {
             })
         });
 
-        let newId = await DB_Facturation.insertFacturation({
+        return await DB_Facturation.insertFacturation({
                 facturation: {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
@@ -249,18 +370,19 @@ const actions = {
                 },
                 extra: cartToinsert
             })
-            .then(resp => {
+            .then(async resp => {
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
                 printThermalPrinterFacturation(idFacturation)
+                printFacturationFromFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
+                store.commit('charged')
             })
             .catch(error => {
                 console.error(error.message)
                 createAlert(store, 'error al insertar En facturación')
+                store.commit('charged')
             })
-        store.commit('charged')
-
     },
     async inserSale(store) {
         store.commit("charging")
@@ -289,6 +411,10 @@ const actions = {
                 createAlert(store, 'error al insertar En Sales')
             })
         store.commit('charged')
+        return newId
+    },
+    clearnPriceStoreCard(store){
+        store.commit("clearnPriceStoreCard") 
     }
 }
 module.exports = actions

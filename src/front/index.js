@@ -1,15 +1,12 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-import { createTicket } from '../back/components/printer/thermalprinter'
 
+import { createPrintWindow } from 'simple-electron-printer-and-thermalprinter';
 import store from "../store"
 const knex = require('../back/DB/connection')
+const { printFacturation } = require('../back/components/facturation')
 
-//knex.select().table('books').then(a => console.error(a)).catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
@@ -23,7 +20,8 @@ const createWindow = async() => {
         height: 500,
         minHeight: 500,
         minWidth: 1270,
-        titleBarStyle: 'hidden'
+        titleBarStyle: 'hidden',
+        icon:`${__dirname}/../../icons/pc2_i4T_icon64x64.ico`
     });
     mainWindow.setMenu(null);
     // and load the index.html of the app.
@@ -51,7 +49,11 @@ app.on('ready', () => {
     // Example of usage of Vuex Store from the main process
     // Results of action will be automatically passed to all renderer processes
     store.commit('count', 2)
+
     createWindow()
+    ipcMain.on('text-fact', () => {
+        printFacturation()
+    })
 });
 
 // Quit when all windows are closed.
