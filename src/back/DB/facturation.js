@@ -1,6 +1,6 @@
 const knex = require('./connection')
-const principalTableName = 'facturation_index';
-const secundaryTableName = 'sales_facturation_list';
+const principalTableName = 'facturation_index'
+const secundaryTableName = 'sales_facturation_list'
 const DB_Facturation = class {
     static async fidFacturationData(ids) {
         return knex.select()
@@ -73,6 +73,49 @@ const DB_Facturation = class {
             .catch(error => {
                 console.error(error)
             })
+    }
+    static async insertInFacturationList(newData){
+        return knex.table(secundaryTableName).insert(newData)
+                .then(resp => resolve(response))
+                .catch(error => {
+                    throw new Error(`error al insertar en ${secundaryTableName} error: ${error}`)
+                })
+    }
+    static async deleteInFacturationsList(ids){
+            return knex
+            .table(principalTableName)
+            .whereIn('id', ids)
+            .del()
+            .catch(error => {
+                throw new Error(`error al insertar en ${secundaryTableName} error: ${error}`)
+            })
+    }
+    static async updateInFacturationList(id,data){
+
+    }
+    static async updateFacturationAndArticles(id, newArticles, deleteArticlesIds, updateArticles){
+        return new Promise((resolve, reject) => {
+            for (let index = 0; index < newArticles.length; index++) {
+                const article = newArticles[index];
+                this.insertInFacturationList({
+                    facturationId : id,
+                    articleId: article.idarticles,
+                    description: article.description,
+                    price: article.public_price,
+                    units: article.numberOfArticles
+                }).catch(error => {
+                    throw new Error(`error al insertar en ${principalTableName} ${secundaryTableName} error: ${error}`)
+                })
+            }
+            for (let index = 0; index < updateArticles.length; index++) {
+                const article = updateArticles[index];
+                this.updateInFacturationList(id,article)
+            }
+            if(deleteArticlesIds.length) this.deleteInFacturationList(deleteArticlesIds)
+            resolve('update OK')
+        }).catch(error => {
+            reject(error)
+        })
     }
 }
 module.exports = { DB_Facturation }

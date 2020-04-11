@@ -430,11 +430,13 @@ const actions = {
                     description: element.description,
                     idarticles: element.articleId,
                     media:0,
+                    old:true,
                     numberOfArticles: element.units,
                     productid: element.id,
                     public_price: element.price
                 })
             }
+            store.commit('ActualFacturationId',id)
             store.commit('purchaseToModify',purchaseToModifyList)
             store.commit('FacturationListVisibility',false)
             store.commit('FacturationPreviewVisibility',true)
@@ -449,6 +451,39 @@ const actions = {
     },
     clearnPriceStoreCard(store){
         store.commit("clearnPriceStoreCard") 
+    },
+    updateBill(store){
+        let newArticles = []
+        let updateArticles = []
+        let deleteArticlesIds = []
+        DB_Facturation.fidFacturationId(store.state.ActualFacturationId).then(fidFacturationArticles => {
+            //store.commit('UpdateButton',false)
+            for (let index = 0; index < store.state.purchaseToModify.length; index++) {
+                const element = store.state.purchaseToModify[index];
+                if(!store.state.purchaseToModify[index].old){
+                    newArticles.push(store.state.purchaseToModify[index])
+                }else{
+                    updateArticles.push({
+                        description: element.description,
+                        idarticles: element.idarticles,
+                        media: element.media,
+                        numberOfArticles: element.numberOfArticles,
+                        productid: element.productid,
+                        public_price: element.public_price
+                    })
+                }
+            }
+            for (let index = 0; index < fidFacturationArticles.length; index++) {
+                const element = fidFacturationArticles[index]
+                if(!store.state.purchaseToModify.find( producto => producto.productid === element.id )){
+                    deleteArticlesIds.push(element.id)
+                }
+            }
+            let a = 1
+            DB_Facturation.updateFacturationAndArticles(store.state.ActualFacturationId, newArticles, deleteArticlesIds, updateArticles)
+            //store.commit('UpdateButton',true)
+        })
+      
     }
 }
 module.exports = actions

@@ -53,7 +53,7 @@
       <v-list v-if="FacturationPreviewVisibility">
         <v-btn outline color="indigo" fixed class="facturationButtonUp" @click="restartBillFinded()"><v-icon>import_export</v-icon></v-btn>
         <cardGrid :isPurchaseToModify=true :headers="headersCardGrid" />
-        <v-btn left color="red" @click=""><v-icon>save</v-icon></v-btn>
+        <v-btn left color="red" @click="updateBill()"><v-icon>save</v-icon></v-btn>
       </v-list>
     </div>
 </template>
@@ -99,7 +99,8 @@ export default {
       "fidFacturationfromFacturationId",
       "findAllFacturation",
       "selectBill",
-      "restartBillFinded"
+      "restartBillFinded",
+      "updateBill"
   ]),{
     fidFacturation(){
       if(this.finder == 'id Factura'){
