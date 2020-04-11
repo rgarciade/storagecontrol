@@ -379,6 +379,10 @@ const actions = {
                 extra: cartToinsert
             })
             .then(async resp => {
+                for (let index = 0; index < cartToinsert.length; index++) {
+                    const element = cartToinsert[index];
+                    DB_Articles.updateArticleUnits(element.articleId, -1 * parseInt(element.units))
+                }
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
                 printThermalPrinterFacturation(idFacturation)
@@ -409,6 +413,11 @@ const actions = {
                 extra: cartToinsert
             })
             .then(resp => {
+                for (let index = 0; index < cartToinsert.length; index++) {
+                    const element = cartToinsert[index];
+                    DB_Articles.updateArticleUnits(element.articleid, -1 * parseInt(element.units))
+                }
+                
                 store.commit("clearnStoreCard")
                 let idSales = resp[0]
                 printThermalPrinterSales(idSales)

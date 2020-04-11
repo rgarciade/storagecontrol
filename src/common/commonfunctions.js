@@ -1,6 +1,10 @@
 const basePrice = (price, vat, decimals = 2) => {
     return (price / ((vat / 100) + 1)).toFixed(decimals)
 }
+const addIvaToPrice = (price, vat, decimals = 2) => {
+    let newPrice = (((parseFloat(price) * parseFloat(vat)) / 100) + parseFloat(price)).toFixed(decimals)
+    return newPrice
+}
 const findChangesInObjetExist = (initialObjet, newObjet) => {
 
     for (var key in newObjet) {
@@ -47,4 +51,4 @@ const checkInputs = {
     ],
     controlDigit: 1
 }
-module.exports = { basePrice, findChangesInObjetExist, checkInputs, currencyFormat }
+module.exports = { basePrice, addIvaToPrice, findChangesInObjetExist, checkInputs, currencyFormat }

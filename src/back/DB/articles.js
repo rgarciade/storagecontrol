@@ -45,6 +45,14 @@ const DB_Articles = class {
             .update(datas)
             .catch(error => { console.error(error) })
     }
+    static async updateArticleUnits(id, unitChange) {
+        return knex
+            .table(tableName)
+            .where('idarticles', id)
+            .update({units: knex.raw(`units + ${unitChange}`)})
+            .catch(error => { console.error(error) })
+    }
+
     static async deleteArticle(id) {
 
         return knex

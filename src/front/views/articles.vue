@@ -46,11 +46,11 @@
                   <v-text-field
                     v-model="editedItem.price_without_vat"
                     disabled
-                    label="precio de compra sin iva"
+                    label="precio de compra con iva"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.purchase_price" label="precio de compra"></v-text-field>
+                  <v-text-field v-model="editedItem.purchase_price" label="precio de compra sin iva"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
                   <v-text-field v-model="editedItem.public_price" label="precio de venta"></v-text-field>
@@ -99,7 +99,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { basePrice, checkInputs } from "../../common/commonfunctions";
+import { basePrice, addIvaToPrice,  checkInputs } from "../../common/commonfunctions";
 
 export default {
   name: "articles",
@@ -155,9 +155,9 @@ export default {
     dialog(val) {
       val || this.close();
     },
-    "editedItem.public_price": {
+    "editedItem.purchase_price": {
       handler: function(after, before) {
-        this.editedItem.price_without_vat = basePrice(after, this.vat);
+        this.editedItem.price_without_vat = addIvaToPrice(after, this.vat);
       },
       deep: true
     }

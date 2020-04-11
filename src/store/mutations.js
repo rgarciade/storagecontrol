@@ -124,7 +124,7 @@ const mutations = {
         let remove = args.remove
         let prev = state.storeCard.filter(d => d.idarticles == article[0].idarticles)
 
-        if (prev[0].numberOfArticles <= 1 || remove) {
+        if (remove) {
             for (let index = 0; index < state.storeCard.length; index++) {
                 const element = state.storeCard[index];
                 if (element.idarticles == article[0].idarticles) {

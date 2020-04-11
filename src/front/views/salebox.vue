@@ -265,11 +265,12 @@ export default {
     async insertPaiment( payed ) {
       let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
+      
         await this.inserFacturation()
         if(this.print){
           printFacturationFromFacturation(20)
         }
-      }else if( this.paymentType ==1 && this.companyData.id > 0){
+      }else if( this.paymentType == 1 && this.companyData.id > 0){
 
         await this.inserFacturation(this.companyData.id )
         if(this.print){

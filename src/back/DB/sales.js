@@ -30,9 +30,12 @@ const DB_Sales = class {
                     data.extra.forEach(element => {
                         newData.push(Object.assign({}, saleId, element))
                     });
+
                     knex
                         .table(secundaryTableName).insert(newData)
-                        .then(resp => resolve(response))
+                        .then(resp =>{
+                            resolve(response)
+                        })
                         .catch(error => {
                             reject(new Error(`error al insertar en ${secundaryTableName} error: ${error}`))
                         })
