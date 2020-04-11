@@ -181,8 +181,9 @@ const mutations = {
     },
     recalculatePricePurchaseModification(state) {
         let pricePurchaseToModify = 0
-        for (let index = 0; index < state.PurchaseToModify.length; index++) {
-            const element = state.PurchaseToModify[index];
+        if(!state.purchaseToModify || !state.purchaseToModify.length) return 
+        for (let index = 0; index < state.purchaseToModify.length; index++) {
+            const element = state.purchaseToModify[index];
             pricePurchaseToModify += element.public_price * element.numberOfArticles
         }
         state.pricePurchaseToModify = pricePurchaseToModify

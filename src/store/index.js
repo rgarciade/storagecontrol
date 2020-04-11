@@ -42,7 +42,8 @@ export default new Vuex.Store({
         facturations:[],
         FacturationListVisibility:true,
         ActualFacturationId:0,
-        FacturationPreviewVisibility:false
+        FacturationPreviewVisibility:false,
+        UpdateButton:true
     },
     actions,
     mutations,

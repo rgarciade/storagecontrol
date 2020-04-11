@@ -83,7 +83,7 @@ const DB_Facturation = class {
     }
     static async deleteInFacturationsList(ids){
             return knex
-            .table(principalTableName)
+            .table(secundaryTableName)
             .whereIn('id', ids)
             .del()
             .catch(error => {
@@ -91,9 +91,15 @@ const DB_Facturation = class {
             })
     }
     static async updateInFacturationList(id,data){
-
+        return knex
+            .table(secundaryTableName)
+            .where('id', id)
+            .update(data)
+            .catch(error => {
+                throw new Error(`error al updatear en ${secundaryTableName} error: ${error}`)
+            })
     }
-    static async updateFacturationAndArticles(id, newArticles, deleteArticlesIds, updateArticles){
+    static async updateFacturationAndArticles(id, price,newArticles, deleteArticlesIds, updateArticles){
         return new Promise((resolve, reject) => {
             for (let index = 0; index < newArticles.length; index++) {
                 const article = newArticles[index];
@@ -109,11 +115,17 @@ const DB_Facturation = class {
             }
             for (let index = 0; index < updateArticles.length; index++) {
                 const article = updateArticles[index];
-                this.updateInFacturationList(id,article)
+                this.updateInFacturationList(article.productid,{
+                    description: article.description,
+                    price: article.public_price,
+                    units: article.numberOfArticles
+                })
             }
-            if(deleteArticlesIds.length) this.deleteInFacturationList(deleteArticlesIds)
+            if(deleteArticlesIds.length) this.deleteInFacturationsList(deleteArticlesIds)
+            this.updatefacturation(id,{ price })
             resolve('update OK')
         }).catch(error => {
+            console.error(error)
             reject(error)
         })
     }

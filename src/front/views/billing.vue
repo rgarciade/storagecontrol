@@ -53,7 +53,8 @@
       <v-list v-if="FacturationPreviewVisibility">
         <v-btn outline color="indigo" fixed class="facturationButtonUp" @click="restartBillFinded()"><v-icon>import_export</v-icon></v-btn>
         <cardGrid :isPurchaseToModify=true :headers="headersCardGrid" />
-        <v-btn left color="red" @click="updateBill()"><v-icon>save</v-icon></v-btn>
+        <p>{{pricePurchaseToModify}}</p>
+        <v-btn v-if="UpdateButton" left color="red" @click="updateBill()"><v-icon>save</v-icon></v-btn>
       </v-list>
     </div>
 </template>
@@ -92,7 +93,9 @@ export default {
   computed: Object.assign({}, mapState([
     "facturations",
     "FacturationListVisibility",
-    "FacturationPreviewVisibility"
+    "FacturationPreviewVisibility",
+    "UpdateButton",
+    "pricePurchaseToModify"
   ]), {}),
   methods: Object.assign({},mapActions([
       "fidFacturationfromCompanyId",

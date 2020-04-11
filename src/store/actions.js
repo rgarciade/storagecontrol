@@ -438,6 +438,7 @@ const actions = {
             }
             store.commit('ActualFacturationId',id)
             store.commit('purchaseToModify',purchaseToModifyList)
+            store.commit("recalculatePricePurchaseModification")
             store.commit('FacturationListVisibility',false)
             store.commit('FacturationPreviewVisibility',true)
         })
@@ -456,8 +457,9 @@ const actions = {
         let newArticles = []
         let updateArticles = []
         let deleteArticlesIds = []
+        store.commit("charging")
         DB_Facturation.fidFacturationId(store.state.ActualFacturationId).then(fidFacturationArticles => {
-            //store.commit('UpdateButton',false)
+            store.commit('UpdateButton',false)
             for (let index = 0; index < store.state.purchaseToModify.length; index++) {
                 const element = store.state.purchaseToModify[index];
                 if(!store.state.purchaseToModify[index].old){
@@ -479,9 +481,27 @@ const actions = {
                     deleteArticlesIds.push(element.id)
                 }
             }
-            let a = 1
-            DB_Facturation.updateFacturationAndArticles(store.state.ActualFacturationId, newArticles, deleteArticlesIds, updateArticles)
-            //store.commit('UpdateButton',true)
+            DB_Facturation.updateFacturationAndArticles(
+                store.state.ActualFacturationId,
+                store.state.pricePurchaseToModify,
+                newArticles,
+                deleteArticlesIds,
+                updateArticles
+            )
+            .then(res => {
+                store.commit('alert', `Factura ${store.state.ActualFacturationId} Actualizada`)
+                store.commit('alert', '');
+                this.dispatch('restartBillFinded');
+                store.commit('UpdateButton',true)
+                store.commit("charged")
+            }).catch(error =>{
+                store.commit('alert', `error al actualizar la factura ${store.state.ActualFacturationId}`)
+                store.commit('alert', '');
+                this.dispatch('restartBillFinded');
+                store.commit('UpdateButton',true)
+                store.commit("charged")
+            })
+           
         })
       
     }
