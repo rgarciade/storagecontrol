@@ -39,7 +39,10 @@ export default new Vuex.Store({
         companyDataContacts: [],
         progresActive: false,
         companys: [],
-        facturations:[]
+        facturations:[],
+        FacturationListVisibility:true,
+        ActualFacturationId:0,
+        FacturationPreviewVisibility:false
     },
     actions,
     mutations,

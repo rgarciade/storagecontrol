@@ -63,7 +63,7 @@ const actions = {
         } else if (idArticle < -1) {
             let newCardArticle = [{
                 'idarticles': idArticle
-            }]
+            }]          
             store.commit("addPurchaseModification", newCardArticle)
             store.commit("recalculatePricePurchaseModification")
         } else {
@@ -222,10 +222,14 @@ const actions = {
         }
 
     },
-    async findAllFacturation(store, text){
+    async findAllFacturation(store){
         store.commit('facturations', await DB_Facturation.findAllFacturation())
     },
     async fidFacturationfromCompanyId(store,id){
+        if(id == ''){
+            this.dispatch('findAllFacturation');
+            return
+        }
         let fidFacturationfromCompanyId = await DB_Facturation.fidFacturationfromCompanyId(id)
         let facturationsIds = []
         for (let index = 0; index < fidFacturationfromCompanyId.length; index++) {
@@ -237,6 +241,10 @@ const actions = {
         store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
     },
     async fidFacturationfromFacturationId(store,id){
+        if(id == ''){
+            this.dispatch('findAllFacturation');
+            return
+        }
         let fidFacturationFacturationId = await DB_Facturation.fidFacturationId(id)
         let facturationsIds = []
         for (let index = 0; index < fidFacturationFacturationId.length; index++) {
@@ -412,6 +420,32 @@ const actions = {
             })
         store.commit('charged')
         return newId
+    },
+    selectBill(store, id){
+        DB_Facturation.fidFacturationId(id).then(fidFacturationArticles => {
+            let purchaseToModifyList = []
+            for (let index = 0; index < fidFacturationArticles.length; index++) {
+                const element = fidFacturationArticles[index];
+                purchaseToModifyList.push({
+                    description: element.description,
+                    idarticles: element.articleId,
+                    media:0,
+                    numberOfArticles: element.units,
+                    productid: element.id,
+                    public_price: element.price
+                })
+            }
+            store.commit('purchaseToModify',purchaseToModifyList)
+            store.commit('FacturationListVisibility',false)
+            store.commit('FacturationPreviewVisibility',true)
+        })
+           
+    },
+    async restartBillFinded(store){
+        await store.commit('ActualFacturationId',0)
+        store.commit('purchaseToModify',[])
+        await store.commit('FacturationListVisibility',true)
+        await store.commit('FacturationPreviewVisibility',false)
     },
     clearnPriceStoreCard(store){
         store.commit("clearnPriceStoreCard") 

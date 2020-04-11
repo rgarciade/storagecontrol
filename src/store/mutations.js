@@ -243,6 +243,18 @@ const mutations = {
             temporalFacturationState.push(element)
         });
         state.facturations = temporalFacturationState
+    },
+    ActualFacturationId(state,id){
+        state.ActualFacturationId = id
+    },
+    FacturationListVisibility(state, visibiliti){
+        state.FacturationListVisibility = visibiliti
+    },
+    FacturationPreviewVisibility(state, visibiliti){
+        state.FacturationPreviewVisibility  =visibiliti
+    },
+    purchaseToModify(state, list){
+        state.purchaseToModify  =list
     }
 }
 module.exports = mutations
