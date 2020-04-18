@@ -13,7 +13,7 @@ const routes = [
     { path: '/Articles', name: 'Articles', component: Articles },
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
-    { path: '*', name: '*', component: Companysfinder }
+    { path: '*', name: '*', component: Salebox }
 ];
 
 const menuRoutes = [

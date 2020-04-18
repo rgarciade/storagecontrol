@@ -142,6 +142,13 @@
                 return this.storeCard.length <= 0 ? true : false;
             }
         }),
+        watch: {
+          storeCard : function (id) {
+            if(this.isStorecard){
+              this.itemsList = this.storeCard
+            }
+          }
+        },
         methods: Object.assign({},mapActions([
             "changeItemPrice",
             "changePurchaseModificationItemPrice",
@@ -184,7 +191,6 @@
             addElement(){},
             subtractToCardElement(){},
             subtractOneToCardElement(){}
-            
         })
     }
 </script>
