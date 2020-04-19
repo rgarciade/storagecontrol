@@ -147,7 +147,7 @@
                 <v-text-field
                   v-if="!creditCard"
                   v-model="moneyBack"
-                  :disabled=true
+                  :disabled="true"
                 ></v-text-field>
               </v-flex>
               <v-flex xs1>
@@ -174,8 +174,7 @@
         </v-stepper-items>
       </v-stepper>   
     </v-dialog>
-    <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect=false ></Newcompany>
-    <button @click="pp()">aaaaa</button>
+    <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect="false" ></Newcompany>
   </div>
 </template>
 
@@ -232,9 +231,6 @@ export default {
     }
   }),
   methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
-    pp(){
-      ipcRenderer.send('text-fact')
-    },
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 

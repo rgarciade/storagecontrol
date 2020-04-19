@@ -1,10 +1,11 @@
 const fs = require('fs');
-const { createPrintWindow, createTicket } = require('simple-electron-printer-and-thermalprinter');
+const { createPrintWindow } = require('simple-electron-printer-and-thermalprinter');
 const { DB_Facturation } = require('../../DB/facturation')
-const { DB_Sales } = require('../../DB/sales')
+const { DB_Companys } = require('../../DB/companys')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
+const moment = require('moment')
 
-const printFacturation = (articles, facturationNumber, date, clientNumber, cliet, streat, city, postalCode, cif) => {
+const printFacturation = (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif) => {
     const cssFile = `${__dirname}/facturation.css`;
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
@@ -21,7 +22,7 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, cliet
         `N.cliente : ${clientNumber}`
     ]
     let topright = [
-        `${cliet}`,
+        `${client}`,
         `${streat}`,
         `${city}`,
         `${postalCode}`,
@@ -41,13 +42,12 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, cliet
 
 const printFacturationFromFacturation = async (id) => {
     let facturation = await DB_Facturation.fidFacturationId(id)
+    let companyId = facturation[0].company_id
+    if( companyId == 0) return 
+    let companyData = await DB_Companys.findCompany(companyId)
     let articles = await createArticlesToTicket(facturation)
-    printFacturation(id, articles)
-}
-const printFacturationFromSales = async (id) => {
-    let sales = await DB_Sales.fidSalesId(id)
-    let articles = await createArticlesToTicket(sales)
-    printFacturation(id, articles)
+    let date =  moment(facturation[0].creation_date).format('L')
+    printFacturation(articles, id, date, companyData[0].id, companyData[0].name, companyData[0].id, companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif )
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
@@ -65,12 +65,12 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
     }
     for (let index = 0; index < articles.length; index++) {
         articlesHtml += `<tr>
-                            <td>${articles[index].texto}</td>
-                            <td>${articles[index].cantidad}</td>
-                            <td>${articles[index].precio}</td>
-                            <td>${articles[index].cantidad * articles[index].precio}</td>
+                            <td>${articles[index].product}</td>
+                            <td>${articles[index].quantity}</td>
+                            <td>${articles[index].price}</td>
+                            <td>${articles[index].quantity * articles[index].price}</td>
                         </tr>`
-        precioConImpuesto = precioConImpuesto + articles[index].cantidad * articles[index].precio
+        precioConImpuesto = precioConImpuesto + articles[index].quantity * articles[index].price
     }
 
     precioSinImpuesto = precioConImpuesto / ((21 / 100) + 1)
@@ -243,4 +243,4 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
 
 }
 
-module.exports = { printFacturation, printFacturationFromSales, printFacturationFromFacturation }
+module.exports = { printFacturation, printFacturationFromFacturation }

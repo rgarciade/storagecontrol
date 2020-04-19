@@ -5,6 +5,7 @@ const mutations = {
         state.storeCard = []
         state.priceStoreCard = 0
         state.paymentType = 1
+        state.creditCard = 0
     },
     clearnPriceStoreCard(state) {
         state.purchaseToModify = []

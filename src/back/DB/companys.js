@@ -11,6 +11,14 @@ const DB_Companys = class {
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 
     }
+    static async findCompany(id) {
+        return knex.select()
+            .table('companys')
+            .where('id', id)
+            .then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+
+    }
 
     static async updateCompany(id, datas) {
         console.error('--', datas)

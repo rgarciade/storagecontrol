@@ -385,7 +385,7 @@ const actions = {
                 }
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
-                printThermalPrinterFacturation(idFacturation)
+                printThermalPrinterFacturation(idFacturation)               
                 printFacturationFromFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
                 store.commit('charged')
