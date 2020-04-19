@@ -5,6 +5,7 @@ const DB_Facturation = class {
     static async fidFacturationData(ids) {
         return knex.select()
         .table(principalTableName)
+        .where('company_id','!=', 0 )
         .whereIn(`${principalTableName}.id`, ids)
         .then((value) => value)
         .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))

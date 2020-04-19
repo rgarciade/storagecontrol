@@ -396,6 +396,9 @@ const actions = {
                 store.commit('charged')
             })
     },
+    async printFacturation(store,id) {
+        printFacturationFromFacturation(id)
+    },
     async inserSale(store) {
         store.commit("charging")
         let cartToinsert = []

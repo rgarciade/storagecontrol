@@ -28,6 +28,9 @@ body {
     color: #676a6c;
     overflow-x: hidden;
 }
+textarea, input, body{
+  text-transform: uppercase !important;
+}
 .container_position{
   margin-top: 2em;
 }

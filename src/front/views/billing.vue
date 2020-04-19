@@ -2,6 +2,9 @@
     <div style="-webkit-app-region: drag">
         <v-card>
           <v-card-title class="headline primary lighten-3">Facturación</v-card-title>
+            <h1 class="salebox-resume" v-if="FacturationPreviewVisibility">
+              Total {{pricePurchaseToModify}}€  &nbsp;&nbsp; 
+            </h1>
         </v-card>
       <div v-if="FacturationListVisibility">
         <v-card-text>
@@ -33,6 +36,7 @@
         <v-data-table
           :headers="headers"
           :items="facturations"
+          disable-initial-sort="true"
           class="elevation-1"
           :rows-per-page-items="rowsPerPage"
           rows-per-page-text="Listados por pagina"
@@ -43,7 +47,8 @@
           </v-alert>
         </template>
           <template v-slot:items="props" >
-            <v-btn color="info" @click="selectBill(props.item.facturationId)">Modificar</v-btn>
+            <td><v-btn color="info" @click="selectBill(props.item.facturationId)">Modificar</v-btn>
+            <v-btn color="info" @click="printFacturation(props.item.facturationId)">Imprimir</v-btn></td>
             <td>{{ props.item.facturationId }}</td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.price }}</td>
@@ -53,8 +58,7 @@
       <v-list v-if="FacturationPreviewVisibility">
         <v-btn outline color="indigo" fixed class="facturationButtonUp" @click="restartBillFinded()"><v-icon>import_export</v-icon></v-btn>
         <cardGrid :isPurchaseToModify=true :headers="headersCardGrid" />
-        <p>{{pricePurchaseToModify}}</p>
-        <v-btn v-if="UpdateButton" left color="red" @click="updateBill()"><v-icon>save</v-icon></v-btn>
+        <v-btn v-if="UpdateButton" left color="red" @click="updateBill();restartBillFinded()"><v-icon>save</v-icon></v-btn>
       </v-list>
     </div>
 </template>
@@ -84,7 +88,7 @@ export default {
       { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
     ],
     headers: [
-      { text: "", value: "",sortable: false,width:"10%" },
+      { text: "", value: "",sortable: false,width:"20%" },
       { text: "facturationId", value: "Id de factura" },
       { text: "date", value: "fecha"},
       { text: "precio", value: "price" }
@@ -103,7 +107,8 @@ export default {
       "findAllFacturation",
       "selectBill",
       "restartBillFinded",
-      "updateBill"
+      "updateBill",
+      "printFacturation"
   ]),{
     fidFacturation(){
       if(this.finder == 'id Factura'){
