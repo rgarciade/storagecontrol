@@ -358,7 +358,7 @@ const actions = {
         createAlert(store, 'Comnpañia creada')
         store.commit('addNewCompanyDataId', newId)
     },
-    async inserFacturation(store, companyId = 0) {
+    async inserFacturation(store, companyId = 1) {
         store.commit("charging")
         let cartToinsert = []
         store.state.storeCard.forEach(element => {

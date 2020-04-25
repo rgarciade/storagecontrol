@@ -150,7 +150,7 @@
                     <v-icon>mail</v-icon>
                   </v-list-tile-action>
                   <v-list-tile-content>
-                    <v-list-tile-title>{{companyDataContact.email}}</v-list-tile-title>
+                    <v-list-tile-title class="email">{{companyDataContact.email}}</v-list-tile-title>
                   </v-list-tile-content>
                 </v-list-tile>
               </v-list>

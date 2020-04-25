@@ -30,6 +30,7 @@
                     label="telefono de contactor"
                 ></v-text-field>
                 <v-text-field
+                    id="correo"
                     v-model="companyData.email"
                     label="email de contactor"
                 ></v-text-field>

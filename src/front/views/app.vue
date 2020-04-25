@@ -31,6 +31,9 @@ body {
 textarea, input, body{
   text-transform: uppercase !important;
 }
+#c_email, #correo, .email{
+    text-transform: lowercase !important;
+}
 .container_position{
   margin-top: 2em;
 }

@@ -83,7 +83,7 @@
         <td>{{ props.item.price_without_vat }}</td>
         <td>{{ props.item.purchase_price }}</td>
         <td>{{ props.item.public_price }}</td>
-        <td>21</td>
+        <td>{{this.vat}}</td>
         <td>
           <input type="number" />
           {{ props.item.units }}

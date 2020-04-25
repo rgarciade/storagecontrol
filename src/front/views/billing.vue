@@ -14,9 +14,45 @@
                 <v-icon>search</v-icon>
               </v-btn>
             </v-flex>
-            <v-flex xs7>
+            <v-flex xs2>
               <v-text-field
                 :mask="mask"
+                v-model="numberFinder"
+              ></v-text-field>
+            </v-flex>
+            <v-icon>search</v-icon>
+            <v-flex xs2>
+              <v-flex xs12 lg6>
+                <v-menu
+                  ref="menu1"
+                  v-model="menu1"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  lazy
+                  transition="scale-transition"
+                  offset-y
+                  full-width
+                  max-width="290px"
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="dateFormatted"
+                      label="Date"
+                      hint="MM/DD/YYYY format"
+                      persistent-hint
+                      prepend-icon="event"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+                </v-menu>
+              <p>Date in ISO format: <strong>{{ date }}</strong></p>
+              </v-flex>
+            </v-flex>
+            <v-icon>search</v-icon>
+            <v-flex xs2>
+              <v-text-field
                 v-model="numberFinder"
               ></v-text-field>
             </v-flex>
@@ -72,7 +108,7 @@ export default {
     finder: 'id Factura',
     finders: [
       'id Empresa',
-      'id Factura'
+      'id Factura',
     ],
     headersCardGrid: [
             { text: "Descripción", value: "description",width:"80%" },
@@ -92,7 +128,9 @@ export default {
       { text: "facturationId", value: "Id de factura" },
       { text: "date", value: "fecha"},
       { text: "precio", value: "price" }
-    ]
+    ],
+    'initialDate':null,
+    menu1: false
   }),
   computed: Object.assign({}, mapState([
     "facturations",

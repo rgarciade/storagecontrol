@@ -24,6 +24,22 @@ exports.up = async function (knex, Promise) {
 
     await knex.table('companys').insert([
         {
+            cif: '0000000',
+            name: 'Varios',
+            contact: 'Varios',
+            location: '',
+            telephone: '',
+            email: '',
+            street: '',
+            city: '',
+            province: '',
+            state: '',
+            postalcode: '',
+            banck: '',
+            mobile: '',
+            notas: ''
+        },
+        {
             cif: '53619624t',
             name: 'empresiña',
             contact: 'luis',
