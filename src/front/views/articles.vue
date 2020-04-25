@@ -14,7 +14,7 @@
     </div>
     <v-toolbar flat color="white">
       <v-spacer></v-spacer>
-      <v-dialog v-model="dialog" max-width="60%">
+      <v-dialog v-model="dialog" max-width="70%">
         <template v-slot:activator="{ on }">
           <v-btn
             color="primary"
@@ -31,7 +31,7 @@
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
-                <v-flex xs12 sm6 md4>
+                <v-flex xs12 sm5 md2>
                   <v-text-field
                     v-model="editedItem.productid"
                     label="Id del prroducto"
@@ -39,25 +39,35 @@
                     validate-on-blur
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
+                <v-flex xs12 sm3 md2>
+                  <v-text-field v-model="editedItem.units" label="unidades"></v-text-field>
+                </v-flex>
+
+                </v-flex>
+                <v-flex xs12 sm4 md4>
+                  <v-text-field v-model="editedItem.purchase_price" label="precio de compra sin iva"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm4 md3>
+                  <v-text-field v-model="editedItem.public_price_without_vat" label="precio de venta sin iva" disabled></v-text-field>
+                </v-flex>
+
+
+              </v-layout>
+              <v-layout wrap>
+                <v-flex xs12 sm8 md4>
                   <v-text-field v-model="editedItem.description" label="Descripción"></v-text-field>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
+                <v-flex xs12 sm4 md4>
                   <v-text-field
                     v-model="editedItem.price_without_vat"
                     disabled
                     label="precio de compra con iva"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.purchase_price" label="precio de compra sin iva"></v-text-field>
+                <v-flex xs12 sm4 md3>
+                  <v-text-field v-model="editedItem.public_price" label="precio de venta con iva"></v-text-field>
                 </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.public_price" label="precio de venta"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field v-model="editedItem.units" label="unidades"></v-text-field>
-                </v-flex>
+
               </v-layout>
             </v-container>
           </v-card-text>
@@ -134,7 +144,8 @@ export default {
       units: null,
       purchase_price: null,
       price_without_vat: 0,
-      public_price: null
+      public_price: null,
+      public_price_without_vat: 0
     },
     defaultItem: {
       productid: "",
@@ -155,9 +166,23 @@ export default {
     dialog(val) {
       val || this.close();
     },
+    "editedItem.public_price": {
+      handler: function(after, before) {
+        if(!after) return
+        if(after.includes(',')){
+          this.editedItem.public_price = after.replace(/,/g , ".")
+        }
+        this.editedItem.public_price_without_vat = addIvaToPrice(after.replace(/,/g , "."), this.vat);
+      },
+      deep: true
+    },
     "editedItem.purchase_price": {
       handler: function(after, before) {
-        this.editedItem.price_without_vat = addIvaToPrice(after, this.vat);
+        if(!after) return
+        if(after.includes(',')){
+          this.editedItem.purchase_price = after.replace(/,/g , ".")
+        }
+        this.editedItem.price_without_vat = addIvaToPrice(after.replace(/,/g , "."), this.vat);
       },
       deep: true
     }

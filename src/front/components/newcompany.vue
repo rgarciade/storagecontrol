@@ -12,8 +12,8 @@
                 <v-text-field v-model="companyData.name" :rules="nameRules" label="Nombre de la compañia" required ></v-text-field>
                 <v-text-field v-model="companyData.cif" label="cif de la compañia" rules="cifRules" required ></v-text-field>
                 <v-text-field :value="companyData.street" id="c_street" label="calle"></v-text-field>
-                <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
                 <v-text-field :value="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
+                <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
                 <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
                 <v-text-field v-model="companyData.telephone" label="telefono de contactor" ></v-text-field>
                 <v-text-field v-model="companyData.contact" label="nombre de contacto" ></v-text-field>
