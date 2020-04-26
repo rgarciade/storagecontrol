@@ -64,8 +64,9 @@
                 no-data="2"
                 no-data-text="No hay artículos seleccionados"
                 expand
+                disable-initial-sort
             >
-                <template v-slot:items="props" class="elevator-1">
+                <template v-slot:items="props" class="elevator-1 marco_interior_punto_de_venta">
                     <dir>
                         <td v-if="props.item.idarticles > 0">
                         {{ props.item.description }}
@@ -75,14 +76,15 @@
                             @change="changeItemDescriptionElement({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
                         </td>
                     </dir>
+                     <td>
+                        <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+                        @change="changeItemUnitsNumberElement({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
+                    </td>
                     <td>
                         <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
                             @change="changeItemPriceElemeny({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
                     </td>
-                    <td>
-                        <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
-                        @change="changeItemUnitsNumberElement({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
-                    </td>
+                   
                     <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
                     <td>
                         <v-icon  class="mr-2" @click="addElement( props.item.idarticles)">add_box</v-icon>
@@ -102,7 +104,15 @@
         name: 'cardGrid',
         data:() => ({
             itemsList: [],
-            finderOpen: false
+            finderOpen: false,
+            headers: [
+                { text: "Descripción", value: "description",width:"80%", sortable: false},
+                { text: "Unidades", value: "units", sortable: false},
+                { text: "Precio de venta", value: "public_price", sortable: false},
+                { text: "Total", value: "units", sortable: false},
+                { text: "Acciones", value: "name", width:"10%", sortable: false},
+                { text: "", value: "", sortable: false }
+            ]
         }),
         created() {
             if(this.isPurchaseToModify){
@@ -133,7 +143,6 @@
             }
         },
         props: {
-            headers:Array,
             isPurchaseToModify: Boolean,
             isStorecard: Boolean
         },

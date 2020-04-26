@@ -93,7 +93,7 @@
       </div>
       <v-list v-if="FacturationPreviewVisibility">
         <v-btn outline color="indigo" fixed class="facturationButtonUp" @click="restartBillFinded()"><v-icon>import_export</v-icon></v-btn>
-        <cardGrid :isPurchaseToModify=true :headers="headersCardGrid" />
+        <cardGrid :isPurchaseToModify=true />
         <v-btn v-if="UpdateButton" left color="red" @click="updateBill();restartBillFinded()"><v-icon>save</v-icon></v-btn>
       </v-list>
     </div>
@@ -109,14 +109,6 @@ export default {
     finders: [
       'id Empresa',
       'id Factura',
-    ],
-    headersCardGrid: [
-            { text: "Descripción", value: "description",width:"80%" },
-            { text: "Precio de venta", value: "public_price"},
-            { text: "unidades", value: "units" },
-            { text: "precio", value: "units" },
-            { text: "Acciones", value: "name", sortable: false,width:"10%" },
-            { text: "", value: "", sortable: false }
     ],
     rowsPerPage: [
       25,

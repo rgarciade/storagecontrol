@@ -33,6 +33,7 @@ export default new Vuex.Store({
         purchaseToModify: [],
         itemsCardList: [],
         priceStoreCard: 0,
+        incomingMoney: 0,
         pricePurchaseToModify: 0,
         newCompanyDataId: 0,
         alert: "",

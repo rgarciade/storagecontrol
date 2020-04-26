@@ -7,7 +7,7 @@
             Total {{priceStoreCard}}€ <v-btn :disabled=candFinish color="success" @click="saleDialog = true; closeFinder()">Terminar</v-btn>
           </h1>
       </v-card>
-      <cardGrid :isStorecard=true :headers=headers />
+      <cardGrid :isStorecard=true />
     </div>
     <v-dialog v-model="saleDialog" max-width="711px">
       <v-stepper v-model="e1">
@@ -196,14 +196,6 @@ export default {
       textFinder:"",
       textFinderCompany:"",
       activeNewCompany: false,
-      headers: [
-            { text: "Descripción", value: "description",width:"80%" },
-            { text: "Precio de venta", value: "public_price"},
-            { text: "unidades", value: "units" },
-            { text: "precio", value: "units" },
-            { text: "Acciones", value: "name", sortable: false,width:"10%" },
-            { text: "", value: "", sortable: false }
-      ],
       headersResumen: [
         { text: "Descripción", value: "description" },
         { text: "Precio de venta", value: "public_price" },
@@ -215,7 +207,12 @@ export default {
   },
   watch: {
     paymentAmount: function (val) {
+      
       this.moneyBack = - (this.priceStoreCard - this.paymentAmount)
+      
+      if(this.moneyBack > 0){
+        this.updateIncomingMoney( this.paymentAmount )
+      }
     },
     textFinderCompany: function (val) {
       this.findCompanys(val)
@@ -230,7 +227,7 @@ export default {
       return this.storeCard.length <= 0 ? true : false;
     }
   }),
-  methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType"]), {
+  methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
@@ -273,6 +270,7 @@ export default {
           printFacturationFromFacturation(20)
         }
       } else {
+        
         await this.inserSale()
       }
       //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales

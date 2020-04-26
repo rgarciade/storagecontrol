@@ -257,6 +257,9 @@ const mutations = {
     },
     purchaseToModify(state, list){
         state.purchaseToModify  =list
+    },
+    updateIncomingMoney(state, value){
+        state.incomingMoney = value
     }
 }
 module.exports = mutations

@@ -5,19 +5,19 @@
               Creación de Cliente
             </v-card-title>
             <v-card-text>
-                <v-form 
+              <v-form 
                 ref="form"
                 lazy-validation
                 v-model="valid">
                 <v-text-field v-model="companyData.name" :rules="nameRules" label="Nombre de la compañia" required ></v-text-field>
-                <v-text-field v-model="companyData.cif" label="cif de la compañia" rules="cifRules" required ></v-text-field>
+                <v-text-field v-model="companyData.cif" label="cif de la compañia" ></v-text-field>
                 <v-text-field :value="companyData.street" id="c_street" label="calle"></v-text-field>
+                <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
                 <v-text-field :value="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
                 <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
-                <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
                 <v-text-field v-model="companyData.telephone" label="telefono de contactor" ></v-text-field>
                 <v-text-field v-model="companyData.contact" label="nombre de contacto" ></v-text-field>
-                <v-text-field id="correo" v-model="companyData.email" label="email de facturacion / contacto" ></v-text-field>
+                <v-text-field id="correo" v-model="companyData.email" label="email de facturacion y contacto" ></v-text-field>
                 <v-textarea
                   solo
                   id="c_notas"

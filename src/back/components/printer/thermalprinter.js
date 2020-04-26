@@ -16,31 +16,39 @@ const createArticlesToTicket = ( articles ) => {
     return articlesFormat
 }
 
-const printThermalPrinterFacturation = async ( id ) => {
+const printThermalPrinterFacturation = async ( id, delivered = null ) => {
     let facturation =  await DB_Facturation.fidFacturationId(id) 
     let articles = await createArticlesToTicket(facturation)
-    printTicket( id, articles )
+    printTicket( id, articles, delivered )
 }
-const printThermalPrinterSales = async ( id ) => {
+const printThermalPrinterSales = async ( id, delivered = null) => {
     let sales =  await DB_Sales.fidSalesId(id) 
     let articles = await createArticlesToTicket(sales)
-    printTicket(id, articles)
+    printTicket(id, articles, delivered)
 }
-const printTicket = async ( id, articles, time = null ) => {
+const printTicket = async ( id, articles, delivered = null, time = null ) => {
     time = (!time)? moment.utc().format('YYYY-MM-DD HH:mm:ss') : time
     createPrintWindow({
-
         html: createTicket(
             {
                 'initial': [
-                    'MICRO-TEX INFORMATICA', 'C.C. LAS ROZAS (MADRID) 28231 ','CIF :B80898224', time
+                    `id de venta:${id}`,
+                    '',
+                    'MICRO-TEX INFORMATICA',
+                    'Avenida de atenas 2, local 22 23',
+                    'C.C. LAS ROZAS (MADRID) 28231 ',
+                    'CIF :B80898224', 
+                    time,
+                    ''
                 ],
                 'articles': articles,
-                'final': [`id de venta:${id}`,'Gracias por su visita']
+                'final': ['Gracias por su visita'],
+                'iva': 21,
+                'delivered':delivered
             }
         ),
         config: ['thermalprinter']
-        })
+     })
 }
 
 module.exports = { printThermalPrinterSales, printThermalPrinterFacturation, createArticlesToTicket, createTicket }

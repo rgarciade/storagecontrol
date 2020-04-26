@@ -21,7 +21,7 @@
           </v-flex>
         </v-layout>
         <v-layout>
-          <v-flex xs12 md3>
+          <v-flex xs12 md2>
             <v-text-field
               :value="companyData.telephone"
               id="c_telephone"
@@ -45,12 +45,12 @@
           <v-flex xs12 md3>
             <v-text-field :value="companyData.banck" id="c_banck" label="banco"></v-text-field>
           </v-flex>
-          <v-flex xs12 md2>
-            <v-text-field :value="companyData.cta" id="c_cta" :rules="controlDigit" label="cta"></v-text-field>
+          <v-flex xs12 md3>
+            <v-text-field :value="companyData.cta" id="c_cta" :rules="controlDigit" label="cuenta"></v-text-field>
           </v-flex>
         </v-layout>
         <v-layout>
-          <v-flex xs12 m2>
+          <v-flex xs3 m2>
             <v-text-field
               :value="companyData.email"
               id="c_email"
@@ -59,17 +59,17 @@
               required
             ></v-text-field>
           </v-flex>
-          <v-flex xs12 md2>
-            <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
+          <v-flex xs12 md5>
+            <v-text-field :value="companyData.street" id="c_street" label="calle"></v-text-field>
+          </v-flex>
+          <v-flex xs2 md1>
+            <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
           </v-flex>
           <v-flex xs12 md2>
             <v-text-field :value="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
           </v-flex>
-          <v-flex xs12 md3>
-            <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
-          </v-flex>
-          <v-flex xs12 md3>
-            <v-text-field :value="companyData.street" id="c_street" label="calle"></v-text-field>
+          <v-flex xs12 md2>
+            <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
           </v-flex>
         </v-layout>
         <v-layout>
