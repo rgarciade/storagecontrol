@@ -412,7 +412,7 @@ const actions = {
             })
         });
 
-        let newId = await DB_Sales.insertSales({
+        await DB_Sales.insertSales({
                 sale: { price: store.state.priceStoreCard },
                 extra: cartToinsert
             })
@@ -433,7 +433,6 @@ const actions = {
                 createAlert(store, 'error al insertar En Sales')
             })
         store.commit('charged')
-        return newId
     },
     selectBill(store, id){
         DB_Facturation.fidFacturationId(id).then(fidFacturationArticles => {

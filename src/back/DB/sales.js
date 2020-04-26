@@ -22,7 +22,6 @@ const DB_Sales = class {
         return new Promise((resolve, reject) => {
             knex
                 .table(principalTableName).insert(data.sale)
-                .returning('id')
                 .then((response) => {
                     if (!response[0]) reject(new Error(`error al insertar en ${principalTableName}`))
                     let saleId = { saleId: response[0] }

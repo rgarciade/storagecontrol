@@ -36,7 +36,6 @@ const DB_Facturation = class {
         return new Promise((resolve, reject) => {
             knex
                 .table(principalTableName).insert(data.facturation)
-                .returning('id')
                 .then((response) => {
                     if (!response[0]) reject(new Error(`error al insertar en ${principalTableName}`))
                     let facturationId = { facturationId: response[0] }
