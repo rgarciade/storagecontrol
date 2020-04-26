@@ -385,7 +385,8 @@ const actions = {
                 }
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
-                printThermalPrinterFacturation(idFacturation)               
+                printThermalPrinterFacturation(idFacturation, store.state.incomingMoney)               
+                state.incomingMoney = 0
                 printFacturationFromFacturation(idFacturation)
                 createAlert(store, 'Nueva factura creada')
                 store.commit('charged')
@@ -423,7 +424,8 @@ const actions = {
                 
                 store.commit("clearnStoreCard")
                 let idSales = resp[0]
-                printThermalPrinterSales(idSales)
+                printThermalPrinterSales(idSales, store.state.incomingMoney)
+                state.incomingMoney = 0
                 createAlert(store, 'Nueva venta Realizada')
             })
             .catch(error => {
@@ -516,6 +518,9 @@ const actions = {
            
         })
       
+    },
+    updateIncomingMoney(store, value){
+        store.commit("updateIncomingMoney",value)
     }
 }
 module.exports = actions
