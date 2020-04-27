@@ -260,6 +260,9 @@ const mutations = {
     },
     updateIncomingMoney(state, value){
         state.incomingMoney = value
+    },
+    setprintType(state, value){
+        state.printType = value
     }
 }
 module.exports = mutations

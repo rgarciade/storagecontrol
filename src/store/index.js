@@ -26,6 +26,7 @@ export default new Vuex.Store({
             price_without_vat: null,
             public_price: null
         }],
+        printType:'nada',
         paymentType: 1,
         creditCard: 0,
         tempItemNumber: -2,

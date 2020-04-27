@@ -385,14 +385,22 @@ const actions = {
                 }
                 store.commit("clearnStoreCard")
                 let idFacturation = resp[0]
-                printThermalPrinterFacturation(idFacturation, store.state.incomingMoney)               
-                store.state.incomingMoney = 0
-                printFacturationFromFacturation(idFacturation)
-                createAlert(store, 'Nueva factura creada')
+                if( store.state.printType == 'factura' || store.state.printType == 'ambas'){
+                    printFacturationFromFacturation(idFacturation)
+                }
+                if(store.state.printType == 'ticket' || store.state.printType == 'ambas'  || (  store.state.printType == 'nada' && store.state.creditCard )){
+                    printThermalPrinterFacturation(idFacturation, store.state.incomingMoney)
+                }
+                store.commit('setprintType','nada')
+                store.commit('updateIncomingMoney',0)
                 store.commit('charged')
+                createAlert(store, 'Nueva factura creada')
+               
             })
             .catch(error => {
                 console.error(error.message)
+                store.commit('setprintType','nada')
+                store.commit('updateIncomingMoney',0)
                 createAlert(store, 'error al insertar En facturación')
                 store.commit('charged')
             })
@@ -425,7 +433,7 @@ const actions = {
                 store.commit("clearnStoreCard")
                 let idSales = resp[0]
                 printThermalPrinterSales(idSales, store.state.incomingMoney)
-                store.state.incomingMoney = 0
+                store.commit('updateIncomingMoney',0)
                 createAlert(store, 'Nueva venta Realizada')
             })
             .catch(error => {
@@ -520,6 +528,9 @@ const actions = {
     },
     updateIncomingMoney(store, value){
         store.commit("updateIncomingMoney",value)
+    },
+    setprintType(store, value){
+        store.commit("setprintType",value)
     }
 }
 module.exports = actions

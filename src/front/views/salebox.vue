@@ -125,14 +125,29 @@
             
             </v-card>
             <v-layout>
-              <v-flex xs2 style="padding-top: 3.5%;">
-                <span>Total: {{priceStoreCard}} €</span>
+              <v-flex xs9 style="padding-top: 8.5%;">
+                <span class="input_center">Total: {{priceStoreCard}} €</span>
               </v-flex>
-              <v-flex xs1 style="padding-top: 3.5%;">
-                <span v-if="!creditCard" >Entrega:</span>
+              <v-flex xs1>
+              </v-flex>
+              <v-flex xs3 style="padding-top: 3.5%;">
+                <v-select
+                  v-if="paymentType == 1"
+                  :items="printTypesitems"
+                  v-model="printTypeVal"
+                  label="Imprimir"
+                  outline
+                >
+                </v-select>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs2 style="padding-top: 3.5%;">
+                <span v-if="!creditCard" >Entrega: </span>
               </v-flex>
               <v-flex xs2 >
                   <v-text-field
+                  class="input_center"
                   type="number"
                   v-if="!creditCard"
                   v-model="paymentAmount"
@@ -140,35 +155,26 @@
                   style=""
                   ></v-text-field>
               </v-flex>
-              <v-flex xs1 style="padding-top: 3.5%;">
-                <span v-if="!creditCard">Cambio:</span>
+              <v-flex xs2 style="padding-top: 3.5%;">
+                <span class="input_center" v-if="!creditCard">Cambio: </span>
               </v-flex>
               <v-flex xs2>
                 <v-text-field
+                  class="input_center"
                   v-if="!creditCard"
                   v-model="moneyBack"
                   :disabled="true"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs1>
+              <v-flex xs4 style="padding-left: 7%;">
+                <v-btn
+                  color="primary"
+                  :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
+                  @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
+                >
+                  Terminar
+                </v-btn>
               </v-flex>
-              <v-flex xs1>
-                <v-checkbox
-                color="primary"
-                  v-model="print"
-                  label="Imprimir"
-                ></v-checkbox>
-              </v-flex>
-            
-              <v-flex xs4 style="padding-top: 2.5%;padding-left: 7%;">
-              <v-btn
-                color="primary"
-                :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
-                @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
-              >
-                Terminar
-              </v-btn>
-            </v-flex>
             </v-layout>
           </v-stepper-content>
         </v-stepper-items>
@@ -189,8 +195,8 @@ export default {
     return {
       finderOpen: false,
       saleDialog: false,
-      print: true,
       e1:0,
+      printTypeVal:'nada',
       paymentAmount:0,
       moneyBack:0,
       textFinder:"",
@@ -202,6 +208,12 @@ export default {
         { text: "unidades", value: "units" },
         { text: "precio", value: "units" }
       ],
+      printTypesitems:[
+        'factura',
+        'ticket',
+        'ambas',
+        'nada'
+      ]
     };
   
   },
@@ -216,18 +228,27 @@ export default {
     },
     textFinderCompany: function (val) {
       this.findCompanys(val)
+    },
+    printTypeVal: function (val){
+      this.setprintType(val)
+    },
+    saleDialog: function (val){
+      debugger
+      if(val){
+        this.printTypeVal = 'nada'
+      }
     }
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
     this.findArticles("");
   },
-  computed: Object.assign({}, mapState(["articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
+  computed: Object.assign({}, mapState(["printType","articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
     candFinish() {
       return this.storeCard.length <= 0 ? true : false;
     }
   }),
-  methods: Object.assign({}, mapActions(["companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
+  methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return 
@@ -258,19 +279,10 @@ export default {
     async insertPaiment( payed ) {
       let newId = 0
       if (this.creditCard == 1 && this.companyData.id <= 0) {
-      
         await this.inserFacturation()
-        if(this.print){
-          printFacturationFromFacturation(20)
-        }
       }else if( this.paymentType == 1 && this.companyData.id > 0){
-
-        await this.inserFacturation(this.companyData.id )
-        if(this.print){
-          printFacturationFromFacturation(20)
-        }
+        await this.inserFacturation( this.companyData.id )
       } else {
-        
         await this.inserSale()
       }
       //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales

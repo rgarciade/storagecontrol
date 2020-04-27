@@ -17,8 +17,8 @@ const createWindow = async() => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 1270,
-        height: 500,
-        minHeight: 500,
+        height: 600,
+        minHeight: 600,
         minWidth: 1270,
         titleBarStyle: 'hidden',
         icon:`${__dirname}/../../icons/pc2_i4T_icon64x64.ico`
