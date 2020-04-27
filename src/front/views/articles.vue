@@ -42,16 +42,12 @@
                 <v-flex xs12 sm3 md2>
                   <v-text-field v-model="editedItem.units" label="unidades"></v-text-field>
                 </v-flex>
-
-                </v-flex>
                 <v-flex xs12 sm4 md4>
                   <v-text-field v-model="editedItem.purchase_price" label="precio de compra sin iva"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm4 md3>
                   <v-text-field v-model="editedItem.public_price_without_vat" label="precio de venta sin iva" disabled></v-text-field>
                 </v-flex>
-
-
               </v-layout>
               <v-layout wrap>
                 <v-flex xs12 sm8 md4>
