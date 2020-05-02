@@ -21,7 +21,7 @@ const menuRoutes = [
     { title: 'Facturación', icon: 'attach_money', route: '/Billing' },
     { title: 'tickets', icon: 'file_copy', route: '/tickets' },
     { title: 'Articulos', icon: 'storage', route: '/Articles' },
-    { title: 'Empresas', icon: 'next_week', route: '/Empresas' }//,
+    { title: 'Empresas', icon: 'next_week', route: '/Empresas' },
     { title: 'Configuración', icon: 'widgets', route: '/' },
 ]
 
