@@ -11,7 +11,7 @@
         <v-card-text>
           <v-layout row>
             <v-flex xs1>
-              <v-btn icon @click="fidFacturation(numberFinder)">
+              <v-btn icon @click="fidFacturation(numberFinder, initialDate ,finalDate)">
                 <v-icon>search</v-icon>
               </v-btn>
             </v-flex>
@@ -21,44 +21,63 @@
                 v-model="numberFinder"
               ></v-text-field>
             </v-flex>
-            <v-icon>search</v-icon>
             <v-flex xs2>
-              <v-flex xs12 lg6>
-                <v-menu
-                  ref="menu1"
-                  v-model="menu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="dateFormatted"
-                      label="Date"
-                      hint="MM/DD/YYYY format"
-                      persistent-hint
-                      prepend-icon="event"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
-                </v-menu>
-              <p>Date in ISO format: <strong>{{ date }}</strong></p>
-              </v-flex>
+              <v-menu
+                ref="fecha1"
+                v-model="fecha1"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="initialDateFormated"
+                    label="Fecha Inicial"
+                    hint="DD/MM/YYYY"
+                    persistent-hint
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="initialDate" no-title @input="fecha1 = false" locale="es-ES"></v-date-picker>
+              </v-menu>
+              <p>Date in ISO format: <strong>{{ initialDate }}</strong></p>
             </v-flex>
-            <v-icon>search</v-icon>
             <v-flex xs2>
-              <v-text-field
-                v-model="numberFinder"
-              ></v-text-field>
+              <v-menu
+                ref="fecha2"
+                v-model="fecha2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                max-width="290px"
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-text-field
+                    v-model="finalDateFormated"
+                    label="Fecha Final"
+                    hint="DD/MM/YYYY"
+                    persistent-hint
+                    prepend-icon="event"
+                    readonly
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="finalDate" no-title @input="fecha2 = false" locale="es-ES"></v-date-picker>
+              </v-menu>
+              <p>Date in ISO format: <strong>{{ finalDate }}</strong></p>
             </v-flex>
-            <v-flex xs1>
-            </v-flex>
+            <v-flex xs1></v-flex>
             <v-flex xs4>
               <v-select
                   :items="finders"
@@ -73,7 +92,7 @@
         <v-data-table
           :headers="headers"
           :items="facturations"
-          disable-initial-sort="true"
+          :disable-initial-sort=true
           class="elevation-1"
           :rows-per-page-items="rowsPerPage"
           rows-per-page-text="Listados por pagina"
@@ -121,8 +140,10 @@ export default {
       { text: "date", value: "fecha"},
       { text: "precio", value: "price" }
     ],
-    'initialDate':null,
-    menu1: false
+    fecha1: false,
+    fecha2: false,
+    initialDate: new Date().toISOString().substr(0, 10),
+    finalDate: new Date().toISOString().substr(0, 10)
   }),
   computed: Object.assign({}, mapState([
     "facturations",
@@ -130,7 +151,14 @@ export default {
     "FacturationPreviewVisibility",
     "UpdateButton",
     "pricePurchaseToModify"
-  ]), {}),
+  ]), {
+    initialDateFormated () {
+      return this.formatDate(this.initialDate)
+    },
+    finalDateFormated () {
+      return this.formatDate(this.finalDate)
+    }
+  }),
   methods: Object.assign({},mapActions([
       "fidFacturationfromCompanyId",
       "fidFacturationfromFacturationId",
@@ -140,14 +168,23 @@ export default {
       "updateBill",
       "printFacturation"
   ]),{
-    fidFacturation(){
+    fidFacturation(numberFinder, initialDate ,finalDate){
       if(this.finder == 'id Factura'){
-        this.fidFacturationfromFacturationId(this.numberFinder)
+        this.fidFacturationfromFacturationId(numberFinder)
       }else{
-        this.fidFacturationfromCompanyId(this.numberFinder)
+        this.fidFacturationfromCompanyId(numberFinder)
       }
     },
-    
+    formatDate (date) {
+      if (!date) return null
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
+    parseDate (date) {
+      if (!date) return null
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    }
   }),
   created() {
     this.restartBillFinded()

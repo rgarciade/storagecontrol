@@ -64,7 +64,7 @@
                 no-data="2"
                 no-data-text="No hay artículos seleccionados"
                 expand
-                disable-initial-sort
+                :disable-initial-sort=true
             >
                 <template v-slot:items="props" class="elevator-1 marco_interior_punto_de_venta">
                     <dir>
