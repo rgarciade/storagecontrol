@@ -21,8 +21,9 @@
                 v-model="numberFinder"
               ></v-text-field>
             </v-flex>
-            <v-flex xs2>
+            <v-flex xs2 >
               <v-menu
+                 v-if="seeDates"
                 ref="fecha1"
                 v-model="fecha1"
                 :close-on-content-click="false"
@@ -47,10 +48,10 @@
                 </template>
                 <v-date-picker v-model="initialDate" no-title @input="fecha1 = false" locale="es-ES"></v-date-picker>
               </v-menu>
-              <p>Date in ISO format: <strong>{{ initialDate }}</strong></p>
             </v-flex>
             <v-flex xs2>
-              <v-menu
+              <v-menu 
+                 v-if="seeDates"
                 ref="fecha2"
                 v-model="fecha2"
                 :close-on-content-click="false"
@@ -75,7 +76,6 @@
                 </template>
                 <v-date-picker v-model="finalDate" no-title @input="fecha2 = false" locale="es-ES"></v-date-picker>
               </v-menu>
-              <p>Date in ISO format: <strong>{{ finalDate }}</strong></p>
             </v-flex>
             <v-flex xs1></v-flex>
             <v-flex xs4>
@@ -124,10 +124,10 @@ export default {
   name: "billing",
   data: () => ({
     mask: "#############",
-    finder: 'id Factura',
+    finder: 'id Empresa',
     finders: [
-      'id Empresa',
       'id Factura',
+      'id Empresa',
     ],
     rowsPerPage: [
       25,
@@ -140,6 +140,7 @@ export default {
       { text: "date", value: "fecha"},
       { text: "precio", value: "price" }
     ],
+    seeDates: true,
     fecha1: false,
     fecha2: false,
     initialDate: new Date().toISOString().substr(0, 10),
@@ -159,8 +160,13 @@ export default {
       return this.formatDate(this.finalDate)
     }
   }),
+  watch:{
+    finder: function(val){
+      this.seeDates = (val == "id Empresa")
+    }
+  },
   methods: Object.assign({},mapActions([
-      "fidFacturationfromCompanyId",
+      "fidFacturationfromCompanyIdAndDates",
       "fidFacturationfromFacturationId",
       "findAllFacturation",
       "selectBill",
@@ -172,7 +178,7 @@ export default {
       if(this.finder == 'id Factura'){
         this.fidFacturationfromFacturationId(numberFinder)
       }else{
-        this.fidFacturationfromCompanyId(numberFinder)
+        this.fidFacturationfromCompanyIdAndDates({numberFinder, initialDate ,finalDate})
       }
     },
     formatDate (date) {
@@ -187,6 +193,7 @@ export default {
     }
   }),
   created() {
+    if(this.finder == "id Empresa") this.seeDates = true
     this.restartBillFinded()
     this.findAllFacturation()
   }

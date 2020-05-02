@@ -240,15 +240,56 @@ const actions = {
         }
         store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
     },
+    /**
+     * 
+     * @param {*} store 
+     * @param {numberFinder, initialDate, finalDate} data 
+     */
+    async fidFacturationfromCompanyIdAndDates(store, data){
+        
+        if(data.id == ''){
+            this.dispatch('findAllFacturation');
+            return
+        }
+        let fidFacturation= await DB_Facturation.fidFacturationfromCompanyIdAndDates(data.numberFinder, data.initialDate, data.finalDate)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturation.length; index++) {
+            const element = fidFacturation[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
     async fidFacturationfromFacturationId(store,id){
         if(id == ''){
             this.dispatch('findAllFacturation');
             return
         }
-        let fidFacturationFacturationId = await DB_Facturation.fidFacturationId(id)
+        let fidFacturationFacturationId = await DB_Facturation.findFacturationId(id)
         let facturationsIds = []
         for (let index = 0; index < fidFacturationFacturationId.length; index++) {
             const element = fidFacturationFacturationId[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
+    /**
+     * 
+     * @param {*} store 
+     * @param {id, initialDate, finalDate} data 
+     */
+    async fidFacturationfromFacturationIdAndDates(store, data){
+        if(id == ''){
+            this.dispatch('findAllFacturation');
+            return
+        }
+        let fidFacturations = await DB_Facturation.findFacturationIdAndDates(data.numberFinder, data.initialDate, data.finalDate)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturations.length; index++) {
+            const element = fidFacturations[index];
             if(facturationsIds.indexOf(element.facturationId) < 0){
                 facturationsIds.push(element.facturationId)
             }
@@ -443,7 +484,7 @@ const actions = {
         store.commit('charged')
     },
     selectBill(store, id){
-        DB_Facturation.fidFacturationId(id).then(fidFacturationArticles => {
+        DB_Facturation.findFacturationId(id).then(fidFacturationArticles => {
             let purchaseToModifyList = []
             for (let index = 0; index < fidFacturationArticles.length; index++) {
                 const element = fidFacturationArticles[index];
@@ -479,7 +520,7 @@ const actions = {
         let updateArticles = []
         let deleteArticlesIds = []
         store.commit("charging")
-        DB_Facturation.fidFacturationId(store.state.ActualFacturationId).then(fidFacturationArticles => {
+        DB_Facturation.findFacturationId(store.state.ActualFacturationId).then(fidFacturationArticles => {
             store.commit('UpdateButton',false)
             for (let index = 0; index < store.state.purchaseToModify.length; index++) {
                 const element = store.state.purchaseToModify[index];

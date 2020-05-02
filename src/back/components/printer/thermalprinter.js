@@ -17,7 +17,7 @@ const createArticlesToTicket = ( articles ) => {
 }
 
 const printThermalPrinterFacturation = async ( id, delivered = null ) => {
-    let facturation =  await DB_Facturation.fidFacturationId(id) 
+    let facturation =  await DB_Facturation.findFacturationId(id) 
     let articles = await createArticlesToTicket(facturation)
     printTicket( id, articles, delivered )
 }
