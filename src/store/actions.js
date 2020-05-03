@@ -488,6 +488,9 @@ const actions = {
     async printFacturation(store,id) {
         printFacturationFromFacturation(id)
     },
+    async printTiket(store,id) {
+        printThermalPrinterSales(id)
+    },
     async inserSale(store) {
         store.commit("charging")
         let cartToinsert = []

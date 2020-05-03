@@ -94,7 +94,7 @@
         </template>
           <template v-slot:items="props" >
             <td><v-btn color="info" @click="selectTicket(props.item.ticketId)">Modificar</v-btn>
-            <v-btn color="info" @click="">Imprimir</v-btn>
+            <v-btn color="info" @click="printTiket(props.item.ticketId)">Imprimir</v-btn>
             <td>{{ props.item.ticketId }}</td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.price }}</td>
@@ -155,7 +155,8 @@ export default {
       "findAllTickets",
       "selectTicket",
       "restartTicketFinded",
-      "printFacturation"
+      "printFacturation",
+      "printTiket"
   ]),{
     fidTicket(numberFinder, initialDate ,finalDate){
       this.findTicketfromFacturationIdAndDates({numberFinder, initialDate ,finalDate})
@@ -172,7 +173,7 @@ export default {
     }
   }),
   created() {
-    //this.restartBillFinded()
+    this.restartTicketFinded()
     this.findAllTickets()
   }
 };

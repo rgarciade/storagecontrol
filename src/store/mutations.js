@@ -269,6 +269,9 @@ const mutations = {
     TicketPreviewVisibility(state, visibiliti){
         state.TicketPreviewVisibility  =visibiliti
     },
+    FacturationPreviewVisibility(state, visibiliti){
+        state.FacturationPreviewVisibility  =visibiliti
+    },
     purchaseToModify(state, list){
         state.purchaseToModify  =list
     },
