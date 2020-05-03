@@ -3,6 +3,7 @@
     <div>    
         <div>
             <v-card
+                v-if="!readOnly"
                 v-bind:style=" finderOpen ? 'max-width: 400px;' : 'max-width: 65px;' "
                 class="align-self-start fincer busqueda-agregar-articulo"
                 raised
@@ -50,14 +51,14 @@
             </v-card>
         </div>
         <div class="all_space" v-on:click="closeFinder()">
-            <v-btn
+            <v-btn v-if="!readOnly"
                 color="primary"
                 @click="addElement()"
                 class = "add-new-article-line"
                 > <v-icon>add</v-icon>
             </v-btn>
             <v-data-table
-                :headers="headers"
+                :headers="!readOnly ? headers : headersReadOnly"
                 :items="itemsList"
                 hide-actions
                 class="elevator-0 marco_punto_venta "
@@ -68,29 +69,29 @@
             >
                 <template v-slot:items="props" class="elevator-1 marco_interior_punto_de_venta">
                     <dir>
-                        <td v-if="props.item.idarticles > 0">
+                        <td v-if="props.item.idarticles > 0 " :readonly="readOnly" >
                         {{ props.item.description }}
                         </td>
-                        <td v-if="props.item.idarticles < 0" style="width:3000em">
-                        <textarea style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
+                        <td v-if="props.item.idarticles < 0 " style="width:3000em">
+                            <textarea  :auto-grow="true" :disabled="readOnly" style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
                             @change="changeItemDescriptionElement({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
                         </td>
                     </dir>
                      <td>
-                        <input class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+                        <input :readonly="readOnly" class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
                         @change="changeItemUnitsNumberElement({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
                     </td>
                     <td>
-                        <input class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+                        <input :readonly="readOnly"  class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
                             @change="changeItemPriceElemeny({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
                     </td>
                    
                     <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
-                    <td>
+                    <td v-if="!readOnly">
                         <v-icon  class="mr-2" @click="addElement( props.item.idarticles)">add_box</v-icon>
                         <v-icon  @click="subtractOneToCardElement( props.item.idarticles)">remove_circle</v-icon>
                     </td>
-                    <td>
+                    <td v-if="!readOnly">
                         <v-icon @click="subtractToCardElement( props.item.idarticles)">delete</v-icon>
                     </td>
                 </template>
@@ -111,6 +112,13 @@
                 { text: "Precio de venta", value: "public_price", sortable: false},
                 { text: "Total", value: "units", sortable: false},
                 { text: "Acciones", value: "name", width:"10%", sortable: false},
+                { text: "", value: "", sortable: false }
+            ],
+            headersReadOnly: [
+                { text: "Descripción", value: "description",width:"80%", sortable: false},
+                { text: "Unidades", value: "units", sortable: false},
+                { text: "Precio de venta", value: "public_price", sortable: false},
+                { text: "Total", value: "units", sortable: false},
                 { text: "", value: "", sortable: false }
             ]
         }),
@@ -144,7 +152,8 @@
         },
         props: {
             isPurchaseToModify: Boolean,
-            isStorecard: Boolean
+            isStorecard: Boolean,
+            readOnly: Boolean
         },
          computed: Object.assign({}, mapState(["articles","companyData","storeCard","purchaseToModify","priceStoreCard"]), {
             candFinish() {

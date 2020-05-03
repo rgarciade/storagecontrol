@@ -11,6 +11,30 @@ const DB_Sales = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
+    static async fidSalesIdsDatas(ids) {
+        return knex.select()
+        .table(principalTableName)
+        .whereIn(`${principalTableName}.id`, ids)
+        .then((value) => value)
+        .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
+    static async fidSalesIdAndDates(id, initialDate, finalDate) {
+        return knex.select()
+            .table(principalTableName)
+            .innerJoin(secundaryTableName,`${principalTableName}.id`,'=',`${secundaryTableName}.saleId`)
+            .where(`${principalTableName}.id`, id)
+            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,`${finalDate} 23:59:59`)
+            .then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
+    static async fidSalesDates(initialDate, finalDate) {
+        return knex.select()
+            .table(principalTableName)
+            .innerJoin(secundaryTableName,`${principalTableName}.id`,'=',`${secundaryTableName}.saleId`)
+            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,`${finalDate} 23:59:59`)
+            .then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
     static async findAllSales() {
         return knex.select()
             .from(principalTableName)

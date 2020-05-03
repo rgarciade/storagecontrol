@@ -246,14 +246,28 @@ const mutations = {
         });
         state.facturations = temporalFacturationState
     },
+    sales(state, data) {
+        let temporalTicketsState = []
+        moment.locale('es');
+        data.forEach(function(element) {
+            element.ticketId = element.id
+            element.date = moment(element.creation_date).format('LLLL');
+            element.price = currencyFormat(element.price)
+            temporalTicketsState.push(element)
+        });
+        state.tickets = temporalTicketsState
+    },
     ActualFacturationId(state,id){
         state.ActualFacturationId = id
     },
     FacturationListVisibility(state, visibiliti){
         state.FacturationListVisibility = visibiliti
     },
-    FacturationPreviewVisibility(state, visibiliti){
-        state.FacturationPreviewVisibility  =visibiliti
+    ticketsListVisibility(state, visibiliti){
+        state.ticketsListVisibility = visibiliti
+    },
+    TicketPreviewVisibility(state, visibiliti){
+        state.TicketPreviewVisibility  =visibiliti
     },
     purchaseToModify(state, list){
         state.purchaseToModify  =list

@@ -22,7 +22,15 @@ const DB_Facturation = class {
             .table(principalTableName)
             .innerJoin(secundaryTableName, `${principalTableName}.id`, '=', `${secundaryTableName}.facturationId`)
             .where(`${principalTableName}.id`, id)
-            .andWhere('creation_date', '>=' ,initialDate).andWhere('creation_date','<=' ,finalDate)
+            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,`${finalDate} 23:59:59`)
+            .then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
+    static async findFacturationDates(initialDate, finalDate) {
+        return knex.select()
+            .table(principalTableName)
+            .innerJoin(secundaryTableName, `${principalTableName}.id`, '=', `${secundaryTableName}.facturationId`)
+            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,`${finalDate} 23:59:59`)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
@@ -39,7 +47,7 @@ const DB_Facturation = class {
             .table(principalTableName)
             .innerJoin(secundaryTableName, `${principalTableName}.id`,'=', `${secundaryTableName}.facturationId`)
             .where(`${principalTableName}.company_id`, id)
-            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,finalDate)
+            .andWhere(`${principalTableName}.creation_date`, '>=' ,initialDate).andWhere(`${principalTableName}.creation_date`,'<=' ,`${finalDate} 23:59:59`)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }

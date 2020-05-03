@@ -168,6 +168,7 @@ export default {
   methods: Object.assign({},mapActions([
       "fidFacturationfromCompanyIdAndDates",
       "fidFacturationfromFacturationId",
+      "fidFacturationfromDates",
       "findAllFacturation",
       "selectBill",
       "restartBillFinded",
@@ -175,7 +176,9 @@ export default {
       "printFacturation"
   ]),{
     fidFacturation(numberFinder, initialDate ,finalDate){
-      if(this.finder == 'id Factura'){
+      if(!numberFinder){
+        this.fidFacturationfromDates({initialDate ,finalDate})
+      }else if(this.finder == 'id Factura'){
         this.fidFacturationfromFacturationId(numberFinder)
       }else{
         this.fidFacturationfromCompanyIdAndDates({numberFinder, initialDate ,finalDate})

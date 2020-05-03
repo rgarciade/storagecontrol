@@ -225,6 +225,9 @@ const actions = {
     async findAllFacturation(store){
         store.commit('facturations', await DB_Facturation.findAllFacturation())
     },
+    async findAllTickets(store){
+        store.commit('sales', await DB_Sales.findAllSales())
+    },
     async fidFacturationfromCompanyId(store,id){
         if(id == ''){
             this.dispatch('findAllFacturation');
@@ -282,11 +285,27 @@ const actions = {
      * @param {id, initialDate, finalDate} data 
      */
     async fidFacturationfromFacturationIdAndDates(store, data){
-        if(id == ''){
+        if(data.id == ''){
             this.dispatch('findAllFacturation');
             return
         }
         let fidFacturations = await DB_Facturation.findFacturationIdAndDates(data.numberFinder, data.initialDate, data.finalDate)
+        let facturationsIds = []
+        for (let index = 0; index < fidFacturations.length; index++) {
+            const element = fidFacturations[index];
+            if(facturationsIds.indexOf(element.facturationId) < 0){
+                facturationsIds.push(element.facturationId)
+            }
+        }
+        store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
+    },
+    /**
+     * 
+     * @param {*} store 
+     * @param {id, initialDate, finalDate} data 
+     */
+    async fidFacturationfromDates(store, data){
+        let fidFacturations = await DB_Facturation.findFacturationDates( data.initialDate, data.finalDate)
         let facturationsIds = []
         for (let index = 0; index < fidFacturations.length; index++) {
             const element = fidFacturations[index];
@@ -311,7 +330,27 @@ const actions = {
             console.error(error)
         }
     },
-
+    /**
+     * 
+     * @param {*} store 
+     * @param {id, initialDate, finalDate} data 
+     */
+    async findTicketfromFacturationIdAndDates(store, data){
+        let fidSales = null
+        if(!data.numberFinder){
+            fidSales = await DB_Sales.fidSalesDates(data.initialDate, data.finalDate)
+        }else{
+            fidSales = await DB_Sales.fidSalesIdAndDates(data.numberFinder, data.initialDate, data.finalDate)
+        }
+        let salesIds = []
+        for (let index = 0; index < fidSales.length; index++) {
+            const element = fidSales[index];
+            if(salesIds.indexOf(element.saleId) < 0){
+                salesIds.push(element.saleId)
+            }
+        }
+        store.commit('sales', await DB_Sales.fidSalesIdsDatas(salesIds))
+    },
     async addNewArticle(store, data) {
         store.commit("charging")
         await DB_Articles.insertArticle(data).then(value => {
@@ -506,11 +545,39 @@ const actions = {
         })
            
     },
+    selectTicket(store, id){
+        DB_Sales.fidSalesId(id).then(fidSalesArticles => {
+            let purchaseToModifyList = []
+            for (let index = 0; index < fidSalesArticles.length; index++) {
+                const element = fidSalesArticles[index];
+                purchaseToModifyList.push({
+                    description: element.description,
+                    idarticles: element.articleId,
+                    media:0,
+                    old:true,
+                    numberOfArticles: element.units,
+                    productid: element.id,
+                    public_price: element.price
+                })
+            }
+            store.commit('ActualTicketId',id)
+            store.commit('purchaseToModify',purchaseToModifyList)
+            store.commit("recalculatePricePurchaseModification")
+            store.commit('ticketsListVisibility',false)
+            store.commit('TicketPreviewVisibility',true)
+        })
+           
+    },
     async restartBillFinded(store){
         await store.commit('ActualFacturationId',0)
         store.commit('purchaseToModify',[])
         await store.commit('FacturationListVisibility',true)
         await store.commit('FacturationPreviewVisibility',false)
+    },
+    async restartTicketFinded(store){
+        store.commit('purchaseToModify',[])
+        await store.commit('ticketsListVisibility',true)
+        await store.commit('TicketPreviewVisibility',false)
     },
     clearnPriceStoreCard(store){
         store.commit("clearnPriceStoreCard") 
