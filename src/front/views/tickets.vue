@@ -3,7 +3,7 @@
         <v-card>
           <v-card-title class="headline primary lighten-3">Tickets</v-card-title>
             <h1 class="salebox-resume" v-if="TicketPreviewVisibility">
-              Total {{pricePurchaseToModify}}€  &nbsp;&nbsp; 
+              Total {{pricePurchaseToModify}}€  &nbsp;&nbsp;
             </h1>
         </v-card>
       <div v-if="ticketsListVisibility">
@@ -49,7 +49,7 @@
               </v-menu>
             </v-flex>
             <v-flex xs2>
-              <v-menu 
+              <v-menu
                  v-if="seeDates"
                 ref="fecha2"
                 v-model="fecha2"
@@ -75,10 +75,10 @@
                 </template>
                 <v-date-picker v-model="finalDate" no-title @input="fecha2 = false" locale="es-ES"></v-date-picker>
               </v-menu>
-            </v-flex>           
+            </v-flex>
           </v-layout>
         </v-card-text>
-      
+
         <v-data-table
           :headers="headers"
           :items="tickets"
@@ -118,7 +118,7 @@ export default {
       25,
       50,
       { text: "$vuetify.dataIterator.rowsPerPageAll", value: -1 }
-    ],
+		],
     headers: [
       { text: "", value: "",sortable: false,width:"20%" },
       { text: "Tocket id", value: "Id de Ticket" },
@@ -136,7 +136,7 @@ export default {
     "ticketsListVisibility",
     "TicketPreviewVisibility",
     "pricePurchaseToModify",
-    
+
   ]), {
     initialDateFormated () {
       return this.formatDate(this.initialDate)

@@ -2,7 +2,6 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 
-import { createPrintWindow } from 'simple-electron-printer-and-thermalprinter';
 import store from "../store"
 const knex = require('../back/DB/connection')
 const { printFacturation } = require('../back/components/facturation')
@@ -10,7 +9,6 @@ const { printFacturation } = require('../back/components/facturation')
 let mainWindow;
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
-
 if (isDevMode) enableLiveReload();
 
 const createWindow = async() => {
@@ -48,11 +46,11 @@ const createWindow = async() => {
 app.on('ready', () => {
     // Example of usage of Vuex Store from the main process
     // Results of action will be automatically passed to all renderer processes
-    store.commit('count', 2)
 
     createWindow()
-    ipcMain.on('text-fact', () => {
-        printFacturation()
+
+	ipcMain.on('print-finish', async (event, args) => {
+		store.createStoreAlert("Fin de la impresion");
     })
 });
 

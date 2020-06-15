@@ -19,9 +19,9 @@
           <v-stepper-step :complete="(e1 > 3 && paymentType)? true : false" step="3">Busqueda empresa <span v-if="companyData.id > 0 && paymentType"> {{companyData.name}}</span></v-stepper-step>
           <v-divider></v-divider>
           <v-stepper-step :complete="e1 > 4" step="4">Pago</v-stepper-step>
-    
+
         </v-stepper-header>
-    
+
         <v-stepper-items>
           <v-stepper-content step="1">
 
@@ -105,7 +105,7 @@
               color=""
               style="max-height: 20em;
               overflow: auto;"
-              
+
             >
             <v-data-table
               :headers="headersResumen"
@@ -122,7 +122,7 @@
                 <td>{{ props.item.numberOfArticles * props.item.public_price }} €</td>
               </template>
             </v-data-table>
-            
+
             </v-card>
             <v-layout>
               <v-flex xs9 style="padding-top: 8.5%;">
@@ -178,7 +178,7 @@
             </v-layout>
           </v-stepper-content>
         </v-stepper-items>
-      </v-stepper>   
+      </v-stepper>
     </v-dialog>
     <Newcompany v-bind:active="activeNewCompany" @disable="activeNewCompany = $event"  @companyName="textFinderCompany = $event" :redirect="false" ></Newcompany>
   </div>
@@ -209,19 +209,20 @@ export default {
         { text: "precio", value: "units" }
       ],
       printTypesitems:[
-        'factura',
+		'factura',
+		'factura por correo',
         'ticket',
         'ambas',
         'nada'
       ]
     };
-  
+
   },
   watch: {
     paymentAmount: function (val) {
-      
+
       this.moneyBack = - (this.priceStoreCard - this.paymentAmount)
-      
+
       if(this.moneyBack > 0){
         this.updateIncomingMoney( this.paymentAmount )
       }
@@ -233,7 +234,6 @@ export default {
       this.setprintType(val)
     },
     saleDialog: function (val){
-      debugger
       if(val){
         this.printTypeVal = 'nada'
       }
@@ -251,9 +251,9 @@ export default {
   methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
-        return 
+        return
       }
-  
+
       if (e && e.code == "Enter" && e.type == "keydown" && !this.finderOpen) {
         this.finderOpen = !this.finderOpen;
       } else if (e && e.type && e.type == "click") {

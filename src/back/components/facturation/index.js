@@ -5,7 +5,7 @@ const { DB_Companys } = require('../../DB/companys')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
 const moment = require('moment')
 
-const printFacturation = (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif) => {
+const printFacturation = (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false) => {
     const cssFile = `${__dirname}/facturation.css`;
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
@@ -29,24 +29,31 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, clien
         `cif: ${cif}`,
     ]
     let formaDePago = 'transferencia'
-    let impuesto = 21
-
+	let impuesto = 21
+	let config = [];
+	if (pdf){
+		config.push('pdf')
+		config.push('hiddenWindow')
+	}
     cssPromise.then(ccs => {
         createPrintWindow({
-            css: ccs,
+			css: ccs,
+			config,
+			name: facturationNumber,
+			finishFunction,
             html: createHtml(articles, topleft, topright, formaDePago, impuesto)
         })
     })
 }
 
 
-const printFacturationFromFacturation = async (id) => {
+const printFacturationFromFacturation = async (id, pdf = false, finishFunction = false) => {
     let facturation = await DB_Facturation.findFacturationId(id)
     let companyId = facturation[0].company_id
     let companyData = await DB_Companys.findCompany(companyId)
     let articles = await createArticlesToTicket(facturation)
     let date =  moment(facturation[0].creation_date).format('L')
-    printFacturation(articles, id, date, companyData[0].id, companyData[0].name, companyData[0].id, companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif )
+    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction )
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto) => {

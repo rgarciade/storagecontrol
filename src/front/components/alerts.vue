@@ -4,7 +4,7 @@
         v-if="msg != ''"
         v-model="msg"
         multi-line
-        :timeout=3000
+        :timeout=10000
         top
       >
         {{msg}}
@@ -29,7 +29,7 @@
         watch:{
           alert: function(val){
             if(val != ''){
-              this.msg = val              
+              this.msg = val
             }
           }
         }

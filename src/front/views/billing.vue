@@ -3,7 +3,7 @@
         <v-card>
           <v-card-title class="headline primary lighten-3">Facturación</v-card-title>
             <h1 class="salebox-resume" v-if="FacturationPreviewVisibility">
-              Total {{pricePurchaseToModify}}€  &nbsp;&nbsp; 
+              Total {{pricePurchaseToModify}}€  &nbsp;&nbsp;
               <v-btn v-if="UpdateButton" color="red" @click="updateBill();restartBillFinded()"><v-icon>save</v-icon></v-btn>
             </h1>
         </v-card>
@@ -50,7 +50,7 @@
               </v-menu>
             </v-flex>
             <v-flex xs2>
-              <v-menu 
+              <v-menu
                  v-if="seeDates"
                 ref="fecha2"
                 v-model="fecha2"
@@ -88,7 +88,7 @@
             </v-flex>
           </v-layout>
         </v-card-text>
-      
+
         <v-data-table
           :headers="headers"
           :items="facturations"
@@ -104,7 +104,7 @@
         </template>
           <template v-slot:items="props" >
             <td><v-btn color="info" @click="selectBill(props.item.facturationId)">Modificar</v-btn>
-            <v-btn color="info" @click="printFacturation(props.item.facturationId)">Imprimir</v-btn></td>
+            <v-btn color="info" @click="printFacturation({id: props.item.facturationId, pdf: true})">Imprimir</v-btn></td>
             <td>{{ props.item.facturationId }}</td>
             <td>{{ props.item.date }}</td>
             <td>{{ props.item.price }}</td>

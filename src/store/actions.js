@@ -1,9 +1,13 @@
+const { app } = require('electron')
 const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
+const {sendEmail} = require('../back/components/email/email')
+const notifier = require('node-notifier');
+
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
@@ -15,7 +19,7 @@ const actions = {
     needFacturation(store, type) {
         //paymentType
         //1 facturation
-        //0 normal 
+        //0 normal
         store.commit('paymentType', type)
     },
     async addToCard(store, idArticle = '') {
@@ -63,7 +67,7 @@ const actions = {
         } else if (idArticle < -1) {
             let newCardArticle = [{
                 'idarticles': idArticle
-            }]          
+            }]
             store.commit("addPurchaseModification", newCardArticle)
             store.commit("recalculatePricePurchaseModification")
         } else {
@@ -244,12 +248,12 @@ const actions = {
         store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
     },
     /**
-     * 
-     * @param {*} store 
-     * @param {numberFinder, initialDate, finalDate} data 
+     *
+     * @param {*} store
+     * @param {numberFinder, initialDate, finalDate} data
      */
     async fidFacturationfromCompanyIdAndDates(store, data){
-        
+
         if(data.id == ''){
             this.dispatch('findAllFacturation');
             return
@@ -280,9 +284,9 @@ const actions = {
         store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
     },
     /**
-     * 
-     * @param {*} store 
-     * @param {id, initialDate, finalDate} data 
+     *
+     * @param {*} store
+     * @param {id, initialDate, finalDate} data
      */
     async fidFacturationfromFacturationIdAndDates(store, data){
         if(data.id == ''){
@@ -300,9 +304,9 @@ const actions = {
         store.commit('facturations', await DB_Facturation.fidFacturationData(facturationsIds))
     },
     /**
-     * 
-     * @param {*} store 
-     * @param {id, initialDate, finalDate} data 
+     *
+     * @param {*} store
+     * @param {id, initialDate, finalDate} data
      */
     async fidFacturationfromDates(store, data){
         let fidFacturations = await DB_Facturation.findFacturationDates( data.initialDate, data.finalDate)
@@ -331,9 +335,9 @@ const actions = {
         }
     },
     /**
-     * 
-     * @param {*} store 
-     * @param {id, initialDate, finalDate} data 
+     *
+     * @param {*} store
+     * @param {id, initialDate, finalDate} data
      */
     async findTicketfromFacturationIdAndDates(store, data){
         let fidSales = null
@@ -467,6 +471,27 @@ const actions = {
                 let idFacturation = resp[0]
                 if( store.state.printType == 'factura' || store.state.printType == 'ambas'){
                     printFacturationFromFacturation(idFacturation)
+				}
+				if( store.state.printType == 'factura por correo'){
+					printFacturationFromFacturation(idFacturation,true, async function () {
+						createAlert(store, 'pdf de factura creado')
+						let companyData = await DB_Companys.findCompanyWithData(companyId)
+						if(companyData[0]){
+							let email = JSON.parse(JSON.stringify(companyData[0])).email
+							const isDevMode = process.execPath.match(/[\\/]electron/);
+							if(isDevMode) email = 'raulgarcia_dlf@hotmail.com'
+							sendEmail(email,`factura ${idFacturation}`,'se adjunta la factura', [`${app.getPath('documents')+'/printer'}/${idFacturation}.pdf`])
+							createAlert(store, `Factura enviada por correo a ${email} `)
+							/*notifier.notify({
+								'title': 'storage control Factura',
+								'message': `Factura enviada por correo a ${email} `
+							  })*/
+						}else{
+							createAlert(store, `la compañia no tiene email asignado`)
+						}
+
+					})
+					//TODO::enviar email
                 }
                 if(store.state.printType == 'ticket' || store.state.printType == 'ambas'  || (  store.state.printType == 'nada' && store.state.creditCard )){
                     printThermalPrinterFacturation(idFacturation, store.state.incomingMoney)
@@ -475,7 +500,7 @@ const actions = {
                 store.commit('updateIncomingMoney',0)
                 store.commit('charged')
                 createAlert(store, 'Nueva factura creada')
-               
+
             })
             .catch(error => {
                 console.error(error.message)
@@ -485,8 +510,9 @@ const actions = {
                 store.commit('charged')
             })
     },
-    async printFacturation(store,id) {
-        printFacturationFromFacturation(id)
+    async printFacturation(store,data) {
+		await printFacturationFromFacturation(data.id, data.pdf ,function () { createAlert(store, 'pdf de factura creado')})
+		createAlert(store, 'creando pdf en documentos/printer Espere para crear otro')
     },
     async printTiket(store,id) {
         printThermalPrinterSales(id)
@@ -512,7 +538,7 @@ const actions = {
                     const element = cartToinsert[index];
                     DB_Articles.updateArticleUnits(element.articleid, -1 * parseInt(element.units))
                 }
-                
+
                 store.commit("clearnStoreCard")
                 let idSales = resp[0]
                 printThermalPrinterSales(idSales, store.state.incomingMoney)
@@ -546,7 +572,7 @@ const actions = {
             store.commit('FacturationListVisibility',false)
             store.commit('FacturationPreviewVisibility',true)
         })
-           
+
     },
     selectTicket(store, id){
         DB_Sales.fidSalesId(id).then(fidSalesArticles => {
@@ -569,7 +595,7 @@ const actions = {
             store.commit('ticketsListVisibility',false)
             store.commit('TicketPreviewVisibility',true)
         })
-           
+
     },
     async restartBillFinded(store){
         await store.commit('ActualFacturationId',0)
@@ -583,7 +609,7 @@ const actions = {
         await store.commit('TicketPreviewVisibility',false)
     },
     clearnPriceStoreCard(store){
-        store.commit("clearnPriceStoreCard") 
+        store.commit("clearnPriceStoreCard")
     },
     updateBill(store){
         let newArticles = []
@@ -633,9 +659,9 @@ const actions = {
                 store.commit('UpdateButton',true)
                 store.commit("charged")
             })
-           
+
         })
-      
+
     },
     updateIncomingMoney(store, value){
         store.commit("updateIncomingMoney",value)

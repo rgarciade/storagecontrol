@@ -19,7 +19,8 @@ const DB_Articles = class {
         return knex.select()
             .table(tableName)
             .where('description', 'like', `%${text}%`)
-            .orWhere('productid', 'like', `%${text}%`)
+			.orWhere('productid', 'like', `%${text}%`)
+			.limit(40)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
