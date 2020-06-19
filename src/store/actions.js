@@ -3,6 +3,7 @@ const { DB_Companys } = require('../back/DB/companys')
 const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
+const { DB_MoneyBoxs } = require('../back/DB/moneybox')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const {sendEmail} = require('../back/components/email/email')
@@ -668,6 +669,10 @@ const actions = {
     },
     setprintType(store, value){
         store.commit("setprintType",value)
-    }
+	},
+	async findAllLastBoxReports(store){
+		let reports = await DB_MoneyBoxs.findAllLast()
+		store.commit('lastReports', reports)
+	}
 }
 module.exports = actions

@@ -25,7 +25,14 @@ export default new Vuex.Store({
             purchase_price: null,
             price_without_vat: null,
             public_price: null
-        }],
+		}],
+		moneyBox:{
+			actualMoneyInBox : 0,
+			dayToReport: new Date().toISOString().substr(0, 10),
+			openReport: null,
+			closeReport: null,
+			lastReports:[]
+		},
         printType:'nada',
         paymentType: 1,
         creditCard: 0,

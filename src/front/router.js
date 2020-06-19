@@ -4,6 +4,7 @@ import Articles from './views/articles';
 import Salebox from './views/salebox';
 import tickets from './views/tickets';
 import Billing from './views/billing';
+import Moneybox from './views/moneybox';
 import conpanyconfiguration from './views/conpanyconfiguration';
 
 const routes = [
@@ -13,6 +14,7 @@ const routes = [
     { path: '/Articles', name: 'Articles', component: Articles },
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
+    { path: '/Moneybox', name: 'Moneybox', component: Moneybox },
     { path: '*', name: '*', component: Salebox }
 ];
 
@@ -22,6 +24,7 @@ const menuRoutes = [
     { title: 'tickets', icon: 'file_copy', route: '/tickets' },
     { title: 'Articulos', icon: 'storage', route: '/Articles' },
     { title: 'Empresas', icon: 'next_week', route: '/Empresas' },
+    { title: 'Moneybox', icon: '', route: '/Moneybox' },
     { title: 'Configuración', icon: 'widgets', route: '/' },
 ]
 

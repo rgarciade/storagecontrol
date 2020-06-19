@@ -182,7 +182,7 @@ const mutations = {
     },
     recalculatePricePurchaseModification(state) {
         let pricePurchaseToModify = 0
-        if(!state.purchaseToModify || !state.purchaseToModify.length) return 
+        if(!state.purchaseToModify || !state.purchaseToModify.length) return
         for (let index = 0; index < state.purchaseToModify.length; index++) {
             const element = state.purchaseToModify[index];
             pricePurchaseToModify += element.public_price * element.numberOfArticles
@@ -280,6 +280,22 @@ const mutations = {
     },
     setprintType(state, value){
         state.printType = value
-    }
+	},
+	lastReports(state, value){
+		state.moneyBox.lastReports = value
+		if(value.length <= 0) return false
+
+		if(state.moneyBox.lastReports[0].open_box){
+			state.moneyBox.closeReport = 1
+			state.moneyBox.openReport = 0
+		}
+		if( state.moneyBox.lastReports[0].close_box){
+			state.moneyBox.openReport = 1
+			state.moneyBox.closeReport = 0
+		}
+		//TODO:: calcular con los vendido hoy sin tarjeta y sacar en tarjeta
+		state.moneyBox.actualMoneyInBox = state.moneyBox.lastReports[0].money
+
+	}
 }
 module.exports = mutations
