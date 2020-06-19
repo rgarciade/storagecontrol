@@ -18,6 +18,8 @@
 		<p>--------------------------------------------------</p>
 		</div>
 
+		<div>actualMoneyInBox ::{{moneyBox.actualMoneyInBox}}</div>
+		<div>actualMoneyCard ::{{moneyBox.actualMoneyCard}}</div>
     </div>
 </template>
 

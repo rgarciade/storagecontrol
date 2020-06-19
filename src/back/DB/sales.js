@@ -35,6 +35,14 @@ const DB_Sales = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
+    static async fidDaySales() {
+		return await knex.sum('price as daybox')
+            .table(principalTableName)
+            .where(`${principalTableName}.creation_date`, '>=' ,knex.select('date_reported').from('money_box').orderBy('date_reported','desc').limit(1) )
+
+			.then((value) => value)
+            .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+    }
     static async findAllSales() {
         return knex.select()
             .from(principalTableName)

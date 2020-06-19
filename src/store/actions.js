@@ -673,6 +673,24 @@ const actions = {
 	async findAllLastBoxReports(store){
 		let reports = await DB_MoneyBoxs.findAllLast()
 		store.commit('lastReports', reports)
+		let lastBoxActionMoney = 0
+		let actualMoneyCard = 0
+		if(reports.length > 0) lastBoxActionMoney = reports[0].money
+		let daySales = await DB_Sales.fidDaySales()
+		if(daySales.length > 0) lastBoxActionMoney += daySales[0].daybox
+		let dayFacturations = await DB_Facturation.findAllCreditCardSales()
+		if(dayFacturations.length > 0){
+			dayFacturations.forEach(element => {
+				if(element.credit_card == 1){
+					actualMoneyCard = element.daybox
+				}
+				if(element.credit_card == 0){
+					lastBoxActionMoney += element.daybox
+				}
+			});
+		}
+		store.commit('actualMoneyInBox', lastBoxActionMoney)
+		store.commit('actualMoneyCard', actualMoneyCard)
 	}
 }
 module.exports = actions

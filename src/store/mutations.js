@@ -293,9 +293,12 @@ const mutations = {
 			state.moneyBox.openReport = 1
 			state.moneyBox.closeReport = 0
 		}
-		//TODO:: calcular con los vendido hoy sin tarjeta y sacar en tarjeta
-		state.moneyBox.actualMoneyInBox = state.moneyBox.lastReports[0].money
-
+	},
+	actualMoneyInBox(state, value){
+		state.moneyBox.actualMoneyInBox = value
+	},
+	actualMoneyCard(state, value){
+		state.moneyBox.actualMoneyCard = value
 	}
 }
 module.exports = mutations

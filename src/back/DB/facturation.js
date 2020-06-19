@@ -56,6 +56,17 @@ const DB_Facturation = class {
             .from(principalTableName)
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
+	}
+	static async findAllCreditCardSales() {
+		return await knex.select('credit_card')
+		.sum('price as daybox')
+		.table(principalTableName)
+		.where(`${principalTableName}.creation_date`, '>=' ,
+			knex.select('date_reported').from('money_box').orderBy('date_reported','desc').limit(1)
+		)
+		.groupBy('credit_card')
+		.then((value) => value)
+		.catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
     static async insertFacturation(data) {
 

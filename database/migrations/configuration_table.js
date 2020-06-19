@@ -7,7 +7,7 @@ exports.up = async function(knex, Promise) {
         table.string('mailpassword', 40).notNullable(null);
         table.string('mailhost', 40).notNullable(null);
         table.string('mailport', 40).notNullable(null);
-        table.tinyint('secure', 40).notNullable(null);
+        table.tinyint('secure').notNullable(null);
 
     })
 

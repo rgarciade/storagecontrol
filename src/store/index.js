@@ -28,6 +28,7 @@ export default new Vuex.Store({
 		}],
 		moneyBox:{
 			actualMoneyInBox : 0,
+			actualMoneyCard : 0,
 			dayToReport: new Date().toISOString().substr(0, 10),
 			openReport: null,
 			closeReport: null,
