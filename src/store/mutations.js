@@ -1,5 +1,6 @@
 const { basePrice,currencyFormat } = require('../common/commonfunctions')
 const moment = require('moment')
+moment.locale('es');
 const mutations = {
     clearnStoreCard(state) {
         state.storeCard = []
@@ -237,7 +238,7 @@ const mutations = {
     },
     facturations(state, data) {
         let temporalFacturationState = []
-        moment.locale('es');
+
         data.forEach(function(element) {
             element.facturationId = element.id
             element.date = moment(element.creation_date).format('LLLL');
@@ -248,7 +249,6 @@ const mutations = {
     },
     sales(state, data) {
         let temporalTicketsState = []
-        moment.locale('es');
         data.forEach(function(element) {
             element.ticketId = element.id
             element.date = moment(element.creation_date).format('LLLL');
@@ -282,7 +282,11 @@ const mutations = {
         state.printType = value
 	},
 	lastReports(state, value){
-		state.moneyBox.lastReports = value
+
+		value.forEach(element => {
+			element.date =  moment(element.date_reported).format('LLLL');
+			state.moneyBox.lastReports.push(element)
+		});
 		if(value.length <= 0) return false
 
 		if(state.moneyBox.lastReports[0].open_box){

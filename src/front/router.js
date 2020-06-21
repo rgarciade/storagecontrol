@@ -24,7 +24,7 @@ const menuRoutes = [
     { title: 'tickets', icon: 'file_copy', route: '/tickets' },
     { title: 'Articulos', icon: 'storage', route: '/Articles' },
     { title: 'Empresas', icon: 'next_week', route: '/Empresas' },
-    { title: 'Moneybox', icon: '', route: '/Moneybox' },
+    { title: 'Moneybox', icon: 'point_of_sale', route: '/Moneybox' },
     { title: 'Configuración', icon: 'widgets', route: '/' },
 ]
 
