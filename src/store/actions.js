@@ -8,12 +8,17 @@ const { printThermalPrinterSales, printThermalPrinterFacturation } = require('..
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const {sendEmail} = require('../back/components/email/email')
 const notifier = require('node-notifier');
+const { default: store } = require('.')
+
 
 const createAlert = (store, text) => {
     store.commit('alert', '')
     store.commit('alert', text)
 }
 const actions = {
+	generateAlert(store, text){
+		createAlert(store,text)
+	},
     selectPaymentType(store, type) {
         store.commit('creditCard', type)
     },
@@ -672,7 +677,7 @@ const actions = {
 	},
 	async findAllLastBoxReports(store){
 		let reports = await DB_MoneyBoxs.findAllLast()
-		store.commit('lastReports', reports)
+	store.commit('lastReports', reports)
 		let lastBoxActionMoney = 0
 		let actualMoneyCard = 0
 		if(reports.length > 0) lastBoxActionMoney = reports[0].money
@@ -691,6 +696,39 @@ const actions = {
 		}
 		store.commit('actualMoneyInBox', lastBoxActionMoney)
 		store.commit('actualMoneyCard', actualMoneyCard)
+	},
+	async checkAddNewDataToMoneyBox(store,data){
+		if((parseFloat(data.moneyInBox) == data.moneyInBox) && parseFloat(data.removeToBox) == data.removeToBox){
+			let lastRow = await DB_MoneyBoxs.findAllLast(1)
+			if(lastRow.length == 0){
+				store.commit('addNewDataToMoneyBox',data)
+			}else if(parseFloat(data.moneyInBox) == parseFloat(store.state.moneyBox.actualMoneyInBox)){
+				store.commit('addNewDataToMoneyBox',data)
+			}else if(parseFloat(data.moneyInBox) != parseFloat(store.state.moneyBox.actualMoneyInBox)){
+				store.commit('errorInUpdateSaleBox',{
+					newMoneyInSaleBox:data.moneyInBox,
+					newRemoveToBox:data.removeToBox
+				})
+			}
+		}else{
+			createAlert(store, "Debes introducir un numero")
+		}
+	},
+	/**
+	 *
+	 * @param {*} store
+	 * @param {*} data {dayToReport,moneyInBox}
+	 */
+	addNewDataToMoneyBox(store,data){
+		store.commit('resetpdateSaleBox')
+		if((parseFloat(data.moneyInBox) == data.moneyInBox) && parseFloat(data.removeToBox) == data.removeToBox){
+			store.commit('addNewDataToMoneyBox',data)
+		}else{
+			createAlert(store, "Debes introducir un numero")
+		}
+	},
+	resetpdateSaleBox(store){
+		store.commit('resetpdateSaleBox')
 	}
 }
 module.exports = actions

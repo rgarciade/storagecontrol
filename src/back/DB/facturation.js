@@ -62,7 +62,7 @@ const DB_Facturation = class {
 		.sum('price as daybox')
 		.table(principalTableName)
 		.where(`${principalTableName}.creation_date`, '>=' ,
-			knex.select('date_reported').from('money_box').orderBy('date_reported','desc').limit(1)
+			knex.select('creation_date').from('money_box').orderBy('creation_date','desc').limit(1)
 		)
 		.groupBy('credit_card')
 		.then((value) => value)

@@ -6,34 +6,25 @@ const DB_MoneyBoxs = class {
         return knex.select()
 			.table(tableName)
 			.limit(last)
-			.orderBy('date_reported','desc')
+			.orderBy('creation_date','desc')
 			.then((value) => value)
 			.catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 	}
 
 	/**
 	 *
-	 * @param {*} date yyyy-mm-dd
+	 * @param {*} data
+	 * 		date_reported: yyyy-mm-dd hh:mm:ss
+	 *      open_box : boolean
+	 *      close_box : boolean
+	 *      money : float
+	 * }
 	 */
-/* 	static async addNewMoneyEvent(date){
-		let reportDateData = await this.findReportDate(date.date_reported)
+ 	static async addNewMoneyEvent(data){
 		knex.table(tableName)
-		.insert(date)
+		.insert(data)
 		.then(resp => resp)
 		.catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
-	} */
-
-	/**
-	 *
-	 * @param {*} date yyyy-mm-dd
-	 */
-	/* async findReportDate(date){
-		knex.select('date_reported')
-			.table(tableName)
-			.where('date_reported', '>=', `${date} 00:00:00`)
-			.andWhere('date_reported', '<=', `${date} 23:59:59`)
-			.then((value) => value)
-			.catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
-	} */
+	}
 }
 module.exports = { DB_MoneyBoxs }

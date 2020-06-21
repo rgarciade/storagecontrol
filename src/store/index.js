@@ -32,7 +32,10 @@ export default new Vuex.Store({
 			dayToReport: new Date().toISOString().substr(0, 10),
 			openReport: null,
 			closeReport: null,
-			lastReports:[]
+			lastReports:[],
+			checkUpdate:0,
+			newMoneyInSaleBox:0,
+			newRemoveToBox:0,
 		},
         printType:'nada',
         paymentType: 1,

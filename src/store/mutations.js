@@ -1,5 +1,6 @@
 const { basePrice,currencyFormat } = require('../common/commonfunctions')
-const moment = require('moment')
+const moment = require('moment');
+const { DB_MoneyBoxs } = require('../back/DB/moneybox');
 moment.locale('es');
 const mutations = {
     clearnStoreCard(state) {
@@ -282,9 +283,9 @@ const mutations = {
         state.printType = value
 	},
 	lastReports(state, value){
-
+		state.moneyBox.lastReports = []
 		value.forEach(element => {
-			element.date =  moment(element.date_reported).format('LLLL');
+			element.date =  moment(element.creation_date).format('LLLL');
 			state.moneyBox.lastReports.push(element)
 		});
 		if(value.length <= 0) return false
@@ -303,6 +304,32 @@ const mutations = {
 	},
 	actualMoneyCard(state, value){
 		state.moneyBox.actualMoneyCard = value
+	},
+	/**
+	 *
+	 * @param {*} state
+	 * @param {*} data {dayToReport,moneyInBox}
+	 */
+	async addNewDataToMoneyBox(state, data){
+			await DB_MoneyBoxs.addNewMoneyEvent({
+				money: data.moneyInBox - data.removeToBox,
+				remove_to_box: data.removeToBox
+			})
+			state.moneyBox.newMoneyInSaleBox = 0
+			state.moneyBox.newRemoveToBox = 0
+			state.moneyBox.checkUpdate = 0
+			this.dispatch('findAllLastBoxReports')
+			this.dispatch('generateAlert',`caja actualizada`)
+	},
+	errorInUpdateSaleBox(state,data){
+		state.moneyBox.newMoneyInSaleBox = data.newMoneyInSaleBox
+		state.moneyBox.newRemoveToBox = data.newRemoveToBox
+		state.moneyBox.checkUpdate = 1
+	},
+	resetpdateSaleBox(state){
+		state.moneyBox.newMoneyInSaleBox = 0
+		state.moneyBox.newRemoveToBox = 0
+		state.moneyBox.checkUpdate = 0
 	}
 }
 module.exports = mutations
