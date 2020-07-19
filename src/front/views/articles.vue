@@ -168,7 +168,7 @@ export default {
         if(after.includes(',')){
           this.editedItem.public_price = after.replace(/,/g , ".")
         }
-        this.editedItem.public_price_without_vat = addIvaToPrice(after.replace(/,/g , "."), this.vat);
+        this.editedItem.public_price_without_vat = basePrice(after.replace(/,/g , "."), this.vat);
       },
       deep: true
     },
