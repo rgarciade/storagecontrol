@@ -241,7 +241,7 @@ export default {
   },
   created: function() {
     window.addEventListener("keydown", this.openFinder);
-    this.findArticles("");
+    this.findArticles({ textFinder : '', findAll: false});
   },
   computed: Object.assign({}, mapState(["printType","articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
     candFinish() {

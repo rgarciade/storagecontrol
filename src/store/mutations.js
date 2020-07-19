@@ -1,4 +1,4 @@
-const { basePrice,currencyFormat } = require('../common/commonfunctions')
+const { basePrice,addIvaToPrice,currencyFormat } = require('../common/commonfunctions')
 const moment = require('moment');
 const { DB_MoneyBoxs } = require('../back/DB/moneybox');
 moment.locale('es');
@@ -217,7 +217,8 @@ const mutations = {
     articles(state, finded) {
         let temporalState = []
         finded.forEach(function(element) {
-            element.price_without_vat = basePrice(element.public_price, 21)
+            element.price_without_vat = addIvaToPrice(element.purchase_price, 21)
+            element.public_price_without_vat = basePrice(element.public_price, 21)
             temporalState.push(element)
         });
         state.articles = temporalState

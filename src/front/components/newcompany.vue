@@ -5,7 +5,7 @@
               Creación de Cliente
             </v-card-title>
             <v-card-text>
-              <v-form 
+              <v-form
                 ref="form"
                 lazy-validation
                 v-model="valid">
@@ -16,7 +16,10 @@
                 <v-text-field :value="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
                 <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
                 <v-text-field v-model="companyData.telephone" label="telefono de contactor" ></v-text-field>
+            	<v-text-field :value="companyData.mobile" id="c_mobile" label="movil"></v-text-field>
                 <v-text-field v-model="companyData.contact" label="nombre de contacto" ></v-text-field>
+				<v-text-field :value="companyData.banck" id="c_banck" label="banco"></v-text-field>
+				<v-text-field :value="companyData.cta" id="c_cta" :rules="controlDigit" label="cuenta"></v-text-field>
                 <v-text-field id="correo" v-model="companyData.email" label="email de facturacion y contacto" ></v-text-field>
                 <v-textarea
                   solo
@@ -31,7 +34,7 @@
              </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn 
+                <v-btn
                 :disabled="!valid" @click="newCompany" color="success">Crear compañia</v-btn>
                 <v-btn @click="disableModal()" >Cerrar</v-btn>
             </v-card-actions>
@@ -76,8 +79,8 @@
             if(this.validate()){
               let newId = await this.createCompany(this.companyData)
             }
-            
-            
+
+
           },
           validate () {
             if (this.$refs.form.validate()) {
@@ -96,7 +99,7 @@
               this.$emit('companyName', this.companyData.name)
             }
           }
-        }                    
+        }
     }
 </script>
 <style>

@@ -15,7 +15,7 @@ const DB_Articles = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
     }
-    static async findArticles(text = '') {
+    static async findArticles(text = null) {
         return knex.select()
             .table(tableName)
             .where('description', 'like', `%${text}%`)

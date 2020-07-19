@@ -5,7 +5,7 @@
         <v-card-title class="headline primary lighten-3">Articulos</v-card-title>
       </v-card>
       <v-text-field
-        v-on:keyup="findArticles(textFinder)"
+        v-on:keyup="findArticles({ textFinder : textFinder, findAll: true})"
         label="Solo"
         placeholder="Buscar"
         solo
@@ -46,7 +46,7 @@
                   <v-text-field v-model="editedItem.purchase_price" label="precio de compra sin iva"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm4 md3>
-                  <v-text-field v-model="editedItem.public_price_without_vat" label="precio de venta sin iva" disabled></v-text-field>
+                  <v-text-field v-model="editedItem.public_price_without_vat" label="precio de venta sin iva" disabled ></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout wrap>
@@ -184,7 +184,7 @@ export default {
     }
   },
   created() {
-    this.findArticles();
+    this.findArticles({findAll: true});
   },
   methods: Object.assign(
     {},
@@ -221,7 +221,7 @@ export default {
       },
       async save() {
         if (this.editedItem.productid.length > 13) {
-          this.createStoreAlert("error en el forrmulario");
+          this.createStoreAlert("error en el forrmulario, longitud maxima del id 13");
           return "";
         }
         if (this.newItem) {
@@ -232,8 +232,8 @@ export default {
             purchase_price: parseInt(this.editedItem.purchase_price),
             public_price: parseInt(this.editedItem.public_price)
           };
-          await this.addNewArticle(article);
-          this.findArticles("");
+		  await this.addNewArticle(article);
+          this.findArticles({findAll: true});
         } else {
           let media =
             (this.articles[this.editedIndex].purchase_price +
@@ -248,7 +248,7 @@ export default {
             units: parseInt(this.editedItem.units),
             media: parseInt(media)
           };
-          await this.updateArticle(article);
+		  await this.updateArticle(article);
         }
         this.close();
       }

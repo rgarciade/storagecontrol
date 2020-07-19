@@ -1,6 +1,6 @@
 
 <template>
-    <div>    
+    <div>
         <div>
             <v-card
                 v-if="!readOnly"
@@ -19,7 +19,7 @@
                 <v-text-field
                     autofocus
                     v-if="finderOpen"
-                    v-on:keyup="findArticles(textFinder)"
+                    v-on:keyup="findArticles({ textFinder : textFinder, findAll: false})"
                     hide-details
                     placeholder="Buscar"
                     solo
@@ -31,7 +31,7 @@
                         <v-list-tile
                             :key="item.index"
                             avatar
-                            @click="addElement(item.idarticles)"
+                            @click="addElement(item.idarticles),closeFinder()"
                             class='article-finder-box'
                         >
                             <v-list-tile-avatar >
@@ -73,19 +73,19 @@
                         {{ props.item.description }}
                         </td>
                         <td v-if="props.item.idarticles < 0 " style="width:3000em">
-                            <textarea  :auto-grow="true" :disabled="readOnly" style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description 
+                            <textarea  :auto-grow="true" :disabled="readOnly" style="width: 100%;" type="text" :id="'articleId-description-' + props.item.idarticles" :value=props.item.description
                             @change="changeItemDescriptionElement({'idarticles':props.item.idarticles, 'description':getValueFromNameAndId('articleId-description-',props.item.idarticles)})"/>
                         </td>
                     </dir>
                      <td>
-                        <input :readonly="readOnly" class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles 
+                        <input :readonly="readOnly" class="imput-number" type="number" :id="'articleId-UnitsNumber-' + props.item.idarticles" :value=props.item.numberOfArticles
                         @change="changeItemUnitsNumberElement({'idarticles':props.item.idarticles, 'units':getValueFromNameAndId('articleId-UnitsNumber-',props.item.idarticles)})">
                     </td>
                     <td>
-                        <input :readonly="readOnly"  class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price 
+                        <input :readonly="readOnly"  class="imput-number" type="number" :id="'articleId-price-' + props.item.idarticles" :value=props.item.public_price
                             @change="changeItemPriceElemeny({'idarticles':props.item.idarticles, 'price':getValueFromNameAndId('articleId-price-',props.item.idarticles)})">
                     </td>
-                   
+
                     <td>{{ props.item.numberOfArticles * props.item.public_price }}</td>
                     <td v-if="!readOnly">
                         <v-icon  class="mr-2" @click="addElement( props.item.idarticles)">add_box</v-icon>
@@ -131,7 +131,7 @@
                 this.changeItemPriceElemeny = this.changePurchaseModificationItemPrice
                 this.changeItemDescriptionElement = this.changePurchaseModificationItemDescription
                 this.changeItemUnitsNumberElement = this.changePurchaseModificationItemUnitsNumber
-                
+
             }
             if(this.isStorecard){
                 this.itemsList = this.storeCard
@@ -143,11 +143,11 @@
                 this.changeItemUnitsNumberElement = this.changeItemUnitsNumber
             }
             window.addEventListener("keydown", this.openFinder);
-            this.findArticles("");
+            this.findArticles({ textFinder : '', findAll: false});
         },
         destroyed: function(){
             if(this.isPurchaseToModify){
-                this.clearnPriceStoreCard() 
+                this.clearnPriceStoreCard()
             }
         },
         props: {
@@ -189,7 +189,7 @@
             },
             openFinder(e) {
                 if(!e || e.target.nodeName == 'TEXTAREA'){
-                    return 
+                    return
                 }
 
                 if (e && e.code == "Enter" && e.type == "keydown" && !this.finderOpen) {

@@ -216,15 +216,17 @@ const actions = {
     createStoreAlert(store, alert) {
         createAlert(store, alert)
     },
-    async findArticles(store, text) {
+    async findArticles(store, args) {
+		const text = (args.textFinder)? args.textFinder : ""
+		const findAll = (args.findAll)? args.findAll : false
         try {
             store.commit("charging")
             if (text != '' && text) {
                 store.commit('articles', await DB_Articles.findArticles(text))
-            } else if (text == "") {
+            } else if ( (findAll && (text == "")) || text == null) {
+				store.commit('articles', await DB_Articles.findAllArticles())
+			}else if (text == "") {
                 store.commit('articles', [])
-            } else if (!text) {
-                store.commit('articles', await DB_Articles.findAllArticles())
             }
             store.commit('charged')
         } catch (error) {
@@ -362,7 +364,12 @@ const actions = {
         store.commit('sales', await DB_Sales.fidSalesIdsDatas(salesIds))
     },
     async addNewArticle(store, data) {
-        store.commit("charging")
+		store.commit("charging")
+		let article = await DB_Articles.findIdArticles(data.productid)
+		if(article.length > 0){
+			createAlert(store, 'ya existe un articulo con este id de producto')
+			return false
+		}
         await DB_Articles.insertArticle(data).then(value => {
             value = value[0]
             if (value) {
@@ -379,7 +386,7 @@ const actions = {
         let id = data.idarticles
         delete data.idarticles
         await DB_Articles.updateArticle(id, data)
-        store.commit('articles', await DB_Articles.findArticles())
+        store.commit('articles', await DB_Articles.findAllArticles())
         store.commit('charged')
         createAlert(store, 'articulo actualizado')
     },
