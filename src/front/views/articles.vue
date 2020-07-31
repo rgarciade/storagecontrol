@@ -89,7 +89,7 @@
         <td>{{ props.item.price_without_vat }}</td>
         <td>{{ props.item.purchase_price }}</td>
         <td>{{ props.item.public_price }}</td>
-        <td>{{this.vat}}</td>
+        <td>{{ config.vat}}</td>
         <td>
           <input type="number" />
           {{ props.item.units }}
@@ -111,7 +111,6 @@ export default {
   name: "articles",
   data: () => ({
     newItem: false,
-    vat: 21,
     idMaxLength: checkInputs.idMaxLength,
     rowsPerPage: [
       25,
@@ -127,7 +126,7 @@ export default {
       { text: "Precio sin iva", value: "price_without_vat" },
       { text: "Precio de compra", value: "purchase_price" },
       { text: "Precio de venta", value: "public_price" },
-      { text: "precio medio", value: "pmedio" },
+      { text: "iva", value: "iva" },
       { text: "unidades", value: "units" },
       { text: "Acciones", value: "name", sortable: false }
     ],
@@ -152,7 +151,7 @@ export default {
       public_price: null
     }
   }),
-  computed: Object.assign({}, mapState(["articles"]), {
+  computed: Object.assign({}, mapState(["articles","config"]), {
     formTitle() {
       return this.editedIndex === -1 ? "Nuevo artículo" : "Editar Articulo";
     }
@@ -183,8 +182,9 @@ export default {
       deep: true
     }
   },
-  created() {
-    this.findArticles({findAll: true});
+  async created() {
+	await this.uploadConfigDatas(['vat'])
+	this.findArticles({findAll: true});
   },
   methods: Object.assign(
     {},
@@ -193,7 +193,8 @@ export default {
       "findArticles",
       "updateArticle",
       "deleteArticleFromId",
-      "createStoreAlert"
+	  "createStoreAlert",
+	  "uploadConfigDatas"
     ]),
     {
       statusNewItem(status = true) {

@@ -60,7 +60,10 @@ export default new Vuex.Store({
         ActualFacturationId:0,
         FacturationPreviewVisibility:false,
         TicketPreviewVisibility:false,
-        UpdateButton:true
+		UpdateButton:true,
+		config:{
+			vat:21
+		}
     },
     actions,
     mutations,

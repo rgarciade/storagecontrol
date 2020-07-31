@@ -2,11 +2,14 @@ const fs = require('fs');
 const { createPrintWindow } = require('simple-electron-printer-and-thermalprinter');
 const { DB_Facturation } = require('../../DB/facturation')
 const { DB_Companys } = require('../../DB/companys')
+const { DB_Configuration } = require('../../DB/configuration')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
 const moment = require('moment')
 
-const printFacturation = (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false) => {
-    const cssFile = `${__dirname}/facturation.css`;
+const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false) => {
+	const cssFile = `${__dirname}/facturation.css`;
+	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
+	const impuesto = (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
             if (!err) {
@@ -29,7 +32,6 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, clien
         `cif: ${cif}`,
     ]
     let formaDePago = 'transferencia'
-	let impuesto = 21
 	let config = [];
 	if (pdf){
 		config.push('pdf')

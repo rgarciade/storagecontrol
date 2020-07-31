@@ -7,7 +7,7 @@ const { DB_MoneyBoxs } = require('../back/DB/moneybox')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const {sendEmail} = require('../back/components/email/email')
-const notifier = require('node-notifier');
+//const notifier = require('node-notifier');
 const { default: store } = require('.')
 
 
@@ -736,6 +736,14 @@ const actions = {
 	},
 	resetpdateSaleBox(store){
 		store.commit('resetpdateSaleBox')
+	},
+	/**
+	 *
+	 * @param {*} store
+	 * @param {*} data array strings
+	 */
+	uploadConfigDatas(store, data){
+		store.commit('uploadConfigDatas',data)
 	}
 }
 module.exports = actions
