@@ -4,7 +4,7 @@
 			<v-card>
 				<v-card-title class="headline primary lighten-3">Configuracion</v-card-title>
 				  <h1 class="">
-					<v-btn color="success" @click=" console.log('actualiza')">Actualizar</v-btn>
+					<v-btn color="success" @click="updateConfigurationDatas()">Actualizar</v-btn>
 				</h1>
 			</v-card>
 
@@ -65,14 +65,35 @@
 
 <script>
 import { mapActions,mapState } from "vuex"
-//document.getElementById('_secure').checked
 export default {
-	name: "config",
+	name: "configView",
 	data: () => ({
 		items: []
 	}),
 	computed: Object.assign({}, mapState(["config"]),{}),
-	methods: Object.assign({},mapActions(["getConfigData"]),{}),
+	methods: Object.assign({},mapActions(["getConfigData","updateConfiguration", "testMail", "generateAlert"]),{
+		updateConfigurationDatas(){
+			debugger
+			let newConfigData = {
+				mail: document.getElementById("_Correo").value,
+				mailhost: document.getElementById("_Host").value,
+				mailport: document.getElementById("_Puerto").value,
+				mailpassword: document.getElementById("_contraseña").value,
+				secure: document.getElementById('_secure').checked
+			}
+			debugger
+			this.updateConfiguration(newConfigData)
+		},
+		sendTestEmail(){
+			let mail = document.getElementById("_emailprueba").value
+			if(mail == ''){
+				this.generateAlert('necesita introducir un email')
+			}else{
+				this.testMail(mail)
+			}
+
+		}
+	}),
 	mounted() {
 		this.getConfigData()
 	},
@@ -91,7 +112,7 @@ export default {
 						{ title: 'contraseña', id: '_contraseña',type: 'password', show:false },
 						{ title: 'subir imagen firma de email',type: 'button', function: ()=>{console.log('actualiza')}  },
 						{ title: 'donde enviar email de prueba',type: 'text', id: '_emailprueba' },
-						{ title: 'email de prueba',type: 'button', function: ()=>{console.log('actualiza')}  }
+						{ title: 'email de prueba', type: 'button', function: this.sendTestEmail  }
 					]
 				},
 				{

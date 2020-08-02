@@ -4,6 +4,7 @@ const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { DB_MoneyBoxs } = require('../back/DB/moneybox')
+const { DB_Configuration } = require('../back/DB/configuration')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const {sendEmail} = require('../back/components/email/email')
@@ -494,7 +495,8 @@ const actions = {
 							const isDevMode = process.execPath.match(/[\\/]electron/);
 							if(isDevMode) email = 'raulgarcia_dlf@hotmail.com'
 							sendEmail(email,`factura ${idFacturation}`,'se adjunta la factura', [`${app.getPath('documents')+'/printer'}/${idFacturation}.pdf`])
-							createAlert(store, `Factura enviada por correo a ${email} `)
+								.then(a => createAlert(store, `Factura enviada por correo a ${email} `))
+								.catch(e => createAlert(store, `Error al enviar el correo ${e}`))
 							/*notifier.notify({
 								'title': 'storage control Factura',
 								'message': `Factura enviada por correo a ${email} `
@@ -745,9 +747,22 @@ const actions = {
 	uploadConfigDatas(store, data){
 		store.commit('uploadConfigDatas',data)
 	},
-	getConfigData(store){
-		store.commit('getConfigData')
+	async getConfigData(store){
+		const configData =  await DB_Configuration.findPrincipalConfiguration()
+		if(configData[0].length <= 0) return false
+		store.commit('updateConfigData',configData)
+	},
+	async updateConfiguration(store,data){
+		store.commit("charging")
+		await DB_Configuration.updatePrincipalConfiguration(data)
+		this.dispatch('getConfigData');
+		store.commit("charged")
+		createAlert(store, `Configuración actualizada correctamente`)
+	},
+	testMail(store,email){
+		sendEmail(email,'Email de prueba','Este es un email de prueba')
+			.then(a => createAlert(store, `revise su correo`))
+			.catch(e => createAlert(store, `Error al enviar el correo ${e}`))
 	}
-
 }
 module.exports = actions

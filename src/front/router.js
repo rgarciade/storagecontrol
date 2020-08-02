@@ -5,7 +5,7 @@ import Salebox from './views/salebox';
 import tickets from './views/tickets';
 import Billing from './views/billing';
 import Moneybox from './views/moneybox';
-import Config from './views/config';
+import ConfigView from './views/configView';
 import conpanyconfiguration from './views/conpanyconfiguration';
 
 const routes = [
@@ -16,7 +16,7 @@ const routes = [
     { path: '/Empresas', name: 'Empresas', component: Companysfinder },
     { path: '/conpanyconfiguration', name: 'conpanyconfiguration', component: conpanyconfiguration },
     { path: '/Moneybox', name: 'Moneybox', component: Moneybox },
-    { path: '/Config', name: 'Config', component: Config },
+    { path: '/ConfigView', name: 'ConfigView', component: ConfigView },
     { path: '*', name: '*', component: Salebox }
 ];
 
@@ -27,7 +27,7 @@ const menuRoutes = [
     { title: 'Articulos', icon: 'storage', route: '/Articles' },
     { title: 'Empresas', icon: 'next_week', route: '/Empresas' },
     { title: 'Cierre de caja', icon: 'point_of_sale', route: '/Moneybox' },
-    { title: 'Configuración', icon: 'widgets', route: '/Config' },
+    { title: 'Configuración', icon: 'widgets', route: '/ConfigView' },
 ]
 
 const router = new VueRouter({

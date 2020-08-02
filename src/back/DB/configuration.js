@@ -34,7 +34,7 @@ const DB_Configuration = class {
             .then((value) => value)
             .catch(error => console.error(error.errno === 'ECONNREFUSED' ? 'connection error' : ''))
 	}
-	static async updatePrincipalConfiguration() {
+	static async updatePrincipalConfiguration(datas) {
 		return knex
 		.table('configuration')
 		.where('id', 1)

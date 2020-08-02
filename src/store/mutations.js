@@ -335,7 +335,7 @@ const mutations = {
 		state.moneyBox.checkUpdate = 0
 	},
 	async uploadConfigDatas(state, data){
-		const config =  await DB_Configuration.findConfigurationById(1)
+		const config =  await DB_Configuration.findPrincipalConfiguration()
 		for (let index = 0; index < data.length; index++) {
 			const element = data[index];
 			if(config[0] && config[0][element]){
@@ -343,15 +343,13 @@ const mutations = {
 			}
 		}
 	},
-	async getConfigData(state){
-		const config =  await DB_Configuration.findConfigurationById(1)
-		if(config[0].length <= 0) return false
+	updateConfigData(state ,configData){
 		state.config = {
-			mail: config[0].mail,
-			mailhost: config[0].mailhost,
-			mailport: config[0].mailport,
-			secure: config[0].secure,
-			vat: config[0].vat
+			mail: configData[0].mail,
+			mailhost: configData[0].mailhost,
+			mailport: configData[0].mailport,
+			secure: configData[0].secure,
+			vat: configData[0].vat
 		}
 	}
 }

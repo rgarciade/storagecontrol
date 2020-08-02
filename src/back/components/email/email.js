@@ -10,6 +10,13 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 					if(!config || !config[0]){
 						throw new Error('error to find email configuration')
 					}
+					if(
+						!config[0].mail ||
+						!config[0].mailpassword ||
+						!config[0].mailhost ||
+						!config[0].mailport ||
+						!config[0].secure
+					){ reject('Termine de configurar su correo en la ventana de configuración')}
 					let transport = await nodemailer.createTransport({
 						host: configurationData.mailhost,
 						port: configurationData.mailhost,
@@ -17,28 +24,33 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 						auth: { user: configurationData.mail, pass :configurationData.mailpassword,	}
 					});
 					let files = []
-					for (let index = 0; index < attachments.length; index++) {
-						const filePath = attachments[index];
-						files.push( { path : filePath} )
+					if(attachments){
+						for (let index = 0; index < attachments.length; index++) {
+							const filePath = attachments[index];
+							files.push( { path : filePath} )
+						}
 					}
 					if(!footerImg) footerImg = configurationData.mailimg //Buffer.from( config.data.mailimg, 'binary').toString();
-					files.push({   // binary buffer as an attachment
-						filename: 'firma',
-						content: Buffer.from( configurationData.mailimg, 'binary').toString(),
-						encoding: 'base64',
-						cid: 'firma'
-					})
+					if(configurationData.mailimg){
+						files.push({   // binary buffer as an attachment
+							filename: 'firma',
+							content: Buffer.from( configurationData.mailimg, 'binary').toString(),
+							encoding: 'base64',
+							cid: 'firma'
+						})
+					}
 					if(footerImg){
 						body = `<div>${body} </br></br> <img src="cid:firma" /></div>`
 					}
 					resolve(await transport.sendMail({
-						from: configurationData.mailhost,// sender address
+						from: configurationData.mail,// sender address
 						to, // list of receivers
 						subject, // Subject line
 						html: body, // html body
 						attachments: files
 					}));
 				} catch (error) {
+					if(error.message) reject(error.message)
 					reject(error)
 				}
 			})

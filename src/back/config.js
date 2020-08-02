@@ -4,7 +4,7 @@ const Const = {
         port: '8989',
         user: 'root',
         password: 'root',
-        database: 'storagecontrol'
+        database: 'storagecontrol_test'
     }
 }
 module.exports = Const
