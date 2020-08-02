@@ -744,6 +744,10 @@ const actions = {
 	 */
 	uploadConfigDatas(store, data){
 		store.commit('uploadConfigDatas',data)
+	},
+	getConfigData(store){
+		store.commit('getConfigData')
 	}
+
 }
 module.exports = actions

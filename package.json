@@ -24,6 +24,7 @@
         "knex": "^0.20.15",
         "moment": "^2.26.0",
         "mysql": "^2.16.0",
+        "node-gyp": "^7.0.0",
         "node-sass": "^4.14.1",
         "nodemailer": "^6.4.8",
         "simple-electron-printer-and-thermalprinter": "^1.0.10",

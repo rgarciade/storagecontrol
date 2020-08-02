@@ -62,7 +62,11 @@ export default new Vuex.Store({
         TicketPreviewVisibility:false,
 		UpdateButton:true,
 		config:{
-			vat:21
+			vat:21,
+			mail:'',
+			mailhost:'',
+			mailport:'',
+			secure: ''
 		}
     },
     actions,
