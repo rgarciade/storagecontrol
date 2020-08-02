@@ -31,10 +31,24 @@
 					<v-list-tile
 						v-for="subItem in item.items"
 						:key="subItem.title"
-						@click=""
 					>
 						<v-list-tile-content >
-							<v-text-field style="width: 100%;" :value="subItem.value" :label="subItem.title" id=""></v-text-field>
+							<v-text-field v-if="subItem.type === 'text'" style="width: 100%;" :value="subItem.value" :label="subItem.title" :id="subItem.id"></v-text-field>
+							<v-btn v-if="subItem.type === 'button'" color="success" @click="subItem.function">{{subItem.title}}</v-btn>
+							<v-text-field
+								v-if="subItem.type === 'password'"
+								append-icon="remove_red_eye"
+								:type="subItem.show ? 'text' : 'password'"
+								:label="subItem.title"
+								:id="subItem.id"
+								@click:append="subItem.show = !subItem.show"
+								></v-text-field>
+							<v-switch
+									v-if="subItem.type == 'switch'"
+									:input-value="subItem.value"
+									:id="subItem.id"
+									:label="subItem.title"
+							></v-switch>
 						</v-list-tile-content>
 
 						<v-list-tile-action>
@@ -51,6 +65,7 @@
 
 <script>
 import { mapActions,mapState } from "vuex"
+//document.getElementById('_secure').checked
 export default {
 	name: "config",
 	data: () => ({
@@ -69,12 +84,14 @@ export default {
 					title: 'Configuracion email',
 					active: true,
 					items: [
-						{ title: 'Correo',value: this.config.mail },
-						{ title: 'Host',value: this.config.mailhost  },
-						{ title: 'Puerto',value: this.config.mailport   },
-						{ title: 'secure',value: (this.config.secure)? 'TRUE': 'FALSE' },
-						{ title: 'actualizar contraseña',value:''  },
-						{ title: 'subir imagen firma de email',value:''  }
+						{ title: 'Correo', id: '_Correo', type: 'text', value: this.config.mail },
+						{ title: 'Host', id: '_Host', type: 'text', value: this.config.mailhost  },
+						{ title: 'Puerto', id: '_Puerto', type: 'text', value: this.config.mailport   },
+						{ title: 'secure', id: '_secure', type: 'switch', value: this.config.secure },
+						{ title: 'contraseña', id: '_contraseña',type: 'password', show:false },
+						{ title: 'subir imagen firma de email',type: 'button', function: ()=>{console.log('actualiza')}  },
+						{ title: 'donde enviar email de prueba',type: 'text', id: '_emailprueba' },
+						{ title: 'email de prueba',type: 'button', function: ()=>{console.log('actualiza')}  }
 					]
 				},
 				{
@@ -82,7 +99,7 @@ export default {
 					title: 'parametros de la aplicacion',
 
 					items: [
-						{ title: 'impuestos',value: this.config.vat }
+						{ title: 'impuestos', id: '_impuestos', type: 'text', value: this.config.vat }
 					]
 				}
 			]
