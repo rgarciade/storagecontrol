@@ -759,8 +759,8 @@ const actions = {
 		store.commit("charged")
 		createAlert(store, `Configuración actualizada correctamente`)
 	},
-	testMail(store,email){
-		sendEmail(email,'Email de prueba','Este es un email de prueba')
+	async testMail(store,email){
+		await sendEmail(email,'Email de prueba','Este es un email de prueba')
 			.then(a => createAlert(store, `revise su correo`))
 			.catch(e => createAlert(store, `Error al enviar el correo ${e}`))
 	}

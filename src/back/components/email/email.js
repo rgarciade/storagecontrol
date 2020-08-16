@@ -17,12 +17,27 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 						!config[0].mailport ||
 						!config[0].secure
 					){ reject('Termine de configurar su correo en la ventana de configuración')}
-					let transport = await nodemailer.createTransport({
-						host: configurationData.mailhost,
-						port: configurationData.mailhost,
-						secure: configurationData.secure,
-						auth: { user: configurationData.mail, pass :configurationData.mailpassword,	}
-					});
+					let transport = null
+					if(configurationData.tls){
+						transport = await nodemailer.createTransport({
+							host: configurationData.mailhost,
+							port: configurationData.mailhost,
+							secure: configurationData.secure,
+							auth: { user: configurationData.mail, pass :configurationData.mailpassword	},
+							tls: {
+								ciphers:'SSLv3'
+							 },
+
+						});
+					}else{
+						transport = await nodemailer.createTransport({
+							host: configurationData.mailhost,
+							port: configurationData.mailhost,
+							secure: configurationData.secure,
+							auth: { user: configurationData.mail, pass :configurationData.mailpassword	}
+						});
+					}
+
 					let files = []
 					if(attachments){
 						for (let index = 0; index < attachments.length; index++) {

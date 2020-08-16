@@ -79,7 +79,8 @@ export default {
 				mailhost: document.getElementById("_Host").value,
 				mailport: document.getElementById("_Puerto").value,
 				mailpassword: document.getElementById("_contraseña").value,
-				secure: document.getElementById('_secure').checked
+				secure: document.getElementById('_secure').checked,
+				tls: document.getElementById('_tls').checked
 			}
 			debugger
 			this.updateConfiguration(newConfigData)
@@ -109,6 +110,7 @@ export default {
 						{ title: 'Host', id: '_Host', type: 'text', value: this.config.mailhost  },
 						{ title: 'Puerto', id: '_Puerto', type: 'text', value: this.config.mailport   },
 						{ title: 'secure', id: '_secure', type: 'switch', value: this.config.secure },
+						{ title: 'tls', id: '_tls', type: 'switch', value: this.config.tls },
 						{ title: 'contraseña', id: '_contraseña',type: 'password', show:false },
 						{ title: 'subir imagen firma de email',type: 'button', function: ()=>{console.log('actualiza')}  },
 						{ title: 'donde enviar email de prueba',type: 'text', id: '_emailprueba' },
