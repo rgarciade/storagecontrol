@@ -349,6 +349,7 @@ const mutations = {
 			mailhost: configData[0].mailhost,
 			mailport: configData[0].mailport,
 			secure: configData[0].secure,
+			tls: configData[0].tls,
 			vat: configData[0].vat
 		}
 	}
