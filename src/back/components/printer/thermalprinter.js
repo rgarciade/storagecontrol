@@ -19,18 +19,20 @@ const createArticlesToTicket = ( articles ) => {
 
 const printThermalPrinterFacturation = async ( id, delivered = null ) => {
     let facturation =  await DB_Facturation.findFacturationId(id)
-    let articles = await createArticlesToTicket(facturation)
-    printTicket( id, articles, delivered )
+	let articles = await createArticlesToTicket(facturation)
+	let vat = (facturation[0] && facturation[0].vat)?  facturation[0].vat : 21
+    printTicket( id, articles, delivered, null, vat)
 }
 const printThermalPrinterSales = async ( id, delivered = null) => {
     let sales =  await DB_Sales.fidSalesId(id)
-    let articles = await createArticlesToTicket(sales)
-    printTicket(id, articles, delivered)
+	let articles = await createArticlesToTicket(sales)
+	let vat = (sales[0] && sales[0].vat)?  sales[0].vat : 21
+    printTicket(id, articles, delivered, null, vat)
 }
-const printTicket = async ( id, articles, delivered = null, time = null ) => {
+const printTicket = async ( id, articles, delivered = null, time = null, vat = null ) => {
 	time = (!time)? moment.utc().format('YYYY-MM-DD HH:mm:ss') : time
 	const config =  await DB_Configuration.findConfigurationById(1)
-	const vat = (config[0] && config[0].vat)? config[0].vat : 21
+	vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
     createPrintWindow({
         html: createTicket(
             {

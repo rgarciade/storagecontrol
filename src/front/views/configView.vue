@@ -73,7 +73,6 @@ export default {
 	computed: Object.assign({}, mapState(["config"]),{}),
 	methods: Object.assign({},mapActions(["getConfigData","updateConfiguration", "testMail", "generateAlert"]),{
 		updateConfigurationDatas(){
-			debugger
 			let newConfigData = {
 				mail: document.getElementById("_Correo").value,
 				mailhost: document.getElementById("_Host").value,
@@ -82,7 +81,9 @@ export default {
 				secure: document.getElementById('_secure').checked,
 				tls: document.getElementById('_tls').checked
 			}
-			debugger
+			if(document.getElementById("_contraseña").value != '' && document.getElementById("_contraseña").value != null ){
+				newConfigData.mailpassword =  document.getElementById("_contraseña").value
+			}
 			this.updateConfiguration(newConfigData)
 		},
 		sendTestEmail(){

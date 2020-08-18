@@ -6,10 +6,10 @@ const { DB_Configuration } = require('../../DB/configuration')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
 const moment = require('moment')
 
-const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false) => {
+const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null) => {
 	const cssFile = `${__dirname}/facturation.css`;
 	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
-	const impuesto = (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
+	const impuesto = vat? vat : (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
             if (!err) {
@@ -54,11 +54,12 @@ const printFacturationFromFacturation = async (id, pdf = false, finishFunction =
     let companyId = facturation[0].company_id
     let companyData = await DB_Companys.findCompany(companyId)
     let articles = await createArticlesToTicket(facturation)
-    let date =  moment(facturation[0].creation_date).format('L')
-    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction )
+	let date =  moment(facturation[0].creation_date).format('L')
+	let vat = (facturation[0].vat)?facturation[0].vat:21
+    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction, vat )
 }
 
-const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
+const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => {
     let topLeftHtml = ''
     let toprightHtml = ''
     let articlesHtml = ''
@@ -81,7 +82,7 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
         precioConImpuesto = precioConImpuesto + articles[index].quantity * articles[index].price
     }
 
-    precioSinImpuesto = precioConImpuesto / ((21 / 100) + 1)
+    precioSinImpuesto = precioConImpuesto / ((impuesto / 100) + 1)
     cantidadImpuesto = precioConImpuesto - precioSinImpuesto
     precioConImpuesto = precioConImpuesto.toFixed(2)
     precioSinImpuesto = precioSinImpuesto.toFixed(2)
