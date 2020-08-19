@@ -94,7 +94,7 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
                 <tr>
                     <td style="    text-align: center;">
 
-                        <img class="img-top" src='${__dirname}/microtex.jpg' />
+                        <img class="img-top img-facturation-top" src='${__dirname}/microtex.jpg' />
 
                     </td>
                 </tr>
@@ -147,13 +147,15 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
                                             <td class='left-bot-box'>
                                                 <table>
                                                     <tr>
-                                                        <td class="not-border">
-                                                            Forma de pago:
+                                                        <td class="not-border td-bold">
+                                                            FORMA DE PAGO:
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            ${formadepago}
+														<td>
+															<spam>
+																- ${formadepago}
+															</spam>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -162,19 +164,28 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
                                             <td class="right-bot-box">
                                                 <table>
                                                     <tr>
-                                                        <td>
-                                                            importe : ${precioSinImpuesto}
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            IMPORTE :
+														</td>
+														<td>
+															${precioSinImpuesto}
+														</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            impuestos : ${impuesto}%  ${ cantidadImpuesto} €
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            IMPUESTO :
+														</td>
+														<td>
+															${impuesto}%  ${ cantidadImpuesto} €
+														</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            tortal: ${precioConImpuesto}
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            TOTAL:
+														</td>
+														<td>
+															${precioConImpuesto}
+														</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -215,25 +226,25 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
                             <td></td>
                         </tr>
                         <tr class='first-table-bot'>
-                            <td class='footer-table-left'>Avenida de atenas 12</td>
+                            <td class='footer-table-left'>Avenida de Atenas 2</td>
                             <td class='footer-table-center'></td>
-                            <td class='footer-table-right'>telefono 916316272</td>
+                            <td class='footer-table-right'>Teléfono 916316272</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>c.comercial las rozas 2</td>
+                            <td class='footer-table-left'>C.Comercial Las Rozas 2</td>
                             <td class='footer-table-center'></td>
-                            <td class='footer-table-right'>www.micro-tex.com 1</td>
+                            <td class='footer-table-right'>www.micro-tex.com</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>Locales 22,23</td>
+                            <td class='footer-table-left'>Locales 22 y 23</td>
                             <td class='footer-table-center'></td>
                             <td class='footer-table-right'>email: micro-tex@micro-tex.com</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>28232 - las rozas madrid </td>
+                            <td class='footer-table-left'>28230 - Las Rozas (Madrid) </td>
                             <td class='footer-table-center'></td>
                             <td class='footer-table-right'></td>
                             <td></td>
