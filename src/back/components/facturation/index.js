@@ -74,10 +74,10 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
     }
     for (let index = 0; index < articles.length; index++) {
         articlesHtml += `<tr>
-                            <td>${articles[index].product}</td>
-                            <td>${articles[index].quantity}</td>
-                            <td>${articles[index].price}</td>
-                            <td>${articles[index].quantity * articles[index].price}</td>
+                            <td>${articles[index].product.replace(/(\r\n|\n|\r)/gm,"<br/>")}</td>
+                            <td style="min-width: 70px;" >${articles[index].quantity}</td>
+                            <td style="min-width: 70px;" >${articles[index].price}</td>
+                            <td style="min-width: 70px;" >${articles[index].quantity * articles[index].price}</td>
                         </tr>`
         precioConImpuesto = precioConImpuesto + articles[index].quantity * articles[index].price
     }
