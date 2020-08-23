@@ -30,21 +30,20 @@ const printThermalPrinterSales = async ( id, delivered = null) => {
     printTicket(id, articles, delivered, null, vat)
 }
 const printTicket = async ( id, articles, delivered = null, time = null, vat = null ) => {
-	time = (!time)? moment.utc().format('YYYY-MM-DD HH:mm:ss') : time
+	time = (!time)? moment.utc().format('DD-M-YY HH:mm:ss') : time
 	const config =  await DB_Configuration.findConfigurationById(1)
 	vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
     createPrintWindow({
         html: createTicket(
             {
                 'initial': [
-                    `id de venta:${id}`,
+                    `Nº. VENTA:${id}`,
                     '',
                     'MICRO-TEX INFORMATICA',
-                    'Avenida de atenas 2, local 22 23',
+                    'AVDA. DE ATENAS, 1 LOCALES 22-23',
                     'C.C. LAS ROZAS (MADRID) 28231 ',
                     'CIF :B80898224',
-                    time,
-                    ''
+                    time
                 ],
                 'articles': articles,
                 'final': ['Gracias por su visita'],
