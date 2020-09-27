@@ -345,6 +345,7 @@ const mutations = {
 	},
 	updateConfigData(state ,configData){
 		state.config = {
+			banknumber: configData[0].banknumber,
 			mail: configData[0].mail,
 			mailhost: configData[0].mailhost,
 			mailport: configData[0].mailport,

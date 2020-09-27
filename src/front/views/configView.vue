@@ -123,7 +123,8 @@ export default {
 					title: 'parametros de la aplicacion',
 
 					items: [
-						{ title: 'impuestos', id: '_impuestos', type: 'text', value: this.config.vat }
+						{ title: 'impuestos', id: '_impuestos', type: 'text', value: this.config.vat },
+						{ title: 'Cuenta Bancaria', id: 'Cuenta Bancaria', type: 'text', value: this.config.banknumber }
 					]
 				}
 			]

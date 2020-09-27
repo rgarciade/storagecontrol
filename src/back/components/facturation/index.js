@@ -4,12 +4,17 @@ const { DB_Facturation } = require('../../DB/facturation')
 const { DB_Companys } = require('../../DB/companys')
 const { DB_Configuration } = require('../../DB/configuration')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
+const { ES } = require('../../../i18n/paiments')
 const moment = require('moment')
 
-const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null) => {
+const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null, formaDePago = ES[3] ) => {
 	const cssFile = `${__dirname}/facturation.css`;
 	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
 	const impuesto = vat? vat : (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
+	if(formaDePago == ES[3]){
+		const banknumber = (Dbconfig[0] && Dbconfig[0].banknumber)? Dbconfig[0].banknumber : ''
+		formaDePago = `${formaDePago} <br> ${banknumber}`
+	}
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
             if (!err) {
@@ -31,7 +36,6 @@ const printFacturation = async (articles, facturationNumber, date, clientNumber,
         `${postalCode}`,
         `cif: ${cif}`,
     ]
-    let formaDePago = 'transferencia'
 	let config = [];
 	if (pdf){
 		config.push('pdf')
@@ -56,7 +60,8 @@ const printFacturationFromFacturation = async (id, pdf = false, finishFunction =
     let articles = await createArticlesToTicket(facturation)
 	let date =  moment(facturation[0].creation_date).format('L')
 	let vat = (facturation[0].vat)?facturation[0].vat:21
-    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction, vat )
+	let paymentType = ES[facturation[0].paymentType]
+    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction, vat, paymentType )
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => {

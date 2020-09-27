@@ -4,6 +4,7 @@ exports.up = async function(knex, Promise) {
 		table.collate('utf8_general_ci');
 		table.increments('id', 11).notNullable().primary();
         table.integer('vat', 11).notNullable(null);
+        table.integer('banknumber', 40).defaultTo(null);
         table.string('mail', 40).defaultTo(null);
         table.string('mailpassword', 40).defaultTo(null);
         table.string('mailhost', 40).defaultTo(null);
@@ -16,8 +17,6 @@ exports.up = async function(knex, Promise) {
     await knex.table('configuration').insert([{
 		'vat': 21
     }])
-
-
 }
 
 exports.down = async function(knex, Promise) {

@@ -34,7 +34,9 @@
             > <v-icon>euro_symbol</v-icon>
               Efectivo
             </v-btn>
-            <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>Tarjeta</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(2)" > <v-icon> article</v-icon>Recibo</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(3)" > <v-icon> transform</v-icon>Transferencia</v-btn>
           </v-stepper-content>
           <v-stepper-content step="2">
             <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
@@ -132,7 +134,7 @@
               </v-flex>
               <v-flex xs3 style="padding-top: 3.5%;">
                 <v-select
-                  v-if="paymentType == 1"
+                  v-if="paymentType >= 1"
                   :items="printTypesitems"
                   v-model="printTypeVal"
                   label="Imprimir"
@@ -196,7 +198,7 @@ export default {
       finderOpen: false,
       saleDialog: false,
       e1:0,
-      printTypeVal:'nada',
+      printTypeVal:'factura',
       paymentAmount:0,
       moneyBack:0,
       textFinder:"",
@@ -213,7 +215,7 @@ export default {
 		'factura por correo',
         'ticket',
         'ambas',
-        'nada'
+		'nada'
       ]
     };
 
@@ -278,9 +280,9 @@ export default {
     },
     async insertPaiment( payed ) {
       let newId = 0
-      if (this.creditCard == 1 && this.companyData.id <= 0) {
+      if (this.creditCard >= 1 && this.companyData.id <= 0) {
         await this.inserFacturation()
-      }else if( this.paymentType == 1 && this.companyData.id > 0){
+      }else if( this.paymentType >= 1 && this.companyData.id > 0){
         await this.inserFacturation( this.companyData.id )
       } else {
         await this.inserSale()

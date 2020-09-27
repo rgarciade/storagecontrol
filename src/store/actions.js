@@ -21,13 +21,22 @@ const actions = {
 		createAlert(store,text)
 	},
     selectPaymentType(store, type) {
-        store.commit('creditCard', type)
+		if(type > 1){
+			store.commit('creditCard', 0)
+			store.commit('paymentType', type)
+		}else{
+			store.commit('creditCard', type)
+		}
     },
     needFacturation(store, type) {
-        //paymentType
+		//paymentType
+		//3 Transferencia
+		//2 Recibo
         //1 facturation
-        //0 normal
-        store.commit('paymentType', type)
+		//0 normal
+		if(store.state.paymentType == 0){
+			store.commit('paymentType', type)
+		}
     },
     async addToCard(store, idArticle = '') {
         if (idArticle == '') {
@@ -466,13 +475,14 @@ const actions = {
                 units: element.numberOfArticles,
                 description: element.description
             })
-        });
+		});
 
         return await DB_Facturation.insertFacturation({
                 facturation: {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
-                    credit_card: store.state.creditCard
+					credit_card: store.state.creditCard,
+					paymentType : store.state.paymentType
                 },
                 extra: cartToinsert
             })
