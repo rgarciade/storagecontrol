@@ -65,12 +65,13 @@
 
 <script>
 import { mapActions,mapState } from "vuex"
+const ipcRenderer = require('electron').ipcRenderer;
 export default {
 	name: "configView",
 	data: () => ({
 		items: []
 	}),
-	computed: Object.assign({}, mapState(["config"]),{}),
+	computed: Object.assign({}, mapState(["config","filePaths"]),{}),
 	methods: Object.assign({},mapActions(["getConfigData","updateConfiguration", "testMail", "generateAlert"]),{
 		updateConfigurationDatas(){
 			let newConfigData = {
@@ -113,7 +114,7 @@ export default {
 						{ title: 'secure', id: '_secure', type: 'switch', value: this.config.secure },
 						{ title: 'tls', id: '_tls', type: 'switch', value: this.config.tls },
 						{ title: 'contraseña', id: '_contraseña',type: 'password', show:false },
-						{ title: 'subir imagen firma de email',type: 'button', function: ()=>{console.log('actualiza')}  },
+						{ title: 'subir imagen firma de email',type: 'button',function: ()=>{ ipcRenderer.send('select-sing')} },
 						{ title: 'donde enviar email de prueba',type: 'text', id: '_emailprueba' },
 						{ title: 'email de prueba', type: 'button', function: this.sendTestEmail  }
 					]

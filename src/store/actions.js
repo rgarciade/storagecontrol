@@ -225,7 +225,7 @@ const actions = {
     },
     createStoreAlert(store, alert) {
         createAlert(store, alert)
-    },
+	},
     async findArticles(store, args) {
 		const text = (args.textFinder)? args.textFinder : ""
 		const findAll = (args.findAll)? args.findAll : false

@@ -1,10 +1,10 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
+const  { updateSingImg } = require('../back/components/email/email')
 
 import store from "../store"
-const knex = require('../back/DB/connection')
-const { printFacturation } = require('../back/components/facturation')
+
 
 let mainWindow;
 
@@ -51,6 +51,11 @@ app.on('ready', () => {
 
 	ipcMain.on('print-finish', async (event, args) => {
 		store.createStoreAlert("Fin de la impresion");
+	})
+	ipcMain.on('select-sing', async (event, args) => {
+		let urlImg = dialog.showOpenDialog({ properties: ['openFile'] })
+		//updateimg
+		updateSingImg(urlImg[0])
     })
 });
 

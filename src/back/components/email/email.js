@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
+const fs  = require("fs");
 const { DB_Configuration } = require('../../DB/configuration')
+
 
 const  sendEmail = async ( to, subject, body, attachments = null, footerImg = null ) =>{
 
@@ -34,7 +36,7 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 							host: configurationData.mailhost,
 							port: configurationData.mailhost,
 							secure: configurationData.secure,
-							auth: { user: configurationData.mail, pass :configurationData.mailpassword	}
+							auth: { user: configurationData.mail, pass: configurationData.mailpassword	}
 						});
 					}
 
@@ -71,8 +73,14 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 			})
 		})
 }
-
-module.exports = { sendEmail }
+const updateSingImg = (urlImg) => {
+	var imageData = fs.readFileSync(urlImg);
+	let imgBuffer = Buffer.from(imageData, 'binary').toString('base64');
+	DB_Configuration.updatePrincipalConfiguration({
+		'mailimg' : imgBuffer
+	})
+}
+module.exports = { sendEmail, updateSingImg }
 /*sendEmail('raulgarcia_dlf@hotmail.com','factura mes de juniosssss1','a qui escribe lo que sea', ["C:/Users/raulg/Documents/repos/storagecontrol/README.md"])
  .then(mail => console.log(mail))
  .catch(console.error);*/
