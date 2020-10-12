@@ -50,13 +50,18 @@ app.on('ready', () => {
     createWindow()
 
 	ipcMain.on('print-finish', async (event, args) => {
-		store.createStoreAlert("Fin de la impresion");
+		store.commit('alert','Fin de la impresion');
 	})
-	ipcMain.on('select-sing', async (event, args) => {
-		let urlImg = dialog.showOpenDialog({ properties: ['openFile'] })
+	ipcMain.on('select-sing',  (event, args) => {
+	 	let urlImg = dialog.showOpenDialog({ properties: ['openFile'] })
 		//updateimg
 		updateSingImg(urlImg[0])
-    })
+		.then(()=>{
+			store.commit('alert','imagen de firma actualizada');
+		}).catch(error => {
+			store.commit('alert',error);
+		})
+	})
 });
 
 // Quit when all windows are closed.

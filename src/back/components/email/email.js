@@ -73,11 +73,18 @@ const  sendEmail = async ( to, subject, body, attachments = null, footerImg = nu
 			})
 		})
 }
-const updateSingImg = (urlImg) => {
-	var imageData = fs.readFileSync(urlImg);
-	let imgBuffer = Buffer.from(imageData, 'binary').toString('base64');
-	DB_Configuration.updatePrincipalConfiguration({
-		'mailimg' : imgBuffer
+const updateSingImg = async (urlImg) => {
+	return new Promise(function(resolve, reject) {
+		var imageData = fs.readFileSync(urlImg);
+		let imgBuffer = Buffer.from(imageData, 'binary').toString('base64');
+		DB_Configuration.updatePrincipalConfiguration({
+			'mailimg' : imgBuffer
+		})
+		.then((result)=>resolve(result))
+		.catch(error => {
+			reject(error.sqlMessage)
+		})
+
 	})
 }
 module.exports = { sendEmail, updateSingImg }
