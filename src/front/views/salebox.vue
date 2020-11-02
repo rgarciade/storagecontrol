@@ -171,7 +171,7 @@
               <v-flex xs4 style="padding-left: 7%;">
                 <v-btn
                   color="primary"
-                  :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
+                  :disabled="( creditCard || (priceStoreCard <= paymentAmount))?false:true"
                   @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
                 >
                   Terminar
@@ -210,11 +210,15 @@ export default {
         { text: "unidades", value: "units" },
         { text: "precio", value: "units" }
       ],
-      printTypesitems:[
+      printTypesitemsFacturation:[
 		'factura',
 		'factura por correo',
         'ticket',
         'ambas',
+		'nada'
+      ],
+      printTypesitemsSales:[
+		'ticket',
 		'nada'
       ]
     };
@@ -234,11 +238,6 @@ export default {
     },
     printTypeVal: function (val){
       this.setprintType(val)
-    },
-    saleDialog: function (val){
-      if(val){
-        this.printTypeVal = 'nada'
-      }
     }
   },
   created: function() {
@@ -248,7 +247,18 @@ export default {
   computed: Object.assign({}, mapState(["printType","articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
     candFinish() {
       return this.storeCard.length <= 0 ? true : false;
-    }
+	},
+	printTypesitems(){
+	  this.printTypeVal = 'nada'
+	  if (this.creditCard >= 1 && this.companyData.id <= 0) {
+        return this.printTypesitemsFacturation
+      }else if( this.paymentType >= 1 && this.companyData.id > 0){
+        return this.printTypesitemsFacturation
+      } else {
+		this.printTypeVal = 'ticket'
+        return this.printTypesitemsSales
+      }
+	}
   }),
   methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
