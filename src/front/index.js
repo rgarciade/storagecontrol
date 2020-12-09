@@ -52,6 +52,18 @@ app.on('ready', () => {
 	ipcMain.on('print-finish', async (event, args) => {
 		store.commit('alert','Fin de la impresion');
 	})
+	ipcMain.on('get-printers', async (event, args) => {
+		let printers = mainWindow.webContents.getPrinters()
+		if(printers.lenght <= 0){
+			printers = [{
+				name: 'Impresoras no encontradas',
+				displayName: 'Impresoras no encontradas',
+			}]
+		}
+		store.commit('printers', printers);
+	})
+
+
 	ipcMain.on('select-sing',  (event, args) => {
 	 	let urlImg = dialog.showOpenDialog({ properties: ['openFile'] })
 		//updateimg

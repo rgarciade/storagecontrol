@@ -11,7 +11,9 @@ exports.up = async function(knex, Promise) {
         table.string('mailport', 40).defaultTo(null);
         table.tinyint('secure').defaultTo(0);
         table.tinyint('tls').defaultTo(0);
-        table.binary('mailimg').defaultTo(null);
+		table.binary('mailimg').defaultTo(null);
+		table.string('tiketsprinter', 225).defaultTo('');
+		table.string('facturationprinter', 225).defaultTo('');
 
     })
     await knex.table('configuration').insert([{

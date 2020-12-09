@@ -346,6 +346,8 @@ const mutations = {
 	updateConfigData(state ,configData){
 		state.config = {
 			banknumber: configData[0].banknumber,
+			facturationprinter: configData[0].facturationprinter,
+			tiketsprinter: configData[0].tiketsprinter,
 			mail: configData[0].mail,
 			mailhost: configData[0].mailhost,
 			mailport: configData[0].mailport,
@@ -353,6 +355,16 @@ const mutations = {
 			tls: configData[0].tls,
 			vat: configData[0].vat
 		}
+	},
+	printers(state, data){
+		state.printers = data
+		let printersList = [];
+		for (let index = 0; index < data.length; index++) {
+			const element = data[index];
+			printersList.push(element.name)
+		}
+		state.printersList = printersList
 	}
+
 }
 module.exports = mutations

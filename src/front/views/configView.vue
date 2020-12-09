@@ -49,10 +49,15 @@
 									:id="subItem.id"
 									:label="subItem.title"
 							></v-switch>
-						</v-list-tile-content>
 
+							<v-select
+								:items="subItem.list"
+								:label="subItem.title"
+								v-model="subItem.value"
+							></v-select>
+						</v-list-tile-content>
 						<v-list-tile-action>
-						<v-icon>{{ subItem.action }}</v-icon>
+							<v-icon>{{ subItem.action }}</v-icon>
 						</v-list-tile-action>
 					</v-list-tile>
 					</v-list-group>
@@ -71,7 +76,7 @@ export default {
 	data: () => ({
 		items: []
 	}),
-	computed: Object.assign({}, mapState(["config","filePaths"]),{}),
+	computed: Object.assign({}, mapState(["config","filePaths","printersList"]),{}),
 	methods: Object.assign({},mapActions(["getConfigData","updateConfiguration", "testMail", "generateAlert"]),{
 		updateConfigurationDatas(){
 			let newConfigData = {
@@ -80,7 +85,11 @@ export default {
 				mailport: document.getElementById("_Puerto").value,
 				mailpassword: document.getElementById("_contraseña").value,
 				secure: document.getElementById('_secure').checked,
-				tls: document.getElementById('_tls').checked
+				tls: document.getElementById('_tls').checked,
+				vat: document.getElementById('_impuestos').value,
+				banknumber: document.getElementById('_cuentabancaria').value,
+				tiketsprinter: this.items[1].items[0].value,
+				facturationprinter: this.items[1].items[1].value
 			}
 			if(document.getElementById("_contraseña").value != '' && document.getElementById("_contraseña").value != null ){
 				newConfigData.mailpassword =  document.getElementById("_contraseña").value
@@ -98,6 +107,7 @@ export default {
 		}
 	}),
 	mounted() {
+		ipcRenderer.send('get-printers')
 		this.getConfigData()
 	},
 	watch: {
@@ -106,7 +116,7 @@ export default {
 				{
 					action: 'alternate_email',
 					title: 'Configuracion email',
-					active: true,
+
 					items: [
 						{ title: 'Correo', id: '_Correo', type: 'text', value: this.config.mail },
 						{ title: 'Host', id: '_Host', type: 'text', value: this.config.mailhost  },
@@ -122,10 +132,12 @@ export default {
 				{
 					action: 'admin_panel_settings',
 					title: 'parametros de la aplicacion',
-
+					active: true,
 					items: [
+						{ title: 'Impresora tikets', id: '_impresora_tikets', type: 'radio', list: this.printersList, value: this.config.tiketsprinter },
+						{ title: 'Impresora Facturas', id: '_impresora_facturas', type: 'radio', list: this.printersList, value: this.config.facturationprinter },
 						{ title: 'impuestos', id: '_impuestos', type: 'text', value: this.config.vat },
-						{ title: 'Cuenta Bancaria', id: 'Cuenta Bancaria', type: 'text', value: this.config.banknumber }
+						{ title: 'Cuenta Bancaria', id: '_cuentabancaria', type: 'text', value: this.config.banknumber },
 					]
 				}
 			]
