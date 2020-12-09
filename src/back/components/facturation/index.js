@@ -46,6 +46,7 @@ const printFacturation = async (articles, facturationNumber, date, clientNumber,
 			css: ccs,
 			config,
 			name: facturationNumber,
+			printerName: (Dbconfig[0] && Dbconfig[0].facturationprinter)? Dbconfig[0].facturationprinter: '',
 			finishFunction,
             html: createHtml(articles, topleft, topright, formaDePago, impuesto)
         })
