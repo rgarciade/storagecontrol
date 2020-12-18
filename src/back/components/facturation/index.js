@@ -7,6 +7,7 @@ const { createArticlesToTicket } = require('../printer/thermalprinter')
 const { ES } = require('../../../i18n/paiments')
 const moment = require('moment')
 
+
 const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null, formaDePago = ES[3] ) => {
 	const cssFile = `${__dirname}/facturation.css`;
 	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
