@@ -153,12 +153,22 @@ height: 129px;
 
 .left-bot-box {
     width: 30%;
-    max-width: 30%;
+	max-width: 30%;
+	border: 1px solid black;
+}
+.img-facturation-top{
+	margin-right: 53%;
+    border-style: none;
+    width: 97%;
+}
+.td-bold{
+	font-weight: bold;
 }
 
 .right-bot-box {
     width: 40%;
-    max-width: 30%;
+	max-width: 30%;
+	border: 1px solid black;
 }
 
 .table-bot-blue {

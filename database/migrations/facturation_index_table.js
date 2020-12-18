@@ -5,8 +5,10 @@ exports.up = async function(knex, Promise) {
         table.increments('id').notNullable().primary();
         table.integer('company_id', 11).defaultTo(0);
         table.integer('credit_card', 1).defaultTo(0);
+        table.integer('paymentType', 1).defaultTo(1);
         table.dateTime('creation_date').notNullable().defaultTo(knex.fn.now());
-        table.double('price', 11).defaultTo(0);
+		table.double('price', 11).defaultTo(0);
+		table.integer('vat', 11).defaultTo(21);
     })
     await knex.table('facturation_index').insert([{
             'company_id': 2,

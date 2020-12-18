@@ -2,11 +2,19 @@ const fs = require('fs');
 const { createPrintWindow } = require('simple-electron-printer-and-thermalprinter');
 const { DB_Facturation } = require('../../DB/facturation')
 const { DB_Companys } = require('../../DB/companys')
+const { DB_Configuration } = require('../../DB/configuration')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
+const { ES } = require('../../../i18n/paiments')
 const moment = require('moment')
 
-const printFacturation = (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false) => {
-    const cssFile = `${__dirname}/facturation.css`;
+const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null, formaDePago = ES[3] ) => {
+	const cssFile = `${__dirname}/facturation.css`;
+	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
+	const impuesto = vat? vat : (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
+	if(formaDePago == ES[3]){
+		const banknumber = (Dbconfig[0] && Dbconfig[0].banknumber)? Dbconfig[0].banknumber : ''
+		formaDePago = `${formaDePago} <br> ${banknumber}`
+	}
     const cssPromise = new Promise((resolve, reject) => {
         fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
             if (!err) {
@@ -28,8 +36,6 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, clien
         `${postalCode}`,
         `cif: ${cif}`,
     ]
-    let formaDePago = 'transferencia'
-	let impuesto = 21
 	let config = [];
 	if (pdf){
 		config.push('pdf')
@@ -40,6 +46,7 @@ const printFacturation = (articles, facturationNumber, date, clientNumber, clien
 			css: ccs,
 			config,
 			name: facturationNumber,
+			printerName: (Dbconfig[0] && Dbconfig[0].facturationprinter)? Dbconfig[0].facturationprinter: '',
 			finishFunction,
             html: createHtml(articles, topleft, topright, formaDePago, impuesto)
         })
@@ -52,11 +59,13 @@ const printFacturationFromFacturation = async (id, pdf = false, finishFunction =
     let companyId = facturation[0].company_id
     let companyData = await DB_Companys.findCompany(companyId)
     let articles = await createArticlesToTicket(facturation)
-    let date =  moment(facturation[0].creation_date).format('L')
-    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction )
+	let date =  moment(facturation[0].creation_date).format('L')
+	let vat = (facturation[0].vat)?facturation[0].vat:21
+	let paymentType = ES[facturation[0].paymentType]
+    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction, vat, paymentType )
 }
 
-const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
+const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => {
     let topLeftHtml = ''
     let toprightHtml = ''
     let articlesHtml = ''
@@ -71,15 +80,15 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
     }
     for (let index = 0; index < articles.length; index++) {
         articlesHtml += `<tr>
-                            <td>${articles[index].product}</td>
-                            <td>${articles[index].quantity}</td>
-                            <td>${articles[index].price}</td>
-                            <td>${articles[index].quantity * articles[index].price}</td>
+                            <td>${articles[index].product.replace(/(\r\n|\n|\r)/gm,"<br/>")}</td>
+                            <td style="min-width: 70px;" >${articles[index].quantity}</td>
+                            <td style="min-width: 70px;" >${articles[index].price}</td>
+                            <td style="min-width: 70px;" >${articles[index].quantity * articles[index].price}</td>
                         </tr>`
         precioConImpuesto = precioConImpuesto + articles[index].quantity * articles[index].price
     }
 
-    precioSinImpuesto = precioConImpuesto / ((21 / 100) + 1)
+    precioSinImpuesto = precioConImpuesto / ((impuesto / 100) + 1)
     cantidadImpuesto = precioConImpuesto - precioSinImpuesto
     precioConImpuesto = precioConImpuesto.toFixed(2)
     precioSinImpuesto = precioSinImpuesto.toFixed(2)
@@ -91,7 +100,7 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
                 <tr>
                     <td style="    text-align: center;">
 
-                        <img class="img-top" src='${__dirname}/microtex.jpg' />
+                        <img class="img-top img-facturation-top" src='${__dirname}/microtex.jpg' />
 
                     </td>
                 </tr>
@@ -144,13 +153,15 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
                                             <td class='left-bot-box'>
                                                 <table>
                                                     <tr>
-                                                        <td class="not-border">
-                                                            Forma de pago:
+                                                        <td class="not-border td-bold">
+                                                            FORMA DE PAGO:
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            ${formadepago}
+														<td>
+															<spam>
+																- ${formadepago}
+															</spam>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -159,19 +170,28 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
                                             <td class="right-bot-box">
                                                 <table>
                                                     <tr>
-                                                        <td>
-                                                            importe : ${precioSinImpuesto}
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            IMPORTE :
+														</td>
+														<td>
+															${precioSinImpuesto}
+														</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            impuestos : ${impuesto}%  ${ cantidadImpuesto} €
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            IMPUESTO :
+														</td>
+														<td>
+															${impuesto}%  ${ cantidadImpuesto} €
+														</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            tortal: ${precioConImpuesto}
-                                                        </td>
+                                                        <td class="td-bold">
+                                                            TOTAL:
+														</td>
+														<td>
+															${precioConImpuesto}
+														</td>
                                                     </tr>
                                                 </table>
                                             </td>
@@ -212,25 +232,25 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto) => {
                             <td></td>
                         </tr>
                         <tr class='first-table-bot'>
-                            <td class='footer-table-left'>Avenida de atenas 12</td>
+                            <td class='footer-table-left'>Avenida de Atenas 2</td>
                             <td class='footer-table-center'></td>
-                            <td class='footer-table-right'>telefono 916316272</td>
+                            <td class='footer-table-right'>Teléfono 916316272</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>c.comercial las rozas 2</td>
+                            <td class='footer-table-left'>C.Comercial Las Rozas 2</td>
                             <td class='footer-table-center'></td>
-                            <td class='footer-table-right'>www.micro-tex.com 1</td>
+                            <td class='footer-table-right'>www.micro-tex.com</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>Locales 22,23</td>
+                            <td class='footer-table-left'>Locales 22 y 23</td>
                             <td class='footer-table-center'></td>
                             <td class='footer-table-right'>email: micro-tex@micro-tex.com</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td class='footer-table-left'>28232 - las rozas madrid </td>
+                            <td class='footer-table-left'>28230 - Las Rozas (Madrid) </td>
                             <td class='footer-table-center'></td>
                             <td class='footer-table-right'></td>
                             <td></td>

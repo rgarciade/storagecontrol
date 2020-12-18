@@ -4,10 +4,11 @@ const { DB_Articles } = require('../back/DB/articles')
 const { DB_Facturation } = require('../back/DB/facturation')
 const { DB_Sales } = require('../back/DB/sales')
 const { DB_MoneyBoxs } = require('../back/DB/moneybox')
+const { DB_Configuration } = require('../back/DB/configuration')
 const { printThermalPrinterSales, printThermalPrinterFacturation } = require('../back/components/printer/thermalprinter')
 const { printFacturationFromFacturation } = require('../back/components/facturation/')
 const {sendEmail} = require('../back/components/email/email')
-const notifier = require('node-notifier');
+//const notifier = require('node-notifier');
 const { default: store } = require('.')
 
 
@@ -20,13 +21,22 @@ const actions = {
 		createAlert(store,text)
 	},
     selectPaymentType(store, type) {
-        store.commit('creditCard', type)
+		if(type > 1){
+			store.commit('creditCard', 0)
+			store.commit('paymentType', type)
+		}else{
+			store.commit('creditCard', type)
+		}
     },
     needFacturation(store, type) {
-        //paymentType
+		//paymentType
+		//3 Transferencia
+		//2 Recibo
         //1 facturation
-        //0 normal
-        store.commit('paymentType', type)
+		//0 normal
+		if(store.state.paymentType == 0){
+			store.commit('paymentType', type)
+		}
     },
     async addToCard(store, idArticle = '') {
         if (idArticle == '') {
@@ -215,7 +225,7 @@ const actions = {
     },
     createStoreAlert(store, alert) {
         createAlert(store, alert)
-    },
+	},
     async findArticles(store, args) {
 		const text = (args.textFinder)? args.textFinder : ""
 		const findAll = (args.findAll)? args.findAll : false
@@ -465,13 +475,14 @@ const actions = {
                 units: element.numberOfArticles,
                 description: element.description
             })
-        });
+		});
 
         return await DB_Facturation.insertFacturation({
                 facturation: {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
-                    credit_card: store.state.creditCard
+					credit_card: store.state.creditCard,
+					paymentType : store.state.paymentType
                 },
                 extra: cartToinsert
             })
@@ -494,7 +505,8 @@ const actions = {
 							const isDevMode = process.execPath.match(/[\\/]electron/);
 							if(isDevMode) email = 'raulgarcia_dlf@hotmail.com'
 							sendEmail(email,`factura ${idFacturation}`,'se adjunta la factura', [`${app.getPath('documents')+'/printer'}/${idFacturation}.pdf`])
-							createAlert(store, `Factura enviada por correo a ${email} `)
+								.then(a => createAlert(store, `Factura enviada por correo a ${email} `))
+								.catch(e => createAlert(store, `Error al enviar el correo ${e}`))
 							/*notifier.notify({
 								'title': 'storage control Factura',
 								'message': `Factura enviada por correo a ${email} `
@@ -736,6 +748,31 @@ const actions = {
 	},
 	resetpdateSaleBox(store){
 		store.commit('resetpdateSaleBox')
+	},
+	/**
+	 *
+	 * @param {*} store
+	 * @param {*} data array strings
+	 */
+	uploadConfigDatas(store, data){
+		store.commit('uploadConfigDatas',data)
+	},
+	async getConfigData(store){
+		const configData =  await DB_Configuration.findPrincipalConfiguration()
+		if(configData[0].length <= 0) return false
+		store.commit('updateConfigData',configData)
+	},
+	async updateConfiguration(store,data){
+		store.commit("charging")
+		await DB_Configuration.updatePrincipalConfiguration(data)
+		this.dispatch('getConfigData');
+		store.commit("charged")
+		createAlert(store, `Configuración actualizada correctamente`)
+	},
+	async testMail(store,email){
+		await sendEmail(email,'Email de prueba','Este es un email de prueba')
+			.then(a => createAlert(store, `revise su correo`))
+			.catch(e => createAlert(store, `Error al enviar el correo ${e}`))
 	}
 }
 module.exports = actions

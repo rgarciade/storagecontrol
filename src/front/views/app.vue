@@ -3,7 +3,7 @@
     <Menu class="Mymenu" ></Menu>
     <Alerts></Alerts>
     <Progress :active="false"></Progress>
-    <router-view class='routerView' default="{name: 'home'}"></router-view> 
+    <router-view class='routerView' default="{name: 'home'}"></router-view>
   </v-app>
 </template>
 
@@ -33,6 +33,9 @@ textarea, input, body{
 }
 #c_email, #correo, .email{
     text-transform: lowercase !important;
+}
+ #_Correo, #_contraseña, #_Host, #_emailprueba{
+	text-transform: none !important;
 }
 .container_position{
   margin-top: 2em;

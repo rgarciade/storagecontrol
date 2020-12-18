@@ -17,6 +17,7 @@
                     <div class="flex-grow-1"></div>
                 </v-toolbar>
                 <v-text-field
+					id="buscador"
                     autofocus
                     v-if="finderOpen"
                     v-on:keyup="findArticles({ textFinder : textFinder, findAll: false})"
@@ -31,7 +32,7 @@
                         <v-list-tile
                             :key="item.index"
                             avatar
-                            @click="addElement(item.idarticles),closeFinder()"
+                            @click="addElement(item.idarticles),clearFinder()"
                             class='article-finder-box'
                         >
                             <v-list-tile-avatar >
@@ -205,7 +206,12 @@
             },
             closeFinder() {
                 this.finderOpen = false;
-            },
+			},
+			clearFinder(){
+				this.textFinder = ''
+				this.findArticles('')
+				document.getElementById('buscador').focus()
+			},
             addElement(){},
             subtractToCardElement(){},
             subtractOneToCardElement(){}

@@ -37,7 +37,9 @@ export default new Vuex.Store({
 			newMoneyInSaleBox:0,
 			newRemoveToBox:0,
 		},
-        printType:'nada',
+		printType:'nada',
+		printers : [],
+		printersList : [],
         paymentType: 1,
         creditCard: 0,
         tempItemNumber: -2,
@@ -60,7 +62,14 @@ export default new Vuex.Store({
         ActualFacturationId:0,
         FacturationPreviewVisibility:false,
         TicketPreviewVisibility:false,
-        UpdateButton:true
+		UpdateButton:true,
+		config:{
+			vat:21,
+			mail:'',
+			mailhost:'',
+			mailport:'',
+			secure: ''
+		}
     },
     actions,
     mutations,

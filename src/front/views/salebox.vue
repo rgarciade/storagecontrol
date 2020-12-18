@@ -34,7 +34,9 @@
             > <v-icon>euro_symbol</v-icon>
               Efectivo
             </v-btn>
-            <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>tarjeta</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(1)" > <v-icon> credit_card</v-icon>Tarjeta</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(2)" > <v-icon> article</v-icon>Recibo</v-btn>
+            <v-btn @click="e1 = 2; selectPaymentType(3)" > <v-icon> transform</v-icon>Transferencia</v-btn>
           </v-stepper-content>
           <v-stepper-content step="2">
             <v-icon @click="e1 = 1" >keyboard_arrow_left</v-icon>
@@ -132,7 +134,7 @@
               </v-flex>
               <v-flex xs3 style="padding-top: 3.5%;">
                 <v-select
-                  v-if="paymentType == 1"
+                  v-if="paymentType >= 1"
                   :items="printTypesitems"
                   v-model="printTypeVal"
                   label="Imprimir"
@@ -169,7 +171,7 @@
               <v-flex xs4 style="padding-left: 7%;">
                 <v-btn
                   color="primary"
-                  :disabled="( creditCard || (priceStoreCard < paymentAmount))?false:true"
+                  :disabled="( creditCard || (priceStoreCard <= paymentAmount))?false:true"
                   @click="e1 = 1; saleDialog = false; insertPaiment(paymentAmount)"
                 >
                   Terminar
@@ -196,7 +198,7 @@ export default {
       finderOpen: false,
       saleDialog: false,
       e1:0,
-      printTypeVal:'nada',
+      printTypeVal:'factura',
       paymentAmount:0,
       moneyBack:0,
       textFinder:"",
@@ -208,12 +210,16 @@ export default {
         { text: "unidades", value: "units" },
         { text: "precio", value: "units" }
       ],
-      printTypesitems:[
+      printTypesitemsFacturation:[
 		'factura',
 		'factura por correo',
         'ticket',
         'ambas',
-        'nada'
+		'nada'
+      ],
+      printTypesitemsSales:[
+		'ticket',
+		'nada'
       ]
     };
 
@@ -232,11 +238,6 @@ export default {
     },
     printTypeVal: function (val){
       this.setprintType(val)
-    },
-    saleDialog: function (val){
-      if(val){
-        this.printTypeVal = 'nada'
-      }
     }
   },
   created: function() {
@@ -246,7 +247,18 @@ export default {
   computed: Object.assign({}, mapState(["printType","articles","companys","companyData","creditCard","storeCard","priceStoreCard","paymentType"]), {
     candFinish() {
       return this.storeCard.length <= 0 ? true : false;
-    }
+	},
+	printTypesitems(){
+	  this.printTypeVal = 'nada'
+	  if (this.creditCard >= 1 && this.companyData.id <= 0) {
+        return this.printTypesitemsFacturation
+      }else if( this.paymentType >= 1 && this.companyData.id > 0){
+        return this.printTypesitemsFacturation
+      } else {
+		this.printTypeVal = 'ticket'
+        return this.printTypesitemsSales
+      }
+	}
   }),
   methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
@@ -278,9 +290,9 @@ export default {
     },
     async insertPaiment( payed ) {
       let newId = 0
-      if (this.creditCard == 1 && this.companyData.id <= 0) {
+      if (this.creditCard >= 1 && this.companyData.id <= 0) {
         await this.inserFacturation()
-      }else if( this.paymentType == 1 && this.companyData.id > 0){
+      }else if( this.paymentType >= 1 && this.companyData.id > 0){
         await this.inserFacturation( this.companyData.id )
       } else {
         await this.inserSale()

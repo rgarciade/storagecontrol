@@ -1,6 +1,8 @@
 const { basePrice,addIvaToPrice,currencyFormat } = require('../common/commonfunctions')
 const moment = require('moment');
 const { DB_MoneyBoxs } = require('../back/DB/moneybox');
+const { DB_Configuration } = require('../back/DB/configuration')
+
 moment.locale('es');
 const mutations = {
     clearnStoreCard(state) {
@@ -214,11 +216,11 @@ const mutations = {
         state.companys = temporalState
 
     },
-    articles(state, finded) {
-        let temporalState = []
+    async articles(state, finded) {
+		let temporalState = []
         finded.forEach(function(element) {
-            element.price_without_vat = addIvaToPrice(element.purchase_price, 21)
-            element.public_price_without_vat = basePrice(element.public_price, 21)
+            element.price_without_vat = addIvaToPrice(element.purchase_price, state.config.vat)
+            element.public_price_without_vat = basePrice(element.public_price, state.config.vat)
             temporalState.push(element)
         });
         state.articles = temporalState
@@ -331,6 +333,38 @@ const mutations = {
 		state.moneyBox.newMoneyInSaleBox = 0
 		state.moneyBox.newRemoveToBox = 0
 		state.moneyBox.checkUpdate = 0
+	},
+	async uploadConfigDatas(state, data){
+		const config =  await DB_Configuration.findPrincipalConfiguration()
+		for (let index = 0; index < data.length; index++) {
+			const element = data[index];
+			if(config[0] && config[0][element]){
+				state.config[element] = config[0][element]
+			}
+		}
+	},
+	updateConfigData(state ,configData){
+		state.config = {
+			banknumber: configData[0].banknumber,
+			facturationprinter: configData[0].facturationprinter,
+			tiketsprinter: configData[0].tiketsprinter,
+			mail: configData[0].mail,
+			mailhost: configData[0].mailhost,
+			mailport: configData[0].mailport,
+			secure: configData[0].secure,
+			tls: configData[0].tls,
+			vat: configData[0].vat
+		}
+	},
+	printers(state, data){
+		state.printers = data
+		let printersList = [];
+		for (let index = 0; index < data.length; index++) {
+			const element = data[index];
+			printersList.push(element.name)
+		}
+		state.printersList = printersList
 	}
+
 }
 module.exports = mutations
