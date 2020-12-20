@@ -15,8 +15,9 @@ function createWindow () {
   win.loadFile('test.html')
   win.webContents.openDevTools();
   win.webContents.once('dom-ready', () => {
+	  console.error('aaaaa')
+	setTimeout(function(){ console.error('bbbb');print(); }, 3000);
 
-	print()
   })
 }
 
@@ -34,15 +35,11 @@ app.on('activate', () => {
   }
 })
 
-
-
-
-
 function print(){
-	console.log('aa')
-	id = 25
-	time = moment.utc().format('DD-M-YY HH:mm:ss')
-	articles = [
+	console.error('aa')
+	let id = 25
+	let time = moment.utc().format('DD-M-YY HH:mm:ss')
+	let articles = [
 		{quantity: 1, product: "pantalla", price: 44},
 		{quantity: 1, product: "pantalla", price: 44},
 		{quantity: 1, product: "pantalla", price: 44},
@@ -68,10 +65,10 @@ function print(){
 		{quantity: 1, product: "pantalla", price: 44},
 		{quantity: 1, product: "pantalla", price: 55}
 	]
-	vat = 21
-	delivered = null
-	printName = "appPOS80AMUSE"
-	console.log('ticket')
+	let vat = 21
+	let delivered = null
+	let printName = ""//"appPOS80AMUSE"
+	console.error('ticket')
 	createPrintWindow({
 		html: createTicket(
 			{

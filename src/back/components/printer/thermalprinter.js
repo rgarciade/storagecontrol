@@ -34,7 +34,7 @@ const printTicket = async ( id, articles, delivered = null, time = null, vat = n
 	time = (!time)? moment.utc().format('DD-M-YY HH:mm:ss') : time
 	const config =  await DB_Configuration.findConfigurationById(1)
 	vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
-	childProcess.exec('electron scriptest.js');
+	childProcess.exec('electron ./src/back/components/printer/printer-and-thermalprinter/index.js');
 	/*
     createPrintWindow({
         html: createTicket(
