@@ -537,7 +537,7 @@ const actions = {
             })
     },
     async printFacturation(store,data) {
-		await printFacturationFromFacturation(data.id, data.pdf ,function () { createAlert(store, 'pdf de factura creado')})
+		await printFacturationFromFacturation(data.id, data.pdf)
 		createAlert(store, 'creando pdf en documentos/printer Espere para crear otro')
     },
     async printTiket(store,id) {

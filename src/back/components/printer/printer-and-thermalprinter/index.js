@@ -2,68 +2,82 @@ const { BrowserWindow, ipcMain, app} = require('electron')
 const { isInConfig } = require('./common')
 const moment = require('moment')
 const fs = require('fs')
+const { DB_Configuration } = require('../../../DB/configuration')
+const { DB_Sales } = require('../../../DB/sales')
+const { DB_Companys } = require('../../../DB/companys')
+const { DB_Facturation } = require('../../../DB/facturation')
+const { createArticlesToTicket } = require('../thermalprinter')
+const { printFacturation } = require('../../../../back/components/facturation')
+const { ES } = require('../../../../i18n/paiments')
+
 
 const dirSave = 'printer'
 let finishFunction = false
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
+async function createWindow () {
+	let type = null
+	let id = null
+	process.argv.forEach(function (val, index, array) {
+		if(val.includes('-type')){
+			console.log(array[index+1])
+			type = array[index+1]
+		}
+		if(val.includes('-id')){
+			id = array[index+1]
+		}
+		if(val.includes('-pdf')){
+			pdf = array[index+1]
+		}
+	});
+	if(!type || !id) app.quit()
 
-function createWindow () {
-	/*sacar datos de base de datos por el id*/
-	let id = 25
-	let time = moment.utc().format('DD-M-YY HH:mm:ss')
-	let articles = [
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 44},
-		{quantity: 1, product: "pantalla", price: 55}
-	]
-	let vat = 21
-	let delivered = null
-	let printName = ""//"appPOS80AMUSE"
-	console.error('ticket')
-	createPrintWindow({
-		html: createTicket(
-			{
-				'initial': [
-					`Nº. VENTA:${id}`,
-					'',
-					'MICRO-TEX INFORMATICA',
-					'AVDA. DE ATENAS, 1 LOCALES 22-23',
-					'C.C. LAS ROZAS (MADRID) 28231 ',
-					'CIF :B80898224',
-					time
-				],
-				'articles': articles,
-				'final': ['Gracias por su visita'],
-				'iva': vat,
-				'delivered':delivered
-			}
-		),
-		printerName: printName,
-		config: ['thermalprinter']
-	 })
-  }
+	const config =  await DB_Configuration.findConfigurationById(1)
+
+	if(type == 'facturation'){
+		let facturation = await DB_Facturation.findFacturationId(id)
+		let companyId = facturation[0].company_id
+		let companyData = await DB_Companys.findCompany(companyId)
+		let articles = await createArticlesToTicket(facturation)
+		let date =  moment(facturation[0].creation_date).format('L')
+		let vat = (facturation[0].vat)?facturation[0].vat:21
+		let paymentType = ES[facturation[0].paymentType]
+		printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, parseInt(pdf), finishFunction, vat, paymentType )
+	}else if(type == 'thermalfacturation' || type == 'sales'){
+		if(type == 'thermalfacturation'){
+			let data = await DB_Sales.fidSalesId(id)
+		}
+		if( type == 'sales'){
+			let data =  await DB_Facturation.findFacturationId(id)
+		}
+		let articles = await createArticlesToTicket(data)
+		let vat = (data[0] && data[0].vat)?  data[0].vat : null
+		vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
+		let paid = (data[0] && data[0].paid)?  data[0].paid : null
+		let time = moment.utc().format('DD-M-YY HH:mm:ss')
+		createPrintWindow({
+			html: createTicket({
+					'initial': [
+						`Nº. VENTA:${id}`,
+						'',
+						'MICRO-TEX INFORMATICA',
+						'AVDA. DE ATENAS, 1 LOCALES 22-23',
+						'C.C. LAS ROZAS (MADRID) 28231 ',
+						'CIF :B80898224',
+						time
+					],
+					'articles': articles,
+					'final': ['Gracias por su visita'],
+					'iva': vat,
+					'delivered':paid
+				}),
+			printerName: config[0].tiketsprinter,
+			config: ['thermalprinter']
+		 })
+	}else {
+		app.quit()
+	}
+}
 
 app.on('ready',createWindow)
 app.on('window-all-closed', () => {
@@ -78,7 +92,8 @@ app.on('window-all-closed', () => {
 
 
 
-const createPrintWindow = (args) => {
+const createPrintWindow = async (args) => {
+
     if(!args.config) args.config = []
 	finishFunction = (args.finishFunction != undefined) ? args.finishFunction : false
     const hidden = isInConfig('hiddenWindow', args)
@@ -89,7 +104,10 @@ const createPrintWindow = (args) => {
         height: 670,
         minHeight: 340,
         width: 820,
-        minWidth: 400
+		minWidth: 400,
+		webPreferences:{
+			nodeIntegration: true
+		}
     }
     if (hidden || thermalprinter) {
         windowProps.show = false

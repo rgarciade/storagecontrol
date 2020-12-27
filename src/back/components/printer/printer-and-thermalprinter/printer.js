@@ -30,7 +30,7 @@ ipcRenderer.on('chargeHtml', (event, args) => {
         document.getElementById("timePrinter").innerHTML = moment.utc().format('YYYY-MM-DD HH:mm:ss');
     }
     if (isInConfig('hiddenWindow', args) || isInConfig('thermalprinter', args)) {
-        setTimeout(function(){ print( args,true ) }, 1000);
+        print( args,true );
     }
 
 })
