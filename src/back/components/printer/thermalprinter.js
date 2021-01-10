@@ -25,7 +25,7 @@ const printThermalPrinterSales = async ( id, delivered = null) => {
     printTicket(id, 'sales')
 }
 const printTicket = async ( id, type ) => {
-	childProcess.exec('electron ./src/back/components/printer/printer-and-thermalprinter/index.js -type '+type+' -id '+ id);
+	childProcess.exec(`electron ${__dirname}\\printer-and-thermalprinter\\index.js -type `+type+' -id '+ id);
 }
 
 module.exports = { printThermalPrinterSales, printThermalPrinterFacturation, createArticlesToTicket, createTicket }

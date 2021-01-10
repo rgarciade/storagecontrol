@@ -7,20 +7,20 @@ const { DB_Sales } = require('../../../DB/sales')
 const { DB_Companys } = require('../../../DB/companys')
 const { DB_Facturation } = require('../../../DB/facturation')
 const { createArticlesToTicket } = require('../thermalprinter')
-const { printFacturation } = require('../../../../back/components/facturation')
+const { createHtml } = require('../../../../back/components/facturation')
 const { ES } = require('../../../../i18n/paiments')
 
 
 const dirSave = 'printer'
 let finishFunction = false
-const isDevMode = process.execPath.match(/[\\/]electron/);
+const isDevMode = 0//process.execPath.match(/[\\/]electron/);
 
 async function createWindow () {
 	let type = null
 	let id = null
 	process.argv.forEach(function (val, index, array) {
+		console.error(array[index+1])
 		if(val.includes('-type')){
-			console.log(array[index+1])
 			type = array[index+1]
 		}
 		if(val.includes('-id')){
@@ -33,7 +33,7 @@ async function createWindow () {
 	if(!type || !id) app.quit()
 
 	const config =  await DB_Configuration.findConfigurationById(1)
-
+	let data = null
 	if(type == 'facturation'){
 		let facturation = await DB_Facturation.findFacturationId(id)
 		let companyId = facturation[0].company_id
@@ -42,14 +42,18 @@ async function createWindow () {
 		let date =  moment(facturation[0].creation_date).format('L')
 		let vat = (facturation[0].vat)?facturation[0].vat:21
 		let paymentType = ES[facturation[0].paymentType]
+		console.error('id--',id,'fff--', companyData[0].id)
 		printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, parseInt(pdf), finishFunction, vat, paymentType )
 	}else if(type == 'thermalfacturation' || type == 'sales'){
 		if(type == 'thermalfacturation'){
-			let data = await DB_Sales.fidSalesId(id)
+		//	console.error('entra1')
+			data =  await DB_Facturation.findFacturationId(id)
 		}
 		if( type == 'sales'){
-			let data =  await DB_Facturation.findFacturationId(id)
+		//	console.error('entra1')
+			data = await DB_Sales.fidSalesId(id)
 		}
+		//console.error('id--',id,'data--',data)
 		let articles = await createArticlesToTicket(data)
 		let vat = (data[0] && data[0].vat)?  data[0].vat : null
 		vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
@@ -193,7 +197,7 @@ function print(printWindow, args ) {
 		printWindow.webContents.printToPDF(options, async ( error, data) => {
 			const dir = app.getPath('documents')+'/'+dirSave
 			const pdfPath = dir +'/'+ pdfName +'.pdf'
-			if (!data) console.log(error)
+			if (!data) console.log('data',error)
 			if (!fs.existsSync(dir)){
 				await  fs.mkdirSync(dir);
 			}
@@ -209,13 +213,13 @@ function print(printWindow, args ) {
 	}else{
 		try {
 			printWindow.webContents.print(options, async (success, errorType) => {
-			  if (!success) console.log(errorType)
+			  if (!success) console.log('data',errorType)
 			  if(finishFunction) finishFunction()
 			  if (close) printWindow.close()
 			})
 
 		} catch (error) {
-			console.log(error)
+			console.log('error',error)
 		}
 	}
 }
@@ -333,5 +337,48 @@ const createProducts = (products, iva, delivered) =>{
     </tr>`
     return productsHtml
 }
-
-
+const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null, formaDePago = ES[3] ) => {
+	const cssFile = `${__dirname}/../../facturation/facturation.css`;
+	const Dbconfig =  await DB_Configuration.findConfigurationById(1)
+	const impuesto = vat? vat : (Dbconfig[0] && Dbconfig[0].vat)? Dbconfig[0].vat : 21
+	if(formaDePago == ES[3]){
+		const banknumber = (Dbconfig[0] && Dbconfig[0].banknumber)? Dbconfig[0].banknumber : ''
+		formaDePago = `${formaDePago} <br> ${banknumber}`
+	}
+    const cssPromise = new Promise((resolve, reject) => {
+        fs.readFile(cssFile, { encoding: 'utf-8' }, function(err, data) {
+            if (!err) {
+                resolve(data)
+            } else {
+                reject(err);
+            }
+        })
+    })
+    let topleft = [
+        `Factura N.${facturationNumber}`,
+        `Fecha: ${date}`,
+        `N.cliente : ${clientNumber}`
+    ]
+    let topright = [
+        `${client}`,
+        `${streat}`,
+        `${city}`,
+        `${postalCode}`,
+        `cif: ${cif}`,
+    ]
+	let config = [];
+	if (pdf){
+		config.push('pdf')
+		config.push('hiddenWindow')
+	}
+    cssPromise.then(ccs => {
+        createPrintWindow({
+			css: ccs,
+			config,
+			name: facturationNumber,
+			printerName: (Dbconfig[0] && Dbconfig[0].facturationprinter)? Dbconfig[0].facturationprinter: '',
+			finishFunction,
+            html: createHtml(articles, topleft, topright, formaDePago, impuesto)
+        })
+    })
+}

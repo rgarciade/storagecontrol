@@ -57,7 +57,7 @@ const printFacturation = async (articles, facturationNumber, date, clientNumber,
 
 
 const printFacturationFromFacturation = async (id, pdf = false, finishFunction = false) => {
-	childProcess.exec('electron ./src/back/components/printer/printer-and-thermalprinter/index.js -type facturation -id '+ id +' -pdf '+ (pdf));
+	childProcess.exec(`electron ${__dirname}\\..\\printer\\printer-and-thermalprinter\\index.js -type facturation -id `+ id +' -pdf '+ (pdf));
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => {
@@ -264,4 +264,4 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
 
 }
 
-module.exports = { printFacturation, printFacturationFromFacturation }
+module.exports = { printFacturation, printFacturationFromFacturation,createHtml }
