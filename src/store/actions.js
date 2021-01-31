@@ -649,13 +649,15 @@ const actions = {
         let newArticles = []
         let updateArticles = []
         let deleteArticlesIds = []
+        let purchaseToModify = store.state.purchaseToModify
+        let actualFacturationId = store.state.ActualFacturationId
         store.commit("charging")
         DB_Facturation.findFacturationId(store.state.ActualFacturationId).then(fidFacturationArticles => {
             store.commit('UpdateButton',false)
-            for (let index = 0; index < store.state.purchaseToModify.length; index++) {
-                const element = store.state.purchaseToModify[index];
-                if(!store.state.purchaseToModify[index].old){
-                    newArticles.push(store.state.purchaseToModify[index])
+            for (let index = 0; index < purchaseToModify.length; index++) {
+                const element = purchaseToModify[index];
+                if(!purchaseToModify[index].old){
+                    newArticles.push(purchaseToModify[index])
                 }else{
                     updateArticles.push({
                         description: element.description,
@@ -669,25 +671,25 @@ const actions = {
             }
             for (let index = 0; index < fidFacturationArticles.length; index++) {
                 const element = fidFacturationArticles[index]
-                if(!store.state.purchaseToModify.find( producto => producto.productid === element.id )){
+                if(!purchaseToModify.find( producto => producto.productid === element.id )){
                     deleteArticlesIds.push(element.id)
                 }
             }
             DB_Facturation.updateFacturationAndArticles(
-                store.state.ActualFacturationId,
-                store.state.pricePurchaseToModify,
+                actualFacturationId,
+                purchaseToModify,
                 newArticles,
                 deleteArticlesIds,
                 updateArticles
             )
             .then(res => {
-                store.commit('alert', `Factura ${store.state.ActualFacturationId} Actualizada`)
+                store.commit('alert', `Factura ${actualFacturationId} Actualizada`)
                 store.commit('alert', '');
                 this.dispatch('restartBillFinded');
                 store.commit('UpdateButton',true)
                 store.commit("charged")
             }).catch(error =>{
-                store.commit('alert', `error al actualizar la factura ${store.state.ActualFacturationId}`)
+                store.commit('alert', `error al actualizar la factura ${actualFacturationId}`)
                 store.commit('alert', '');
                 this.dispatch('restartBillFinded');
                 store.commit('UpdateButton',true)
