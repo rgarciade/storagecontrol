@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Imprimir</title>
+
+    <!-- Normalize or reset CSS with your favorite library -->
+    <link rel="stylesheet" href="css/normalize.min.css">
+
+    <!-- Load paper.css for happy printing -->
+    <link rel="stylesheet" href="css/cssPrinter.css">
+    <link rel="stylesheet" href="css/menu.css">
+
+    <!-- Set page size here: A5, A4 or A3 -->
+    <!-- Set also "landscape" if you need -->
+    <style>
+        @page {
+            size: A3 landscape
+        }
+    </style>
+</head>
+
+<!-- Set "A5", "A4" or "A3" for class name -->
+<!-- Set also "landscape" if you need -->
+
+<body class="A3 landscape">
+    <div id='printerMenu' class='no-print'>
+        <ul class="nav">
+            <li><a onclick="print()">Imprimir</a></li>
+            <li><a>Tipo De Hoja</a>
+                <ul>
+                    <li><a onclick="changePageType('A3')">A3</a></li>
+                    <li><a onclick="changePageType('A4')">A4</a></li>
+                    <li><a onclick="changePageType('A5')" class="last">A5</a></li>
+                </ul>
+            </li>
+            <li><a>Distribucion</a>
+                <ul>
+                    <li><a onclick="changeLandscape(true)">Hotizontal</a></li>
+                    <li><a onclick="changeLandscape()" class="last">Vertical</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Each sheet element should have the class "sheet" -->
+    <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
+    <section class="sheet padding-10mm">
+
+        <!-- Write HTML just like a web page -->
+        <article id=page></article>
+        <section id='timePrinter' style="display:none"></section>
+    </section>
+
+
+
+</body>
+<script>
+    function changePage(type, landscape) {
+        landscape = (landscape) ? 'landscape' : ''
+        document.getElementsByTagName('body')[0].className = `${type} ${landscape}`;
+    }
+    function changeLandscape(landscape) {
+        if (landscape) {
+            localStorage.setItem('landscape', 'landscape');
+        } else {
+            localStorage.setItem('landscape', '');
+        }
+        opdatePage()
+    }
+    function changePageType(PageType) {
+        if (PageType) {
+            localStorage.setItem('PageType', PageType);
+        } else {
+            localStorage.setItem('PageType', '');
+        }
+        opdatePage()
+    }
+    function opdatePage() {
+        document.getElementsByTagName('body')[0].className = `${localStorage.getItem('PageType')} ${localStorage.getItem('landscape')}`
+    }
+
+    const {
+        print
+    } = require(`${__dirname}/printer.js`)
+    const {
+        webFrame
+    } = require('electron')
+    webFrame.setZoomFactor(0.5)
+</script>
+
+
+</html>

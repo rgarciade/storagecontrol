@@ -6,6 +6,8 @@ const { DB_Configuration } = require('../../DB/configuration')
 const { createArticlesToTicket } = require('../printer/thermalprinter')
 const { ES } = require('../../../i18n/paiments')
 const moment = require('moment')
+var childProcess = require('child_process');
+
 
 const printFacturation = async (articles, facturationNumber, date, clientNumber, client, streat, city, postalCode, cif, pdf = false, finishFunction = false, vat = null, formaDePago = ES[3] ) => {
 	const cssFile = `${__dirname}/facturation.css`;
@@ -55,14 +57,7 @@ const printFacturation = async (articles, facturationNumber, date, clientNumber,
 
 
 const printFacturationFromFacturation = async (id, pdf = false, finishFunction = false) => {
-    let facturation = await DB_Facturation.findFacturationId(id)
-    let companyId = facturation[0].company_id
-    let companyData = await DB_Companys.findCompany(companyId)
-    let articles = await createArticlesToTicket(facturation)
-	let date =  moment(facturation[0].creation_date).format('L')
-	let vat = (facturation[0].vat)?facturation[0].vat:21
-	let paymentType = ES[facturation[0].paymentType]
-    printFacturation(articles, id, date, companyData[0].id, companyData[0].name,companyData[0].street, companyData[0].city, companyData[0].postalcode, companyData[0].cif, pdf, finishFunction, vat, paymentType )
+	childProcess.exec(`electron ${__dirname}\\..\\printer\\printer-and-thermalprinter\\index.js -type facturation -id `+ id +' -pdf '+ (pdf));
 }
 
 const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => {
@@ -269,4 +264,4 @@ const createHtml = (articles, topleft, topright, formadepago, impuesto = 21) => 
 
 }
 
-module.exports = { printFacturation, printFacturationFromFacturation }
+module.exports = { printFacturation, printFacturationFromFacturation,createHtml }

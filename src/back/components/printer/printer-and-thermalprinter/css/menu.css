@@ -1,0 +1,54 @@
+ul, ol {
+    list-style:none;
+}
+
+.nav > li {
+    float:left;
+}
+
+.nav li a {
+    text-decoration:none;
+    padding:10px 12px;
+    display:block;
+    background:#e0e0e0;
+    z-index: 100;
+}
+.nav ul> li> a{
+    background:#e0e0e0;
+    z-index: 100;
+}
+.nav ul> li> ul> li{
+    background:#e0e0e0;
+    z-index: 100;
+}
+.nav ul> li> ul> li>a{
+    background:#e0e0e0;
+    z-index: 100;
+}
+
+.last{
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.nav li ul {
+    display:none;
+    position:absolute;
+    min-width:140px;
+}
+.nav li:hover > ul {
+    display:block;
+}
+
+.nav li ul li {
+    position:relative;
+    background:#e0e0e0;
+    z-index: 100;
+}
+
+.nav li ul li ul {
+    right:-140px;
+    top:0px;
+}
+.nav{
+    display: initial;
+}

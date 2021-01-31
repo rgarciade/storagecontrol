@@ -9,6 +9,7 @@ exports.up = async function(knex, Promise) {
         table.dateTime('creation_date').notNullable().defaultTo(knex.fn.now());
 		table.double('price', 11).defaultTo(0);
 		table.integer('vat', 11).defaultTo(21);
+		table.double('paid', 11).defaultTo(0);
     })
     await knex.table('facturation_index').insert([{
             'company_id': 2,

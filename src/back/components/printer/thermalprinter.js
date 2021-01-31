@@ -3,6 +3,7 @@ const { DB_Sales } = require('../../DB/sales')
 const { DB_Configuration } = require('../../DB/configuration')
 const { DB_Facturation } = require('../../DB/facturation')
 const moment = require('moment')
+var childProcess = require('child_process');
 
 const createArticlesToTicket = ( articles ) => {
     let articlesFormat = []
@@ -18,43 +19,13 @@ const createArticlesToTicket = ( articles ) => {
 }
 
 const printThermalPrinterFacturation = async ( id, delivered = null ) => {
-    let facturation =  await DB_Facturation.findFacturationId(id)
-	let articles = await createArticlesToTicket(facturation)
-	let vat = (facturation[0] && facturation[0].vat)?  facturation[0].vat : 21
-    printTicket( id, articles, delivered, null, vat)
+    printTicket( id, 'thermalfacturation')
 }
 const printThermalPrinterSales = async ( id, delivered = null) => {
-    let sales =  await DB_Sales.fidSalesId(id)
-	let articles = await createArticlesToTicket(sales)
-	let vat = (sales[0] && sales[0].vat)?  sales[0].vat : 21
-    printTicket(id, articles, delivered, null, vat)
+    printTicket(id, 'sales')
 }
-const printTicket = async ( id, articles, delivered = null, time = null, vat = null ) => {
-	time = (!time)? moment.utc().format('DD-M-YY HH:mm:ss') : time
-	const config =  await DB_Configuration.findConfigurationById(1)
-	vat = (vat)? vat : (config[0] && config[0].vat)? config[0].vat : 21
-
-    createPrintWindow({
-        html: createTicket(
-            {
-                'initial': [
-                    `Nº. VENTA:${id}`,
-                    '',
-                    'MICRO-TEX INFORMATICA',
-                    'AVDA. DE ATENAS, 1 LOCALES 22-23',
-                    'C.C. LAS ROZAS (MADRID) 28231 ',
-                    'CIF :B80898224',
-                    time
-                ],
-                'articles': articles,
-                'final': ['Gracias por su visita'],
-                'iva': vat,
-                'delivered':delivered
-            }
-		),
-		printerName: (config[0] && config[0].tiketsprinter)? config[0].tiketsprinter: '',
-        config: ['thermalprinter']
-     })
+const printTicket = async ( id, type ) => {
+	childProcess.exec(`electron ${__dirname}\\printer-and-thermalprinter\\index.js -type `+type+' -id '+ id);
 }
 
 module.exports = { printThermalPrinterSales, printThermalPrinterFacturation, createArticlesToTicket, createTicket }

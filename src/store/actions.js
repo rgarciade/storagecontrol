@@ -482,7 +482,8 @@ const actions = {
                     company_id: companyId,
                     price: store.state.priceStoreCard,
 					credit_card: store.state.creditCard,
-					paymentType : store.state.paymentType
+					paymentType : store.state.paymentType,
+					paid: store.state.incomingMoney
                 },
                 extra: cartToinsert
             })
@@ -536,7 +537,7 @@ const actions = {
             })
     },
     async printFacturation(store,data) {
-		await printFacturationFromFacturation(data.id, data.pdf ,function () { createAlert(store, 'pdf de factura creado')})
+		await printFacturationFromFacturation(data.id, data.pdf)
 		createAlert(store, 'creando pdf en documentos/printer Espere para crear otro')
     },
     async printTiket(store,id) {
@@ -555,7 +556,10 @@ const actions = {
         });
 
         await DB_Sales.insertSales({
-                sale: { price: store.state.priceStoreCard },
+                sale: {
+					price: store.state.priceStoreCard,
+					paid: store.state.incomingMoney
+				},
                 extra: cartToinsert
             })
             .then(resp => {

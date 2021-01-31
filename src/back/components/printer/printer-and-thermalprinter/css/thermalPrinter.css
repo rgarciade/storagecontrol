@@ -1,0 +1,87 @@
+* {
+    font-size: 16px;
+    font-family: 'Times New Roman';
+}
+@media print {
+    @page{
+        size:B9;
+        margin: 0;
+
+    }
+    body { }
+}
+td,
+th,
+tr,
+table {
+   
+    border-collapse: collapse;
+    width: 300px;
+}
+.separator-top{
+    border-top: 1px solid black;
+}
+.separator-bot{
+    border-bottom: 1px solid black;
+}
+.bot_group_pading{
+    padding-left: 16px;
+    padding-top: 6px;
+}
+td.producto,
+th.producto {
+    width: 104px;
+    max-width: 104px;
+    word-break: break-all;
+}
+
+td.cantidad,
+th.cantidad {
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
+}
+
+td.precio,
+th.precio {
+    width: 40px;
+    max-width: 40px;
+    word-break: break-all;
+    vertical-align: bottom;
+}
+.total_group_top{
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 0px !important;  
+}
+.total_group_bot{
+    border-top: 0px !important;  
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+.centrado {
+    text-align: center;
+    align-content: center;
+}
+
+.page {
+    width: 200px;
+    max-width: 200px;
+}
+.ticket {
+    width: 300px;
+    max-width: 300px;
+}
+
+img {
+    max-width: 200px;
+    width: inherit;
+    margin-left: 16%;
+}
+
+@media print {
+    .oculto-impresion,
+    .oculto-impresion * {
+        display: none !important;
+    }
+}
