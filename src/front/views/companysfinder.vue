@@ -35,9 +35,14 @@
             >
               <v-card-title primary-title>
                 <div>
-                  <div class="headline">{{company.name}}</div>
-                  <span>telefono: {{company.telephone}}</span>
-                  <span>cif: {{company.cif}}</span>
+					<div class="headline">{{company.name}}</div>
+					<span>Id empresa: {{company.id}}</span>
+					<br>
+					<span>telefono: {{company.telephone}}</span>
+					<br>
+					<span>cif: {{company.cif}}</span>
+					<br>
+
                   <v-card-actions>
                     <v-btn flat color="orange" :href="`mailto:${company.email}`" icon>
                       <v-icon>email</v-icon>
@@ -76,3 +81,4 @@ export default {
   methods: Object.assign({}, mapActions(["findCompanys"]), {})
 };
 </script>
+

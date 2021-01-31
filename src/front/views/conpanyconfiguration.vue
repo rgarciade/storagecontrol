@@ -6,6 +6,7 @@
     <v-form v-model="valid">
       <v-container class="container_position" grid-list-md>
         <h1>Datos de la empresa</h1>
+        <p>ID de la empresa:  <span>{{companyData.id}}</span></p>
         <v-layout>
           <v-flex xs6 md6>
             <v-text-field
