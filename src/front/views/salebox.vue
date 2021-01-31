@@ -199,7 +199,7 @@ export default {
       saleDialog: false,
       e1:0,
       printTypeVal:'factura',
-      paymentAmount:0,
+      paymentAmount:'',
       moneyBack:0,
       textFinder:"",
       textFinderCompany:"",
