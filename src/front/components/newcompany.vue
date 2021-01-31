@@ -11,21 +11,21 @@
                 v-model="valid">
                 <v-text-field v-model="companyData.name" :rules="nameRules" label="Nombre de la compañia" required ></v-text-field>
                 <v-text-field v-model="companyData.cif" label="cif de la compañia" ></v-text-field>
-                <v-text-field :value="companyData.street" id="c_street" label="calle"></v-text-field>
-                <v-text-field :value="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
-                <v-text-field :value="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
-                <v-text-field :value="companyData.state" id="c_province" label="provincia"></v-text-field>
+                <v-text-field v-model="companyData.street" id="c_street" label="calle"></v-text-field>
+                <v-text-field v-model="companyData.postalcode" id="c_postalcode" label="codigo postal"></v-text-field>
+                <v-text-field v-model="companyData.city" id="c_city" label="localidad/ciudad"></v-text-field>
+                <v-text-field v-model="companyData.state" id="c_province" label="provincia"></v-text-field>
                 <v-text-field v-model="companyData.telephone" label="telefono de contactor" ></v-text-field>
-            	<v-text-field :value="companyData.mobile" id="c_mobile" label="movil"></v-text-field>
+            	<v-text-field v-model="companyData.mobile" id="c_mobile" label="movil"></v-text-field>
                 <v-text-field v-model="companyData.contact" label="nombre de contacto" ></v-text-field>
-				<v-text-field :value="companyData.banck" id="c_banck" label="banco"></v-text-field>
-				<v-text-field :value="companyData.cta" id="c_cta" :rules="controlDigit" label="cuenta"></v-text-field>
+				<v-text-field v-model="companyData.banck" id="c_banck" label="banco"></v-text-field>
+				<v-text-field v-model="companyData.cta" id="c_cta" :rules="controlDigit" label="cuenta"></v-text-field>
                 <v-text-field id="correo" v-model="companyData.email" label="email de facturacion y contacto" ></v-text-field>
                 <v-textarea
                   solo
                   id="c_notas"
                   label="Notas"
-                  :value="companyData.notas"
+                  v-model="companyData.notas"
                   box
                   clearable
                   auto-grow
@@ -50,11 +50,19 @@
           return {
             valid: true,
             companyData:{
-                name:'',
-                cif:'',
-                contact:'',
-                telephone:'',
-                email:''
+				name:'',
+				cif:'',
+				street:'',
+				postalcode:'',
+				city:'',
+				state:'',
+				telephone:'',
+				mobile:'',
+				contact:'',
+				banck:'',
+				cta:'',
+				email:'',
+				notas:''
             },
             nameRules: checkInputs.nameRules,
             emailRules: checkInputs.emailRules,
@@ -77,6 +85,7 @@
           },
           async newCompany(){
             if(this.validate()){
+				debugger
               let newId = await this.createCompany(this.companyData)
             }
 
