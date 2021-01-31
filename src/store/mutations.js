@@ -230,12 +230,26 @@ const mutations = {
     },
     companyData(state, data) {
         state.companyData = data[0]
-    },
+	},
+	clearnCompanyData(state){
+		state.companyData = {
+            id: '',
+            cif: '',
+            name: '',
+            contact: '',
+            location: '',
+            telephone: '',
+            email: ''
+        }
+	},
     addNewCompanyDataId(state, id) {
         state.newCompanyDataId = id
     },
     companyDataContacts(state, data) {
         state.companyDataContacts = data
+    },
+    clearncompanyDataContacts(state) {
+        state.companyDataContacts = []
     },
     creditCard(state, data) {
         state.creditCard = data

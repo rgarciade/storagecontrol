@@ -45,12 +45,12 @@
             </h1>
             <v-btn
               color="primary"
-              @click="e1 = 3; needFacturation(1); textFinder =''"
+              @click="e1 = 3; needFacturationtrigger(1); textFinder =''"
             > SI
             </v-btn>
             <v-btn
               color="primary"
-              @click="e1 = 4; needFacturation(0); textFinder =''"
+              @click="e1 = 4; needFacturationtrigger(0); textFinder =''"
             > no
             </v-btn>
           </v-stepper-content>
@@ -249,7 +249,6 @@ export default {
       return this.storeCard.length <= 0 ? true : false;
 	},
 	printTypesitems(){
-	  this.printTypeVal = 'nada'
 	  if (this.creditCard >= 1 && this.companyData.id <= 0) {
         return this.printTypesitemsFacturation
       }else if( this.paymentType >= 1 && this.companyData.id > 0){
@@ -260,7 +259,7 @@ export default {
       }
 	}
   }),
-  methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
+  methods: Object.assign({}, mapActions(["setprintType","companyConfigurationView","resetCompanyData","findCompanys","changeItemPrice","needFacturation","changeItemDescription","changeItemUnitsNumber","findArticles","addToCard","subtractOneToCard","subtractToCard","inserFacturation","inserSale","createStoreAlert","insertPaiment","selectPaymentType","updateIncomingMoney"]), {
     openFinder(e) {
       if(!e || e.target.nodeName == 'TEXTAREA'){
         return
@@ -276,7 +275,12 @@ export default {
       if (e && e.code == "Escape" && e.type == "keydown" && this.finderOpen) {
         this.closeFinder();
       }
-    },
+	},
+	needFacturationtrigger(val){
+		this.printTypeVal = (val)? 'factura' : 'nada'
+		if(val == 0) this.resetCompanyData()
+		this.needFacturation(val)
+	},
     closeFinder() {
       this.finderOpen = false;
     },
@@ -297,8 +301,6 @@ export default {
       } else {
         await this.inserSale()
       }
-      //TODO: completar las functiones printFacturationFromFacturation y printFacturationFromSales
-      ///// y mover printThermalPrinterFacturation y la otra de donde esta a aqui fuera
       this.paymentAmount = 0;
     },
   })

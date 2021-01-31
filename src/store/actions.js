@@ -427,7 +427,12 @@ const actions = {
         let companyDataContacts = await DB_Companys.findCompanyDataContacts(companyData[0].id)
         store.commit('companyData', companyData)
         store.commit('companyDataContacts', companyDataContacts)
-    },
+	},
+    async resetCompanyData(store) {
+		store.commit('clearncompanyDataContacts')
+		store.commit('clearnCompanyData')
+	},
+
     async addNewContact(store, data) {
         store.commit("charging")
         await DB_Companys.insertContactWithCompanyId(data.id, data.newContactEmail, data.newContact, data.newContacttelephone)
