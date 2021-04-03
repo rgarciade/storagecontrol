@@ -1,11 +1,18 @@
 const Const = {
-   DB: {
-        host: '127.0.0.1',
+    DB: {
+        host: '192.168.1.49',
         port: '8989',
         user: 'root',
 		password: 'root',
 		database: 'storagecontrol_test'
     }
+  /*  DB: {
+        host: '127.0.0.1',
+        port: '8989',
+        user: 'root',
+		password: 'root',
+		database: 'storagecontrol_test'
+    } */
 /*  DB: {
         host: '192.168.2.167',
         port: '3306',

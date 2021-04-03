@@ -79,3 +79,9 @@
     flex-basis: 100% !important;
     max-width: 100% !important;
 }
+.version{
+	position: absolute;
+    bottom: 0px;
+    color: white;
+    z-index: 9999;
+}

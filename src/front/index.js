@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 const  { updateSingImg } = require('../back/components/email/email')
+const fs = require('fs');
 
 import store from "../store"
 
@@ -44,6 +45,7 @@ const createWindow = async() => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+	global.version = getversion()
     // Example of usage of Vuex Store from the main process
     // Results of action will be automatically passed to all renderer processes
 
@@ -86,6 +88,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
+	global.version = getversion()
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
@@ -95,3 +98,9 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+const getversion = () =>{
+	let rawdata = fs.readFileSync('./package.json');
+	let packageData = JSON.parse(rawdata);
+	return packageData.version
+}

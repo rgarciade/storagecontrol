@@ -4,14 +4,26 @@
     <Alerts></Alerts>
     <Progress :active="false"></Progress>
     <router-view class='routerView' default="{name: 'home'}"></router-view>
+	<div class="version">{{version}}</div>
   </v-app>
 </template>
 
 <script>
   import { mapState } from "vuex"
+  var remote = require('electron').remote;
+
   export default {
-      name: 'app',
-      computed: mapState(["count"]),
+	name: 'app',
+	created() {
+		console.log('version:',remote.getGlobal('version'))
+		this.version = remote.getGlobal('version')
+	},
+	data() {
+		return {
+			version: ''
+		};
+	},
+    computed: mapState(["count"])
   }
 </script>
 <style>
