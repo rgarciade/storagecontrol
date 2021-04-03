@@ -100,7 +100,7 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 const getversion = () =>{
-	let rawdata = fs.readFileSync('./package.json');
+	let rawdata = fs.readFileSync(__dirname + '\\..\\..\\package.json');
 	let packageData = JSON.parse(rawdata);
 	return packageData.version
 }
